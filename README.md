@@ -4,7 +4,7 @@ Pulsar NBA is a standalone NBA probability, market, research and decision engine
 
 ## Current status
 
-**V1.3.0 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
+**V1.4.0 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
 
 ## End-to-end chain
 
@@ -194,3 +194,29 @@ joined into derived performance without changing the original settlement.
 The project is still **not live-operational** on GitHub-hosted runners:
 official NBA stats/schedule/injuries failed independent provider checks.
 The `NBA_LIVE_ENABLED` repository variable must remain unset/false.
+
+## V1.4 — provider contract and deterministic end-to-end proof
+
+Acquisition now has a stable DataProvider boundary. OfficialNBAProvider uses
+the current official schedule/stats/injury adapters; BundleProvider loads an
+explicitly unverified local research bundle; JsonSnapshotProvider accepts
+schema-compatible research snapshots. The predictive model no longer needs
+a provider-specific object shape.
+
+CI also runs `python -m nba.e2e_dryrun`. This network-free fixture traverses
+team inputs, rotations, context, structural projection, probability surfaces,
+Pinnacle-style market pairing, uncertainty, decisions and predictive lineage.
+It must produce six market candidates and zero BETs because the fixture is
+uncertified. This is software evidence only; synthetic inputs never enter the
+prospective performance ledger.
+
+V2 shadow output can be checked with:
+
+    python -m nba.v2_gate --input runtime/research/v2_shadow.json
+
+The V2 review gate requires at least 250 paired holdout games by default,
+forbids material degradation in Brier/LogLoss/ECE/margin MAE/total MAE and
+requires at least two strict metric improvements. A passing report only says
+MANUAL_REVIEW_ONLY; auto_promote and betting_certified remain false.
+A human-reviewed frozen model generation would still need new prospective
+validation before any live approval.

@@ -18,5 +18,7 @@ jobs:
         run: python -m py_compile nba/*.py
       - name: Preflight
         run: python -m nba.preflight
+      - name: Deterministic end-to-end dry-run
+        run: python -m nba.e2e_dryrun
       - name: Unit tests
         run: python -m unittest discover -s tests -v

@@ -110,14 +110,24 @@ def audit_records(
                 raise ValueError("paper entry has invalid role or phase")
             if row.get("model_generation") != forecast["model_generation"]:
                 raise ValueError("paper and forecast model generations differ")
-            if row.get("source_snapshot_sha256") != forecast["source_snapshot_sha256"]:
-                raise ValueError("paper and forecast predictive inputs differ")
-            if _dt(row["entry_at"]) != _dt(forecast["forecast_at"]):
-                raise ValueError("paper entry and forecast time differ")
+            manifest = validate_manifest(row["input_manifest"])
+            if (manifest["game_id"] != game
+                    or manifest["model_generation"] != forecast["model_generation"]
+                    or row.get("source_snapshot_sha256") != manifest["sha256"]
+                    or _dt(row["entry_at"]) != _dt(manifest["analyzed_at"])
+                    or _dt(row["source_snapshot_at"]) != _dt(manifest["source_snapshot_at"])):
+                raise ValueError("paper predictive input manifest does not match")
+            # The full-game cohort freezes its FIRST FINAL forecast. A paper
+            # candidate may legitimately use a LATER FINAL injury update.
+            if _dt(row["entry_at"]) < _dt(forecast["forecast_at"]):
+                raise ValueError("paper selection predates the archived first FINAL forecast")
             if _dt(row["commence_time"]) != _dt(forecast["tipoff_at"]):
                 raise ValueError("paper game tip-off mismatch")
             if _dt(row["entry_at"]) >= _dt(row["commence_time"]):
                 raise ValueError("paper bet entered after tip-off")
+            to_tip = (_dt(row["commence_time"]) - _dt(row["entry_at"])).total_seconds() / 60
+            if not 5 <= to_tip <= 30:
+                raise ValueError("paper entry outside FINAL 5-30 minute cohort")
             price = float(row["price"])
             if not math.isfinite(price) or price <= 1:
                 raise ValueError("invalid paper price")

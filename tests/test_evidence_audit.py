@@ -37,6 +37,8 @@ def corpus():
         "selection": "home_ml", "status": "PAPER", "phase": "FINAL",
         "model_generation": MODEL_GENERATION,
         "source_snapshot_sha256": manifest["sha256"],
+        "source_snapshot_at": manifest["source_snapshot_at"],
+        "input_manifest": manifest,
         "entry_at": context.analyzed_at, "commence_time": forecast["tipoff_at"],
         "price": 2.0, "stake_fraction": .01, "line": None,
     }
@@ -63,6 +65,30 @@ class EvidenceAuditTests(unittest.TestCase):
         self.assertTrue(result["ok"], result["errors"])
         self.assertFalse(result["betting_certified"])
         self.assertEqual(result["counts"]["settled_entries"], 1)
+
+    def test_later_paper_can_use_new_injury_snapshot(self):
+        f, p, o, c, s = corpus()
+        context = GameContext(
+            "g", "2026-11-15", "2026-11-15T22:10:00Z",
+            "Boston Celtics", "New York Knicks", phase="FINAL")
+        manifest = build_input_manifest(
+            context=context, home=TeamMetrics("Boston Celtics", 118, 111, 99),
+            away=TeamMetrics("New York Knicks", 115, 113, 98),
+            home_rotation=[RotationPlayer("h", "H", 240)],
+            away_rotation=[RotationPlayer("a", "A", 240)],
+            stats_snapshot_sha256="a" * 64,
+            stats_observed_at="2026-11-15T20:00:00Z",
+            injury_snapshot_sha256="c" * 64,
+            injury_reported_at="2026-11-15T22:05:00Z",
+        )
+        p["entry_at"] = context.analyzed_at
+        p["source_snapshot_sha256"] = manifest["sha256"]
+        p["source_snapshot_at"] = manifest["source_snapshot_at"]
+        p["input_manifest"] = manifest
+        updated = settle_candidate(p, home_score=116, away_score=111)
+        result = audit_records(forecasts=[f], paper=[p], outcomes=[o],
+                               closes=[c], settled=[updated])
+        self.assertTrue(result["ok"], result["errors"])
 
     def test_future_forecast_rejected(self):
         f, p, o, c, s = corpus()

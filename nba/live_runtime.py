@@ -194,15 +194,37 @@ def run(
     source_quality = assess(
         analyzed_at=source.captured_at, team_stats_at=stats["observed_at"],
         injury_report_at=injuries["reported_at"], odds_at=source.captured_at)
-    eligible = any(game_report_ready(injuries, game_date=game.game_date,
-                                    home=game.home, away=game.away) for game in slate)
-    if not source_quality["eligible"] or not eligible:
+    eligible_games = [
+        game for game in slate if game_report_ready(
+            injuries, game_date=game.game_date, home=game.home, away=game.away)
+    ]
+    if not source_quality["eligible"] or not eligible_games:
         out["status"] = "NO_ANALYSIS"
         out["failures"].append("odds_skipped:mandatory_source_unavailable_or_stale")
         out["source_quality"] = source_quality
         Path(output).parent.mkdir(parents=True, exist_ok=True)
         Path(output).write_text(json.dumps(out, indent=2), encoding="utf-8")
         return out
+
+    # For regular-season research, refuse a paid market request when no
+    # upcoming game clears the minimum completed-game sample. The preseason
+    # plumbing mode may still exercise the market path with sparse samples.
+    if operating_mode == "regular":
+        team_rows = (stats.get("advanced_windows") or {}).get(0) or (
+            stats.get("advanced_windows") or {}).get("0") or []
+        games_played = {
+            canonical_team(str(row.get("TEAM_NAME") or "")): int(row.get("GP") or 0)
+            for row in team_rows
+        }
+        if not any(min(games_played.get(game.home, 0),
+                       games_played.get(game.away, 0)) >= 5
+                   for game in eligible_games):
+            out["status"] = "NO_ANALYSIS"
+            out["failures"].append(
+                "odds_skipped:all_upcoming_games_below_five_completed_team_games")
+            Path(output).parent.mkdir(parents=True, exist_ok=True)
+            Path(output).write_text(json.dumps(out, indent=2), encoding="utf-8")
+            return out
 
     try:
         reserve_odds_request(path=odds_budget_path, purpose="live_analysis")

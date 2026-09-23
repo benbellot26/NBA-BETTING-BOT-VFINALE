@@ -34,8 +34,7 @@ class OperationsTests(unittest.TestCase):
 
     def test_outcomes_are_behind_provider_adapter(self):
         games=[ScheduleGame("g","2026-10-20","2026-10-20T23:00:00Z","Boston Celtics","New York Knicks",3,"Final",120,110)]
-        with patch("nba.providers.fetch_schedule",return_value=games):
-            finals=OfficialOutcomeProvider().finals()
+        finals=OfficialOutcomeProvider(fetcher=lambda: games).finals()
         self.assertEqual(finals["g"].home_score,120)
 
 if __name__=="__main__":unittest.main()

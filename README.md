@@ -253,6 +253,6 @@ Useful commands:
     python -m nba.health_report
     python -m nba.market_smoke
 
-The market smoke is manual because it consumes one Odds API request. Synthetic rehearsals are never prospective evidence.
+The market smoke is manual because it consumes one Odds API request. Synthetic rehearsals are never prospective evidence. V1.6 also persists a UTC daily Odds API request budget (default 48, configurable with NBA_ODDS_DAILY_REQUEST_BUDGET); analysis, close capture and market diagnostics fail closed when that budget is exhausted. `live_runtime --mode preseason` can exercise real plumbing while refusing to write paper or FINAL prospective evidence.
 
 The first V1.6 merge to `main` also runs the market diagnostic once automatically. It consumes one Odds API request, does not require events to exist, and never certifies betting.

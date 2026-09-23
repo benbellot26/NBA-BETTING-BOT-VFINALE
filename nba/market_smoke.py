@@ -4,8 +4,10 @@ import argparse, json
 from pathlib import Path
 from .acquisition import fetch_nba_odds_diagnostic
 from .odds_normalizer import normalize_game
+from .odds_budget import reserve as reserve_odds_request
 
-def run(*, require_events: bool=False)->dict:
+def run(*, require_events: bool=False, budget_path: str='runtime/odds_budget.json')->dict:
+    reserve_odds_request(path=budget_path,purpose='market_smoke')
     payload=fetch_nba_odds_diagnostic()
     events=[normalize_game(row) for row in payload["events"]]
     market_counts={"ML":0,"SPREAD":0,"TOTAL":0}

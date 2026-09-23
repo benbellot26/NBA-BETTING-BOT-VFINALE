@@ -9,6 +9,7 @@ from typing import Any
 from .acquisition import fetch_historical_nba_odds, fetch_nba_odds
 from .market import no_vig_pair, paired_price_rows, fresh_quote
 from .odds_normalizer import normalize_game
+from .odds_budget import reserve as reserve_odds_request
 from .teams import canonical_team
 from .tracking import append_jsonl
 
@@ -88,7 +89,8 @@ def _close_row(entry: dict[str, Any], event: dict[str, Any],
 
 
 def capture(*, paper_path: str, close_path: str, mode: str = "live",
-            live_window_minutes: float = 20.0) -> dict[str, Any]:
+            live_window_minutes: float = 20.0,
+            odds_budget_path: str = "runtime/odds_budget.json") -> dict[str, Any]:
     entries = _read(paper_path)
     closed = {row.get("entry_key") for row in _read(close_path)}
     pending = [row for row in entries if row.get("entry_key") not in closed]
@@ -100,10 +102,15 @@ def capture(*, paper_path: str, close_path: str, mode: str = "live",
     live_events: list[dict[str, Any]] | None = None
     historical_cache: dict[str, Any] = {}
     if mode == "live":
+        due=[row for row in pending if 0 <= (_dt(row["commence_time"])-now).total_seconds()/60.0 <= live_window_minutes]
+        if not due:
+            return {"added": 0, "pending": len(pending), "failures": [], "odds_api_requests": 0}
+        pending=due
         try:
+            reserve_odds_request(path=odds_budget_path, purpose="live_close")
             live_events = [normalize_game(row) for row in fetch_nba_odds(bookmakers="pinnacle")]
         except Exception as exc:
-            return {"added": 0, "pending": len(pending), "failures": [f"live_odds:{exc}"]}
+            return {"added": 0, "pending": len(pending), "failures": [f"live_odds:{exc}"], "odds_api_requests": 1}
     for entry in pending:
         try:
             tip = _dt(entry["commence_time"])
@@ -118,6 +125,7 @@ def capture(*, paper_path: str, close_path: str, mode: str = "live",
                     continue
                 target = (tip - timedelta(minutes=1)).isoformat()
                 if target not in historical_cache:
+                    reserve_odds_request(path=odds_budget_path, purpose="historical_close")
                     historical_cache[target] = fetch_historical_nba_odds(
                         date_iso=target, bookmakers="pinnacle")
                 payload = historical_cache[target]

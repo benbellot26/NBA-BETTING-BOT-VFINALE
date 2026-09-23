@@ -8,6 +8,10 @@ on:
       target_date:
         description: YYYY-MM-DD (optional)
         required: false
+      operating_mode:
+        description: regular or preseason (manual dispatch only)
+        required: false
+        default: regular
   schedule:
     - cron: '*/20 17-23 * * *'
     - cron: '*/20 0-6 * * *'
@@ -32,6 +36,7 @@ jobs:
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
           TARGET_DATE: ${{ inputs.target_date }}
+          OPERATING_MODE: ${{ inputs.operating_mode }}
         run: |
           if [ -z "$ODDS_API_KEY" ]; then
             echo "ODDS_API_KEY is not configured; live research skipped."
@@ -39,8 +44,9 @@ jobs:
           fi
           DATE_ARG=""
           if [ -n "$TARGET_DATE" ]; then DATE_ARG="--date $TARGET_DATE"; fi
-          python -m nba.live_runtime $DATE_ARG --output runtime/live_run.json
-          python -m nba.close_runtime --mode live
+          MODE="${OPERATING_MODE:-regular}"
+          python -m nba.live_runtime $DATE_ARG --mode "$MODE" --output runtime/live_run.json
+          if [ "$MODE" = "regular" ]; then python -m nba.close_runtime --mode live; fi
       - name: Refresh health report
         if: always()
         run: python -m nba.health_report || true

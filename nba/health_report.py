@@ -19,6 +19,8 @@ def build(root: str | Path = "runtime") -> dict[str, Any]:
     live=_json(root/"live_run.json") or {}
     provider=_json(root/"provider_smoke.json") or {}
     performance=_json(ev/"performance.json") or {}
+    market=_json(root/"market_smoke.json") or {}
+    budget=_json(root/"odds_budget.json") or {}
     audit=_json(ev/"audit.json") or {}
     forecasts=_jsonl(ev/"final_forecasts.jsonl")
     paper=_jsonl(ev/"paper_entries.jsonl")
@@ -39,6 +41,8 @@ def build(root: str | Path = "runtime") -> dict[str, Any]:
         "last_odds_api_requests":int(live.get("odds_api_requests") or 0),
         "provider_ok":provider.get("ok"),
         "provider_details":provider.get("providers") or {},
+        "market_coverage_ready":market.get("coverage_ready"),
+        "odds_budget":{"used":int(budget.get("used") or 0),"limit":budget.get("limit"),"remaining":budget.get("remaining"),"purposes":budget.get("purposes") or {}},
         "evidence":{
             "forecasts":len(forecasts),"paper_entries":len(paper),
             "closes":len(closes),"settled":len(settled),

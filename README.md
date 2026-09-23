@@ -254,3 +254,5 @@ Useful commands:
     python -m nba.market_smoke
 
 The market smoke is manual because it consumes one Odds API request. Synthetic rehearsals are never prospective evidence.
+
+The first V1.6 merge to `main` also runs the market diagnostic once automatically. It consumes one Odds API request, does not require events to exist, and never certifies betting.

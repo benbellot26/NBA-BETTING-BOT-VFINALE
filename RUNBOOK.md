@@ -201,3 +201,5 @@ Before enabling scheduled research:
 The live workflow writes runtime/health.json. ANALYSIS_BLOCKED and PROVIDER_DEGRADED states fail the Actions job after artifacts/state are persisted, so GitHub workflow-failure notifications act as the operational alert.
 
 The shared persistence script is idempotent and serialised by the nba-runtime-data concurrency group. It creates runtime-data if absent and converts legacy contents to a data-only branch. Daily artifacts provide an additional retained backup.
+
+The market-smoke workflow is also triggered once by the V1.6 merge because its workflow file is new. Normal future checks remain manual unless the diagnostic code/workflow changes.

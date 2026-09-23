@@ -13,7 +13,6 @@ from .evidence_audit import audit_records
 from .model import ProbabilitySurface
 from .performance import brier, calibration_ece, logloss
 from .providers import OfficialOutcomeProvider
-from .schedule import fetch_schedule
 from .settlement import settle_candidate
 from .tracking import append_jsonl
 
@@ -113,7 +112,7 @@ def refresh(
     forecasts = _read(forecasts_path)
     outcomes = _read(outcomes_path)
     known = {str(row.get("game_id")) for row in outcomes}
-    finals = OfficialOutcomeProvider(fetcher=fetch_schedule).finals()
+    finals = OfficialOutcomeProvider().finals()
     for forecast in forecasts:
         game_id = str(forecast.get("game_id") or "")
         if game_id in known or game_id not in finals:

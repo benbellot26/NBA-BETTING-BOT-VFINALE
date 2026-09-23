@@ -1,5 +1,11 @@
 name: Pulsar NBA Manual Market Smoke
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'nba/market_smoke.py'
+      - 'nba/acquisition.py'
+      - '.github/workflows/market-smoke.yml'
   workflow_dispatch:
     inputs:
       require_events:

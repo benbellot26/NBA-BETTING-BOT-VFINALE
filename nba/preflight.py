@@ -1,6 +1,6 @@
 from __future__ import annotations
 import importlib
-MODULES=("nba.model","nba.team_strength","nba.pace","nba.rotations","nba.player_availability","nba.matchup","nba.context","nba.structural","nba.distribution","nba.market","nba.uncertainty","nba.decision","nba.staking","nba.certification","nba.pipeline","nba.provider_http","nba.schedule","nba.nba_stats_api","nba.team_inputs","nba.injury_pdf","nba.rotation_projection","nba.live_runtime","nba.prospective","nba.close_runtime","nba.performance_runtime","nba.provider_smoke","nba.odds_smoke","nba.v2_shadow","nba.replay_export","nba.pit_bundle","nba.lineage","nba.evidence_audit","nba.provider_contract","nba.providers","nba.fixture_provider","nba.e2e_dryrun","nba.v2_gate")
+MODULES=("nba.model","nba.team_strength","nba.pace","nba.rotations","nba.player_availability","nba.matchup","nba.context","nba.structural","nba.distribution","nba.market","nba.uncertainty","nba.decision","nba.staking","nba.certification","nba.pipeline","nba.provider_http","nba.schedule","nba.nba_stats_api","nba.team_inputs","nba.injury_pdf","nba.rotation_projection","nba.live_runtime","nba.prospective","nba.close_runtime","nba.performance_runtime","nba.provider_smoke","nba.odds_smoke","nba.v2_shadow","nba.replay_export","nba.pit_bundle","nba.lineage","nba.evidence_audit","nba.provider_contract","nba.providers","nba.fixture_provider","nba.e2e_dryrun","nba.v2_gate","nba.preseason_check")
 def run()->dict:
     failures=[]
     for name in MODULES:

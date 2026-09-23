@@ -4,7 +4,7 @@ Pulsar NBA is a standalone NBA probability, market, research and decision engine
 
 ## Current status
 
-**V1.4.0 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
+**V1.5.0 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
 
 ## End-to-end chain
 
@@ -220,3 +220,24 @@ requires at least two strict metric improvements. A passing report only says
 MANUAL_REVIEW_ONLY; auto_promote and betting_certified remain false.
 A human-reviewed frozen model generation would still need new prospective
 validation before any live approval.
+
+## V1.5 — official provider integration and preseason check
+
+The live runtime now uses OfficialNBAProvider.capture() and validates its
+ProviderSnapshot before any odds request. No scheduled games, blocked
+statistics, unsubmitted official injuries and stale input timestamps prevent
+paid odds acquisition. Earlier games already underway no longer block later
+upcoming games on the same NBA date.
+
+JsonSnapshotProvider and BundleProvider remain unverified offline research
+inputs; neither can impersonate the official live source. All betting gates
+remain uncertified and NBA_LIVE_ENABLED is not enabled by this release.
+
+For preseason development run the strictly network-free command:
+
+    python -m nba.preseason_check
+
+It checks imports, the deterministic six-market end-to-end fixture, locked
+source-controlled certification and the static live-workflow guards. A green
+software check is not proof of upstream provider availability. The report
+explicitly says live_operational=false and odds_api_requests=0.

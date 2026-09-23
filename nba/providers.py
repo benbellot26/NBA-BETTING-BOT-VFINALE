@@ -22,8 +22,16 @@ class OfficialNBAProvider:
     def capture(self, *, target_date: str) -> ProviderSnapshot:
         season = season_for_date(target_date)
         schedule = fetch_schedule()
-        if not games_on(schedule, target_date):
+        slate = games_on(schedule, target_date)
+        if not slate:
             raise NoGamesOnTargetDate("no NBA games on target date")
+        # Avoid waiting for stats/PDF after the last target match has tipped.
+        current = datetime.now(timezone.utc)
+        if not any(
+            datetime.fromisoformat(game.commence_time.replace("Z", "+00:00"))
+            .astimezone(timezone.utc) > current for game in slate
+        ):
+            raise NoGamesOnTargetDate("no upcoming NBA games on target date")
         stats_observed_at = datetime.now(timezone.utc).isoformat()
         stats = acquire_stat_pack(
             season=season, observed_at=stats_observed_at, game_date=target_date,

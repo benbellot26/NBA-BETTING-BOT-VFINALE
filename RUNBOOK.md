@@ -175,3 +175,14 @@ V2 shadow review readiness is evaluated separately:
 A review_ready=true result never modifies the champion, never writes a live
 certification and never authorizes a wager. Promotion requires explicit source
 changes, human review and a fresh prospective validation cycle.
+
+## V1.5 — preseason-only verification
+
+From the repository root run:
+
+    python -m nba.preseason_check --output runtime/preseason_readiness.json
+
+This check calls no websites and does not use ODDS_API_KEY. It validates the
+software and static workflow gates only. Keep NBA_LIVE_ENABLED unset/false
+until a separate official data-provider smoke and full live paper rehearsal
+succeed on the intended runner. Do not count synthetic CI games as evidence.

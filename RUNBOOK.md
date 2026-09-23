@@ -212,3 +212,11 @@ Paid/current market calls share `runtime/odds_budget.json`. The default daily ca
 ## V1.6.1 — odds request budget caveat
 
 NBA_ODDS_DAILY_REQUEST_BUDGET counts outbound requests; The Odds API can charge multiple quota credits per request. The market-smoke response reports provider quota telemetry separately. Inspect the available quota before scheduling repeated market pulls. If runtime/odds_budget.json is corrupt or unreadable, fix or restore it; the bot must not silently reset today's spend.
+
+## V1.6.2 — safe closing snapshots
+
+Closes are timestamped after the Odds API HTTP response. If the response
+arrives after tip or the Pinnacle book's quote timestamp is in the future,
+before paper entry or after tip, no close is recorded. The market smoke
+uses only valid paired Pinnacle contracts on the same NBA event. Its workflow
+runs only by explicit manual dispatch; no push-triggered paid checks.

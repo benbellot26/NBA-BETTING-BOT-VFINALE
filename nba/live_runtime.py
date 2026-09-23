@@ -78,12 +78,15 @@ def _same_tip(a: str, b: str) -> bool:
 
 
 def _match(game: Any, rows: list[dict[str, Any]]) -> dict[str, Any] | None:
-    return next((
+    matching = [
         row for row in rows
         if canonical_team(row["home"]) == canonical_team(game.home)
         and canonical_team(row["away"]) == canonical_team(game.away)
         and _same_tip(str(row.get("commence_time") or ""), game.commence_time)
-    ), None)
+    ]
+    if len(matching) > 1:
+        raise ValueError("ambiguous duplicate odds events for game and tip-off")
+    return matching[0] if matching else None
 
 
 def _load_cert(path: str) -> dict[str, Any]:

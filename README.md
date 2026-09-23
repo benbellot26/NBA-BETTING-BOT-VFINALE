@@ -260,3 +260,13 @@ The first V1.6 merge to `main` also runs the market diagnostic once automaticall
 ## V1.6.1 — early-season spend protection
 
 Regular-season research checks both teams' five-completed-game minimum **before** reserving or requesting paid odds. If every upcoming game fails the sample gate, it records NO_ANALYSIS and spends zero odds requests. Preseason plumbing still uses its explicit research-only mode. The persistent daily budget is a cap on HTTP requests, **not** a cap on provider credits: one request may cost multiple credits depending on markets and plan. A corrupt budget ledger now fails closed rather than silently resetting to zero.
+
+## V1.6.2 — PIT close integrity and market pairing
+
+Live Pinnacle closes now record HTTP response-receipt time, never the
+request start. Close evidence is rejected when the response arrives at/after
+tip or the quote timestamp is outside the original entry-to-pre-tip window.
+The NBA market diagnostic now requires valid paired Pinnacle ML, Spread and
+Total contracts **on the same event**; other bookmakers cannot falsely make
+Pinnacle coverage appear ready. It is manual-only to avoid unrequested paid
+API calls on a routine code merge.

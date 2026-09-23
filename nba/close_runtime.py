@@ -98,34 +98,48 @@ def capture(*, paper_path: str, close_path: str, mode: str = "live",
     added = 0
     failures: list[str] = []
     if not pending:
-        return {"added": 0, "pending": 0, "failures": []}
+        return {"added": 0, "pending": 0, "failures": [], "odds_api_requests": 0}
+    all_pending_count = len(pending)
+    attempted_requests = 0
     live_events: list[dict[str, Any]] | None = None
+    received_at: datetime | None = None
     historical_cache: dict[str, Any] = {}
     if mode == "live":
-        due=[row for row in pending if 0 <= (_dt(row["commence_time"])-now).total_seconds()/60.0 <= live_window_minutes]
+        due = [row for row in pending
+               if 0 <= (_dt(row["commence_time"]) - now).total_seconds() / 60.0
+               <= live_window_minutes]
         if not due:
-            return {"added": 0, "pending": len(pending), "failures": [], "odds_api_requests": 0}
-        pending=due
+            return {"added": 0, "pending": all_pending_count, "failures": [],
+                    "odds_api_requests": 0}
+        pending = due
         try:
             reserve_odds_request(path=odds_budget_path, purpose="live_close")
+            attempted_requests += 1
             live_events = [normalize_game(row) for row in fetch_nba_odds(bookmakers="pinnacle")]
+            # Never backdate receipt to the start of a slow HTTP request.
+            received_at = datetime.now(timezone.utc)
         except Exception as exc:
-            return {"added": 0, "pending": len(pending), "failures": [f"live_odds:{exc}"], "odds_api_requests": 1}
+            return {"added": 0, "pending": all_pending_count,
+                    "failures": [f"live_odds:{exc}"],
+                    "odds_api_requests": attempted_requests}
     for entry in pending:
         try:
             tip = _dt(entry["commence_time"])
             if mode == "live":
-                minutes = (tip - now).total_seconds() / 60.0
-                if not 0 <= minutes <= live_window_minutes:
+                if received_at is None or received_at >= tip:
+                    raise ValueError("live odds arrived at or after tip-off")
+                minutes = (tip - received_at).total_seconds() / 60.0
+                if not 0 < minutes <= live_window_minutes:
                     continue
                 event = _match(entry, live_events or [])
-                captured = now.isoformat()
+                captured = received_at.isoformat()
             else:
                 if tip > now:
                     continue
                 target = (tip - timedelta(minutes=1)).isoformat()
                 if target not in historical_cache:
                     reserve_odds_request(path=odds_budget_path, purpose="historical_close")
+                    attempted_requests += 1
                     historical_cache[target] = fetch_historical_nba_odds(
                         date_iso=target, bookmakers="pinnacle")
                 payload = historical_cache[target]
@@ -137,14 +151,26 @@ def capture(*, paper_path: str, close_path: str, mode: str = "live",
                 raise ValueError("event not found in close snapshot")
             pinnacle = next((book for book in event["markets"][entry["market"]]
                                  if str(book.get("bookmaker") or "").lower() == "pinnacle"), None)
-            if pinnacle is None or not fresh_quote(pinnacle.get("last_update"), captured, max_age_minutes=30):
+            if pinnacle is None or not fresh_quote(
+                pinnacle.get("last_update"), captured, max_age_minutes=30
+            ):
                 raise ValueError("Pinnacle close quote is stale or missing")
+            # fresh_quote tolerates two minutes of provider clock skew in
+            # ordinary market analysis. Immutable close evidence cannot:
+            # both the quote and the HTTP receipt must be pre-tip, and the
+            # quote must not predate the original paper entry.
+            quote_at = _dt(str(pinnacle["last_update"]))
+            if (quote_at < _dt(str(entry["entry_at"]))
+                    or quote_at > _dt(captured)
+                    or quote_at >= tip):
+                raise ValueError("Pinnacle quote is outside the entry-to-pre-tip close window")
             append_jsonl(close_path, _close_row(entry, event, captured, mode))
             closed.add(entry["entry_key"])
             added += 1
         except Exception as exc:
             failures.append(f"{entry.get('entry_key')}:{exc}")
-    return {"added": added, "pending": len(pending) - added, "failures": failures}
+    return {"added": added, "pending": all_pending_count - added,
+            "failures": failures, "odds_api_requests": attempted_requests}
 
 
 def main() -> None:

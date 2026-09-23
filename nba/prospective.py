@@ -70,6 +70,7 @@ def record_final_forecasts(live_run: dict[str, Any], path: str | Path) -> dict[s
             "baseline_margin_sd": score["margin_sd"],
             "baseline_total_sd": score["total_sd"],
             "role": "PIT_FINAL_FORECAST",
+             "probabilities": game.get("probabilities"),
             "input_manifest": game.get("input_manifest"),
         }
         append_jsonl(target, record)

@@ -142,6 +142,7 @@ def run(
         "schema": "pulsar-nba-live-run-v3", "target_date": target_date,
         "season": season, "generated_at": started_at, "status": "OK",
         "source_provider": "official-nba", "failures": [], "games": [],
+        "odds_api_requests": 0,
     }
     # The live path always constructs its OWN official provider. JSON files,
     # local bundles and CI fixtures have no route to live/paper certification.
@@ -198,6 +199,7 @@ def run(
         return out
 
     try:
+        out["odds_api_requests"] += 1
         odds = [normalize_game(item) for item in fetch_nba_odds()]
         # Analysis time is AFTER quote acquisition, never the earlier start
         # of a slow source request. The FINAL gate uses this later timestamp.

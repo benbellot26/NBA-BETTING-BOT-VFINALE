@@ -6,13 +6,21 @@ from typing import Any
 from urllib.parse import urlsplit
 from urllib.request import Request, urlopen
 
-DEFAULT_HEADERS = {
+BASE_HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/153 Safari/537.36",
     "Accept": "application/json,text/plain,*/*",
     "Accept-Language": "en-US,en;q=0.9",
-    "Origin": "https://www.nba.com",
-    "Referer": "https://www.nba.com/",
 }
+
+def _default_headers(url: str) -> dict[str, str]:
+    """Use provider-appropriate headers; never send NBA origin to third parties."""
+    headers = dict(BASE_HEADERS)
+    host = (urlsplit(url).hostname or "").lower()
+    if host == "nba.com" or host.endswith(".nba.com"):
+        headers.update({"Origin": "https://www.nba.com", "Referer": "https://www.nba.com/"})
+    elif host == "official.nba.com" or host.endswith(".official.nba.com"):
+        headers.update({"Referer": "https://official.nba.com/"})
+    return headers
 
 
 class ProviderError(RuntimeError):
@@ -26,7 +34,7 @@ def _safe_endpoint(url: str) -> str:
 
 def get_bytes(url: str, *, headers: dict[str, str] | None = None,
               timeout: float = 20.0, retries: int = 2) -> bytes:
-    merged = dict(DEFAULT_HEADERS)
+    merged = _default_headers(url)
     if headers:
         merged.update(headers)
     error: Exception | None = None
@@ -54,3 +62,27 @@ def get_json(url: str, **kwargs: Any) -> Any:
         return json.loads(get_text(url, **kwargs))
     except json.JSONDecodeError:
         raise ProviderError(f"invalid JSON from {_safe_endpoint(url)}") from None
+
+
+def get_json_with_headers(url: str, *, headers: dict[str, str] | None = None,
+                          timeout: float = 20.0, retries: int = 2) -> tuple[Any, dict[str, str]]:
+    """JSON plus response headers for provider diagnostics such as quota telemetry."""
+    merged = _default_headers(url)
+    if headers:
+        merged.update(headers)
+    error: Exception | None = None
+    for attempt in range(retries + 1):
+        try:
+            request = Request(url, headers=merged)
+            with urlopen(request, timeout=timeout) as response:  # nosec B310
+                body = response.read().decode("utf-8", errors="replace")
+                return json.loads(body), {str(k).lower(): str(v) for k, v in response.headers.items()}
+        except json.JSONDecodeError:
+            raise ProviderError(f"invalid JSON from {_safe_endpoint(url)}") from None
+        except Exception as exc:
+            error = exc
+            if attempt < retries:
+                time.sleep(0.5 * (2 ** attempt))
+    code = getattr(error, "code", None)
+    detail = f"HTTP {code}" if isinstance(code, int) else type(error).__name__
+    raise ProviderError(f"GET {_safe_endpoint(url)} failed: {detail}") from None

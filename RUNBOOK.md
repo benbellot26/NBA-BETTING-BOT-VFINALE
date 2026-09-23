@@ -1,0 +1,77 @@
+# Pulsar NBA runbook
+
+## Repository boundaries
+
+Source code and frozen reference state live on main. Mutable prospective evidence lives on runtime-data. Do not merge runtime-data into main.
+
+## Required secret
+
+ODDS_API_KEY is required by the live research workflow. Store it in GitHub repository Actions secrets. Never commit it to a file.
+
+## Scheduled flow
+
+Pulsar NBA Live Research runs every 20 minutes during the usual NBA game window in UTC. It hydrates the prior runtime-data state, runs the live model, records FINAL paper-eligible candidates, captures a near-close Pinnacle snapshot when available, uploads an artifact, then persists runtime back to runtime-data.
+
+Pulsar NBA Daily Evidence runs once per day. It settles completed paper entries from the official NBA schedule, joins captured closes, refreshes proper scores and CLV diagnostics, and writes a certification candidate.
+
+Pulsar NBA Provider Smoke checks the official schedule, NBA.com team stats and the official injury-report feed once per day.
+
+## Fail-closed rules
+
+No real BET is authorized if any of these conditions fail:
+
+- market-specific betting certification;
+- FINAL timing window of 5-30 minutes before tip;
+- valid official schedule match;
+- usable NBA team/player stats;
+- official injury report parsed successfully;
+- rotation construction;
+- fresh executable market;
+- paired Pinnacle no-vig benchmark;
+- model edge threshold;
+- conservative lower-bound edge threshold;
+- robust sharp-edge threshold;
+- resolved key-player uncertainty.
+
+Missing data produces NO_ANALYSIS or NO_BET rather than silently substituting a weaker source.
+
+## Paper cohort
+
+Before certification, candidates that clear every operational, uncertainty and sharp-market condition can be marked paper_eligible. They remain NO_BET. One entry per game/market/selection is stored prospectively.
+
+Paper staking is hypothetical. It uses the same conservative lower-bound quarter-Kelly logic and exposure caps, but it is not user execution and must not be reported as realized return.
+
+## Closing prices
+
+The normal path captures Pinnacle shortly before tip using current odds.
+
+If a close is missed and the Odds API plan provides historical access, run:
+
+    python -m nba.close_runtime --mode historical
+
+Historical featured-market snapshots are a paid Odds API feature. The historical endpoint returns the closest snapshot at or before the requested timestamp. A later postgame price must never be substituted for a missing close.
+
+## Certification
+
+The runtime certification candidate is written to runtime/evidence/certification_candidate.json on runtime-data.
+
+Current minimum evidence is intentionally strict:
+
+- at least 600 independent games globally;
+- at least 400 settled observations per market;
+- ECE no greater than 0.05;
+- at least 400 paired sharp observations per market;
+- at least 100 comparable CLV observations per market;
+- positive CLV rate of at least 0.52.
+
+These are necessary gates, not proof of profitability. Predictive changes require a new generation/policy decision and prospective validation.
+
+## Manual health commands
+
+    python -m nba.preflight
+    python -m unittest discover -s tests -v
+    python -m nba.provider_smoke
+
+## Season timing
+
+The 2026-27 regular season begins October 20, 2026. Before regular-season data exists, empty current-season stats should not be treated as evidence. The provider smoke may use the previous season only to verify that the upstream stats endpoint is healthy; production predictions remain point-in-time to their target season.

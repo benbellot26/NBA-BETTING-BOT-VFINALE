@@ -1,0 +1,12 @@
+{
+  "schema": "pulsar-nba-certification-v1",
+  "model_generation": "pulsar-nba-v1-structural",
+  "probability_policy_id": "pulsar-nba-probability-policy-v1",
+  "certified": false,
+  "markets": {
+    "ML": {"betting_certified": false},
+    "SPREAD": {"betting_certified": false},
+    "TOTAL": {"betting_certified": false}
+  },
+  "reason": "Prospective evidence has not yet earned betting certification."
+}

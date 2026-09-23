@@ -1,5 +1,7 @@
 from __future__ import annotations
 from datetime import datetime,timezone
+import argparse
+from pathlib import Path
 import json
 from .injury_pdf import fetch_latest_report
 from .nba_stats_api import team_stats
@@ -39,6 +41,13 @@ def run()->dict:
     return result
 
 def main()->None:
-    result=run();print(json.dumps(result,indent=2))
+    parser=argparse.ArgumentParser()
+    parser.add_argument("--output")
+    args=parser.parse_args()
+    result=run()
+    payload=json.dumps(result,indent=2)
+    if args.output:
+        target=Path(args.output);target.parent.mkdir(parents=True,exist_ok=True);target.write_text(payload,encoding="utf-8")
+    print(payload)
     if not result["ok"]:raise SystemExit(1)
 if __name__=="__main__":main()

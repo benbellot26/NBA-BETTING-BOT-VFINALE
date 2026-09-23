@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 from datetime import date, timedelta
+import hashlib
 import json
 from pathlib import Path
 from typing import Any
 
 from .nba_stats_api import player_stats, team_stats
-from .snapshot_store import persist_snapshot
+from .snapshot_store import canonical_bytes, persist_snapshot
 from .team_inputs import build_team_metrics
 from .teams import team_info
 
@@ -18,6 +19,50 @@ def prior_day_cutoff(game_date: str) -> str:
     return (date.fromisoformat(game_date) - timedelta(days=1)).strftime("%m/%d/%Y")
 
 
+def _verify_stats_cache(*, payload: dict[str, Any], season: str, date_to: str,
+                        snapshot_root: str) -> dict[str, Any]:
+    """Bind cached model features to the original locally persisted snapshot.
+
+    A SHA proves consistency of stored bytes, NOT authenticity of NBA.com
+    collection time or provenance. Never repair a corrupt cache silently.
+    """
+    if payload.get("season") != season or payload.get("date_to") != date_to:
+        raise RuntimeError("stats cache has mismatched PIT cutoff")
+    meta = payload.get("snapshot")
+    if not isinstance(meta, dict) or meta.get("kind") != "nba_stats" or (
+        meta.get("source") != "stats.nba.com"
+    ) or meta.get("observed_at") != payload.get("observed_at"):
+        raise RuntimeError("stats cache has inconsistent snapshot metadata")
+    try:
+        windows = payload["advanced_windows"]
+        if not isinstance(windows, dict):
+            raise ValueError("missing advanced windows")
+        # The original snapshot was serialized with integer window keys.
+        # JSON cache loads them as strings; normalize before recomputing its
+        # canonical SHA to avoid a false mismatch from key sort order.
+        normalized = {int(key): rows for key, rows in windows.items()}
+        if len(normalized) != len(windows) or set(normalized) != set(WINDOWS):
+            raise ValueError("invalid advanced windows")
+        content = {key: value for key, value in payload.items()
+                   if key != "snapshot"}
+        content["advanced_windows"] = normalized
+        data = canonical_bytes(content)
+        digest = hashlib.sha256(data).hexdigest()
+        if meta.get("sha256") != digest or meta.get("bytes") != len(data):
+            raise RuntimeError("stats cache digest mismatch")
+        source = Path(str(meta["path"])).resolve()
+        allowed = (Path(snapshot_root).resolve() / "nba_stats").resolve()
+        if not source.is_relative_to(allowed):
+            raise RuntimeError("stats cache snapshot path is outside the snapshot root")
+        if not source.is_file():
+            raise RuntimeError("original stats snapshot missing")
+        if hashlib.sha256(source.read_bytes()).hexdigest() != digest:
+            raise RuntimeError("original stats snapshot digest mismatch")
+    except (KeyError, TypeError, ValueError, OSError) as exc:
+        raise RuntimeError(f"stats cache integrity check failed: {type(exc).__name__}") from None
+    return payload
+
+
 def acquire_stat_pack(
     *, season: str, observed_at: str, game_date: str,
     snapshot_root: str = "runtime/snapshots",
@@ -26,9 +71,10 @@ def acquire_stat_pack(
     cache = Path(snapshot_root) / "stats_cache" / f"{season}_{date_to.replace('/', '-')}.json"
     if cache.exists():
         payload = json.loads(cache.read_text(encoding="utf-8"))
-        if payload.get("season") != season or payload.get("date_to") != date_to:
-            raise RuntimeError("stats cache has mismatched PIT cutoff")
-        return payload
+        return _verify_stats_cache(
+            payload=payload, season=season, date_to=date_to,
+            snapshot_root=snapshot_root,
+        )
     advanced = {n: team_stats(season=season, last_n_games=n, measure_type="Advanced", date_to=date_to)
                 for n in WINDOWS}
     base = team_stats(season=season, measure_type="Base", date_to=date_to)

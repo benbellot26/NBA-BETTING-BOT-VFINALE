@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 import json
 from pathlib import Path
 from typing import Any
@@ -11,6 +11,25 @@ from .team_inputs import build_team_metrics
 from .teams import team_info
 
 WINDOWS = (0, 30, 15, 10, 5)
+CACHE_MAX_AGE_HOURS = 12.0
+
+
+def _dt(value: str) -> datetime:
+    parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    if parsed.tzinfo is None:
+        raise ValueError("stats cache timestamp requires timezone")
+    return parsed.astimezone(timezone.utc)
+
+
+def _cache_is_fresh(payload: dict[str, Any], *, observed_at: str, season: str,
+                    date_to: str, max_age_hours: float = CACHE_MAX_AGE_HOURS) -> bool:
+    if payload.get("season") != season or payload.get("date_to") != date_to:
+        return False
+    try:
+        age = (_dt(observed_at) - _dt(str(payload["observed_at"]))).total_seconds() / 3600
+    except (KeyError, TypeError, ValueError):
+        return False
+    return 0 <= age <= max_age_hours
 
 
 def prior_day_cutoff(game_date: str) -> str:
@@ -26,9 +45,10 @@ def acquire_stat_pack(
     cache = Path(snapshot_root) / "stats_cache" / f"{season}_{date_to.replace('/', '-')}.json"
     if cache.exists():
         payload = json.loads(cache.read_text(encoding="utf-8"))
-        if payload.get("season") != season or payload.get("date_to") != date_to:
-            raise RuntimeError("stats cache has mismatched PIT cutoff")
-        return payload
+        if _cache_is_fresh(payload, observed_at=observed_at, season=season, date_to=date_to):
+            return payload
+        # Never relabel an old snapshot with a newer observation time. Refresh
+        # from the provider so lineage continues to describe when bytes were seen.
     advanced = {n: team_stats(season=season, last_n_games=n, measure_type="Advanced", date_to=date_to)
                 for n in WINDOWS}
     base = team_stats(season=season, measure_type="Base", date_to=date_to)

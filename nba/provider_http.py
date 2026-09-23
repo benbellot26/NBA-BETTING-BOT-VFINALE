@@ -10,9 +10,23 @@ DEFAULT_HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/153 Safari/537.36",
     "Accept": "application/json,text/plain,*/*",
     "Accept-Language": "en-US,en;q=0.9",
+}
+
+NBA_BROWSER_HEADERS = {
     "Origin": "https://www.nba.com",
     "Referer": "https://www.nba.com/",
 }
+
+
+def headers_for(url: str, overrides: dict[str, str] | None = None) -> dict[str, str]:
+    """Use provider-specific headers instead of leaking NBA browser headers everywhere."""
+    merged = dict(DEFAULT_HEADERS)
+    host = (urlsplit(url).hostname or "").lower()
+    if host == "nba.com" or host.endswith(".nba.com"):
+        merged.update(NBA_BROWSER_HEADERS)
+    if overrides:
+        merged.update(overrides)
+    return merged
 
 
 class ProviderError(RuntimeError):
@@ -26,9 +40,7 @@ def _safe_endpoint(url: str) -> str:
 
 def get_bytes(url: str, *, headers: dict[str, str] | None = None,
               timeout: float = 20.0, retries: int = 2) -> bytes:
-    merged = dict(DEFAULT_HEADERS)
-    if headers:
-        merged.update(headers)
+    merged = headers_for(url, headers)
     error: Exception | None = None
     for attempt in range(retries + 1):
         try:

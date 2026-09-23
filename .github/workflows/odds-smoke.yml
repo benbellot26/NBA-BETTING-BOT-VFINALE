@@ -14,6 +14,7 @@ jobs:
   key-check:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    # Safe to rerun after rotating ODDS_API_KEY: no credential is logged.
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v7

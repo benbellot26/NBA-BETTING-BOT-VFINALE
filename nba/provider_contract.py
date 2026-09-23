@@ -13,6 +13,10 @@ from .schedule import ScheduleGame, games_on, season_for_date
 SCHEMA = "pulsar-nba-provider-snapshot-v1"
 
 
+class NoGamesOnTargetDate(ValueError):
+    """No scheduled game on the requested NBA date; do not fetch paid data."""
+
+
 def _dt(value: str) -> datetime:
     parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
     if parsed.tzinfo is None:
@@ -57,9 +61,9 @@ class ProviderSnapshot:
         schedule = [ScheduleGame(**row) for row in self.schedule]
         slate = games_on(schedule, self.target_date)
         if not slate:
-            raise ValueError("provider snapshot has no target-date games")
-        if any(_dt(game.commence_time) <= captured for game in slate):
-            raise ValueError("provider snapshot must be captured before every target tip")
+            raise NoGamesOnTargetDate("provider snapshot has no target-date games")
+        if not any(_dt(game.commence_time) > captured for game in slate):
+            raise ValueError("provider snapshot has no upcoming target-date games")
         return self
 
     def fingerprint(self) -> str:

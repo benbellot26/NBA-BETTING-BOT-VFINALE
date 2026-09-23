@@ -11,15 +11,17 @@ from zoneinfo import ZoneInfo
 from . import MODEL_GENERATION, PROBABILITY_POLICY_ID
 from .acquisition import fetch_nba_odds
 from .data_quality import assess
-from .injury_pdf import fetch_latest_report, game_report_ready
-from .live_inputs import acquire_stat_pack, prior_day_cutoff, team_id, team_metric_from_pack
+from .injury_pdf import game_report_ready
+from .live_inputs import prior_day_cutoff, team_id, team_metric_from_pack
 from .lineage import build_input_manifest
 from .market import fresh_quote
 from .odds_normalizer import normalize_game
 from .pipeline import analyze_game
+from .provider_contract import NoGamesOnTargetDate
+from .providers import OfficialNBAProvider
 from .prospective import record_paper_candidates, record_final_forecasts
 from .rotation_projection import normalized_player_name, project_rotation
-from .schedule import fetch_schedule, games_on, season_for_date
+from .schedule import ScheduleGame, games_on, season_for_date
 from .schedule_context import build_game_context
 from .snapshot_store import persist_snapshot
 from .teams import canonical_team
@@ -132,71 +134,91 @@ def run(
     snapshot_root: str = "runtime/snapshots",
     certification_path: str = "data/nba_betting_certification.json",
     paper_path: str = "runtime/evidence/paper_entries.jsonl",
+    forecasts_path: str = "runtime/evidence/final_forecasts.jsonl",
 ) -> dict[str, Any]:
-    now = datetime.now(timezone.utc)
-    observed = now.isoformat()
+    started_at = datetime.now(timezone.utc).isoformat()
     season = season_for_date(target_date)
     out: dict[str, Any] = {
-        "schema": "pulsar-nba-live-run-v2", "target_date": target_date,
-        "season": season, "generated_at": observed, "status": "OK",
-        "failures": [], "games": [],
+        "schema": "pulsar-nba-live-run-v3", "target_date": target_date,
+        "season": season, "generated_at": started_at, "status": "OK",
+        "source_provider": "official-nba", "failures": [], "games": [],
     }
+    # The live path always constructs its OWN official provider. JSON files,
+    # local bundles and CI fixtures have no route to live/paper certification.
     try:
-        schedule = fetch_schedule()
-        slate = games_on(schedule, target_date)
+        source = OfficialNBAProvider(snapshot_root=snapshot_root).capture(
+            target_date=target_date)
+        if source.provider_id != "official-nba" or source.role != "PROSPECTIVE_SOURCE":
+            raise ValueError("untrusted source refused by live runtime")
+        source.validated()
+        schedule = [ScheduleGame(**row) for row in source.schedule]
+        stats = source.stats
+        injuries = source.injuries
+        if not injuries.get("team_status"):
+            raise ValueError("official injury report has no submission rows")
+        if stats.get("date_to") != prior_day_cutoff(target_date):
+            raise ValueError("stats PIT cutoff mismatch")
+        injury_snapshot = persist_snapshot(
+            snapshot_root, kind="injuries", observed_at=injuries["reported_at"],
+            payload=injuries, source=injuries.get("source_url") or "official-nba")
+    except NoGamesOnTargetDate:
+        out["status"] = "NO_GAMES"
+        Path(output).parent.mkdir(parents=True, exist_ok=True)
+        Path(output).write_text(json.dumps(out, indent=2), encoding="utf-8")
+        return out
     except Exception as exc:
         out["status"] = "NO_ANALYSIS"
-        out["failures"].append(f"schedule:{exc}")
-        schedule, slate = [], []
+        out["failures"].append(f"official_provider:{exc}")
+        Path(output).parent.mkdir(parents=True, exist_ok=True)
+        Path(output).write_text(json.dumps(out, indent=2), encoding="utf-8")
+        return out
 
+    source_time = datetime.fromisoformat(source.captured_at.replace("Z", "+00:00"))
+    slate = [game for game in games_on(schedule, target_date)
+             if _minutes_to(game.commence_time, source_time) > 0]
     if not slate:
-        if out["status"] == "OK":
-            out["status"] = "NO_GAMES"
+        out["status"] = "NO_GAMES"
+        Path(output).parent.mkdir(parents=True, exist_ok=True)
+        Path(output).write_text(json.dumps(out, indent=2), encoding="utf-8")
+        return out
+
+    # Pre-check source freshness WITHOUT calling the paid Odds API. The
+    # placeholder odds_at is only for this source-only gate, not a market quote.
+    source_quality = assess(
+        analyzed_at=source.captured_at, team_stats_at=stats["observed_at"],
+        injury_report_at=injuries["reported_at"], odds_at=source.captured_at)
+    eligible = any(game_report_ready(injuries, game_date=game.game_date,
+                                    home=game.home, away=game.away) for game in slate)
+    if not source_quality["eligible"] or not eligible:
+        out["status"] = "NO_ANALYSIS"
+        out["failures"].append("odds_skipped:mandatory_source_unavailable_or_stale")
+        out["source_quality"] = source_quality
         Path(output).parent.mkdir(parents=True, exist_ok=True)
         Path(output).write_text(json.dumps(out, indent=2), encoding="utf-8")
         return out
 
     try:
-        stats = acquire_stat_pack(season=season, game_date=target_date,
-                                  observed_at=observed, snapshot_root=snapshot_root)
-        if stats.get("date_to") != prior_day_cutoff(target_date):
-            raise RuntimeError("stats PIT cutoff mismatch")
+        odds = [normalize_game(item) for item in fetch_nba_odds()]
+        # Analysis time is AFTER quote acquisition, never the earlier start
+        # of a slow source request. The FINAL gate uses this later timestamp.
+        now = datetime.now(timezone.utc)
+        observed = now.isoformat()
+        out["generated_at"] = observed
+        persist_snapshot(snapshot_root, kind="odds", observed_at=observed,
+                         payload=odds, source="the-odds-api")
     except Exception as exc:
-        stats = None
-        out["failures"].append(f"stats:{exc}")
-
-    try:
-        injuries = fetch_latest_report(season=season)
-        if not injuries.get("team_status"):
-            raise RuntimeError("official injury PDF has no team submission rows")
-        injury_snapshot = persist_snapshot(snapshot_root, kind="injuries",
-                         observed_at=injuries["reported_at"],
-                         payload=injuries, source=injuries["source_url"])
-    except Exception as exc:
-        injuries = None
-        out["failures"].append(f"injuries:{exc}")
-
-    # Avoid spending odds credits while required statistics/injury sources are down.
-    if stats is not None and injuries is not None and any(
-        game_report_ready(injuries, game_date=game.game_date,
-                          home=game.home, away=game.away) for game in slate
-    ):
-        try:
-            odds = [normalize_game(item) for item in fetch_nba_odds()]
-            persist_snapshot(snapshot_root, kind="odds", observed_at=observed,
-                             payload=odds, source="the-odds-api")
-        except Exception as exc:
-            odds = []
-            out["failures"].append(f"odds:{exc}")
-
-    else:
         odds = []
-        out["failures"].append("odds_skipped:required_statistics_or_official_injuries_unavailable")
+        out["failures"].append(f"odds:{exc}")
+        now = datetime.now(timezone.utc)
+        observed = now.isoformat()
+        out["generated_at"] = observed
 
     cert = _load_cert(certification_path)
     if stats is not None and odds and injuries is not None:
         for game in slate:
             try:
+                if _minutes_to(game.commence_time, now) <= 0:
+                    raise ValueError("tipoff already passed before odds acquisition completed")
                 if not game_report_ready(injuries, game_date=game.game_date,
                                          home=game.home, away=game.away):
                     raise ValueError("game injury report not submitted for both teams")
@@ -277,7 +299,7 @@ def run(
         out["status"] = "NO_ANALYSIS"
     Path(output).parent.mkdir(parents=True, exist_ok=True)
     out["paper_recording"] = record_paper_candidates(out, paper_path)
-    out["final_forecasts"] = record_final_forecasts(out, "runtime/evidence/final_forecasts.jsonl")
+    out["final_forecasts"] = record_final_forecasts(out, forecasts_path)
     Path(output).write_text(json.dumps(out, indent=2), encoding="utf-8")
     return out
 

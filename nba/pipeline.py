@@ -39,15 +39,15 @@ def analyze_game(
     certification: dict[str, Any] | None = None,
     home_rotation: Iterable[RotationPlayer] | None = None,
     away_rotation: Iterable[RotationPlayer] | None = None,
-    market_fresh: bool = True, betting_window_ok: bool = False,
+    market_fresh: bool = True, betting_window_ok: bool = False,\n    lineup_uncertain: bool = False,
 ) -> dict[str, Any]:
     projection, components = project_game(home=home, away=away, context=context,
                                            home_rotation=home_rotation, away_rotation=away_rotation)
     surface = probability_surface(projection, spread_line=spread_line, total_line=total_line)
     payload = prediction_payload(projection, surface, components=components)
     probabilities = asdict(surface)
-    unresolved = projection.data_quality == "LINEUP_UNCERTAIN"
-    bands = intervals(probabilities, data_quality=projection.data_quality,
+    unresolved = projection.data_quality == "LINEUP_UNCERTAIN" or lineup_uncertain
+    bands = intervals(probabilities, data_quality="LINEUP_UNCERTAIN" if unresolved else projection.data_quality,
                       market_fresh=market_fresh, unresolved_key_player=unresolved)
     payload["probability_intervals"] = bands
     payload["decision"] = {"candidates": []}

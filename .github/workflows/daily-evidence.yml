@@ -1,15 +1,10 @@
-name: Pulsar NBA Live Research
+name: Pulsar NBA Daily Evidence
 on:
   workflow_dispatch:
-    inputs:
-      target_date:
-        description: YYYY-MM-DD (optional)
-        required: false
   schedule:
-    - cron: '*/20 17-23 * * *'
-    - cron: '*/20 0-6 * * *'
+    - cron: '30 12 * * *'
 jobs:
-  live:
+  evidence:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -27,27 +22,16 @@ jobs:
           if git show-ref --verify --quiet refs/remotes/origin/runtime-data; then
             git archive origin/runtime-data runtime 2>/dev/null | tar -x || true
           fi
-      - name: Run live research and close capture
-        env:
-          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
-          TARGET_DATE: ${{ inputs.target_date }}
-        run: |
-          if [ -z "$ODDS_API_KEY" ]; then
-            echo "ODDS_API_KEY is not configured; live research skipped."
-            exit 0
-          fi
-          DATE_ARG=""
-          if [ -n "$TARGET_DATE" ]; then DATE_ARG="--date $TARGET_DATE"; fi
-          python -m nba.live_runtime $DATE_ARG --output runtime/live_run.json
-          python -m nba.close_runtime --mode live
-      - name: Upload runtime evidence
+      - name: Settle and refresh evidence
+        run: python -m nba.performance_runtime
+      - name: Upload evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: pulsar-nba-runtime-${{ github.run_id }}
-          path: runtime/
+          name: pulsar-nba-evidence-${{ github.run_id }}
+          path: runtime/evidence/
           if-no-files-found: ignore
-          retention-days: 30
+          retention-days: 90
       - name: Persist runtime-data branch
         run: |
           if [ ! -d runtime ]; then exit 0; fi
@@ -59,5 +43,5 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           git add -f runtime
           if git diff --cached --quiet; then exit 0; fi
-          git commit -m "runtime: prospective NBA evidence [skip ci]"
+          git commit -m "runtime: settle NBA paper evidence [skip ci]"
           git push origin runtime-data

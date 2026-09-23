@@ -1,14 +1,16 @@
 from __future__ import annotations
 import argparse,json
 from dataclasses import asdict
-from datetime import date,datetime,timezone
+from datetime import datetime,timezone
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 from .acquisition import fetch_nba_odds
 from .injury_pdf import fetch_latest_report
 from .live_inputs import acquire_stat_pack,team_id,team_metric_from_pack
 from .odds_normalizer import normalize_game
 from .pipeline import analyze_game
+from .prospective import record_paper_candidates
 from .rotation_projection import project_rotation
 from .schedule import fetch_schedule,games_on,season_for_date
 from .schedule_context import build_game_context
@@ -25,29 +27,27 @@ def _minutes_to(commence:str,now:datetime)->float:
     if not commence:return 9999
     dt=datetime.fromisoformat(commence.replace("Z","+00:00"));dt=dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
     return (dt.astimezone(timezone.utc)-now).total_seconds()/60
-def _injury_map(report:dict[str,Any],team:str)->dict[str,str]:
-    return {str(r["player_name"]):str(r["status"]) for r in report.get("records") or [] if canonical_team(str(r.get("team") or ""))==canonical_team(team)}
+def _injury_map(report:dict[str,Any],team:str)->dict[str,str]:return {str(r["player_name"]):str(r["status"]) for r in report.get("records") or [] if canonical_team(str(r.get("team") or ""))==canonical_team(team)}
 def _line(books:list[dict[str,Any]],selection:str)->float|None:
     search=[b for b in books if str(b.get("bookmaker") or "").lower()=="pinnacle"] or books
     for b in search:
         for r in b.get("selections") or []:
             if r.get("selection")==selection and r.get("point") is not None:return float(r["point"])
     return None
-def _match(game,rows):
-    return next((r for r in rows if canonical_team(r["home"])==canonical_team(game.home) and canonical_team(r["away"])==canonical_team(game.away)),None)
+def _match(game,rows):return next((r for r in rows if canonical_team(r["home"])==canonical_team(game.home) and canonical_team(r["away"])==canonical_team(game.away)),None)
 def _load_cert(path:str)->dict[str,Any]:
-    try:return json.loads(Path(path).read_text(encoding="utf-8"))
+    runtime=Path("runtime/evidence/certification_candidate.json");source=runtime if runtime.exists() else Path(path)
+    try:return json.loads(source.read_text(encoding="utf-8"))
     except Exception:return {"certified":False,"markets":{}}
 
-def run(*,target_date:str,output:str,snapshot_root:str="runtime/snapshots",certification_path:str="data/nba_betting_certification.json")->dict[str,Any]:
+def run(*,target_date:str,output:str,snapshot_root:str="runtime/snapshots",certification_path:str="data/nba_betting_certification.json",paper_path:str="runtime/evidence/paper_entries.jsonl")->dict[str,Any]:
     now=datetime.now(timezone.utc);observed=now.isoformat();season=season_for_date(target_date);out={"schema":"pulsar-nba-live-run-v1","target_date":target_date,"season":season,"generated_at":observed,"status":"OK","failures":[],"games":[]}
     try:schedule=fetch_schedule();slate=games_on(schedule,target_date)
     except Exception as exc:out["status"]="NO_ANALYSIS";out["failures"].append(f"schedule:{exc}");schedule=[];slate=[]
     if not slate:
         if out["status"]=="OK":out["status"]="NO_GAMES"
         Path(output).parent.mkdir(parents=True,exist_ok=True);Path(output).write_text(json.dumps(out,indent=2),encoding="utf-8");return out
-    try:
-        odds=[normalize_game(x) for x in fetch_nba_odds()];persist_snapshot(snapshot_root,kind="odds",observed_at=observed,payload=odds,source="the-odds-api")
+    try:odds=[normalize_game(x) for x in fetch_nba_odds()];persist_snapshot(snapshot_root,kind="odds",observed_at=observed,payload=odds,source="the-odds-api")
     except Exception as exc:out["status"]="NO_ANALYSIS";out["failures"].append(f"odds:{exc}");odds=[]
     try:stats=acquire_stat_pack(season=season,observed_at=observed,snapshot_root=snapshot_root)
     except Exception as exc:out["status"]="NO_ANALYSIS";out["failures"].append(f"stats:{exc}");stats=None
@@ -70,8 +70,9 @@ def run(*,target_date:str,output:str,snapshot_root:str="runtime/snapshots",certi
             analysis=analyze_game(home=home,away=away,context=ctx,spread_line=spread,total_line=total,books_by_market=market["markets"],certification=cert,home_rotation=hr,away_rotation=ar,market_fresh=True,betting_window_ok=timing)
             analysis["commence_time"]=game.commence_time;analysis["injury_report_at"]=injuries["reported_at"];analysis["rotation_home"]=[asdict(x) for x in hr];analysis["rotation_away"]=[asdict(x) for x in ar];out["games"].append(analysis)
     if not out["games"] and out["status"]=="OK":out["status"]="NO_ANALYSIS"
-    Path(output).parent.mkdir(parents=True,exist_ok=True);Path(output).write_text(json.dumps(out,indent=2),encoding="utf-8");return out
+    Path(output).parent.mkdir(parents=True,exist_ok=True);Path(output).write_text(json.dumps(out,indent=2),encoding="utf-8")
+    out["paper_recording"]=record_paper_candidates(out,paper_path);Path(output).write_text(json.dumps(out,indent=2),encoding="utf-8");return out
 
 def main()->None:
-    p=argparse.ArgumentParser();p.add_argument("--date",default=date.today().isoformat());p.add_argument("--output",default="runtime/live_run.json");p.add_argument("--snapshot-root",default="runtime/snapshots");p.add_argument("--certification",default="data/nba_betting_certification.json");a=p.parse_args();r=run(target_date=a.date,output=a.output,snapshot_root=a.snapshot_root,certification_path=a.certification);print(json.dumps({"status":r["status"],"games":len(r["games"]),"failures":r["failures"]},indent=2))
+    p=argparse.ArgumentParser();p.add_argument("--date",default=datetime.now(ZoneInfo("America/New_York")).date().isoformat());p.add_argument("--output",default="runtime/live_run.json");p.add_argument("--snapshot-root",default="runtime/snapshots");p.add_argument("--certification",default="data/nba_betting_certification.json");p.add_argument("--paper",default="runtime/evidence/paper_entries.jsonl");a=p.parse_args();r=run(target_date=a.date,output=a.output,snapshot_root=a.snapshot_root,certification_path=a.certification,paper_path=a.paper);print(json.dumps({"status":r["status"],"games":len(r["games"]),"paper":r.get("paper_recording"),"failures":r["failures"]},indent=2))
 if __name__=="__main__":main()

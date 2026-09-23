@@ -39,6 +39,7 @@ def build(root: str | Path = "runtime") -> dict[str, Any]:
         "last_live_status":live.get("status"),
         "last_target_date":live.get("target_date"),
         "last_odds_api_requests":int(live.get("odds_api_requests") or 0),
+        "odds_budget_unit":"REQUESTS_NOT_PROVIDER_CREDITS",
         "provider_ok":provider.get("ok"),
         "provider_details":provider.get("providers") or {},
         "market_coverage_ready":market.get("coverage_ready"),

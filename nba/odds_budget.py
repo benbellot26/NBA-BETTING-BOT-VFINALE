@@ -18,13 +18,26 @@ def _limit(value: int | None = None) -> int:
     return raw
 
 def _read(path: Path, day: str, limit: int) -> dict[str, Any]:
-    try:
-        data=json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, ValueError, TypeError):
-        data={}
+    if path.exists():
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError, TypeError):
+            raise OddsBudgetExceeded("Odds API budget ledger unreadable; fail closed") from None
+        if (not isinstance(data, dict)
+                or data.get("schema") != "pulsar-nba-odds-budget-v1"
+                or not isinstance(data.get("used"), int)
+                or isinstance(data.get("used"), bool)
+                or data["used"] < 0
+                or not isinstance(data.get("purposes"), dict)):
+            raise OddsBudgetExceeded("Odds API budget ledger invalid; fail closed")
+        if data.get("utc_date") == day and data["used"] > limit:
+            raise OddsBudgetExceeded("Odds API budget already exceeds configured limit")
+    else:
+        data = {}
     if data.get("utc_date") != day:
-        data={"schema":"pulsar-nba-odds-budget-v1","utc_date":day,"used":0,"purposes":{}}
-    data["limit"]=limit
+        data = {"schema":"pulsar-nba-odds-budget-v1","utc_date":day,
+                "used":0,"purposes":{}}
+    data["limit"] = limit
     return data
 
 def reserve(*, path: str | Path = "runtime/odds_budget.json", purpose: str,

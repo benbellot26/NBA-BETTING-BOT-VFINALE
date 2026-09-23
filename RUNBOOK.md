@@ -208,3 +208,7 @@ The market-smoke workflow is also triggered once by the V1.6 merge because its w
 ### Odds request budget and explicit preseason mode
 
 Paid/current market calls share `runtime/odds_budget.json`. The default daily cap is 48 requests and can be lowered with `NBA_ODDS_DAILY_REQUEST_BUDGET`. A request is reserved before the HTTP call, so failures still count conservatively. `python -m nba.live_runtime --mode preseason` never writes paper entries or FINAL prospective forecasts. Scheduled production research remains `regular`.
+
+## V1.6.1 — odds request budget caveat
+
+NBA_ODDS_DAILY_REQUEST_BUDGET counts outbound requests; The Odds API can charge multiple quota credits per request. The market-smoke response reports provider quota telemetry separately. Inspect the available quota before scheduling repeated market pulls. If runtime/odds_budget.json is corrupt or unreadable, fix or restore it; the bot must not silently reset today's spend.

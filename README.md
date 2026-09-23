@@ -4,7 +4,7 @@ Pulsar NBA is a standalone NBA probability, market, research and decision engine
 
 ## Current status
 
-**V1.2.0 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
+**V1.2.1 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
 
 ## End-to-end chain
 
@@ -78,7 +78,7 @@ System/paper ROI is hypothetical and must not be represented as realized user RO
 ## Automated workflows
 
 - **Pulsar NBA CI** — install, compile, preflight and unit tests on `main`.
-- **Pulsar NBA Provider Smoke** — daily health check of official schedule/stats/injury sources.
+- **Pulsar NBA Provider Smoke** — weekly health check of official schedule/stats/injury sources.
 - **Pulsar NBA Live Research** — scheduled pregame analysis, paper cohort and live Pinnacle close capture.
 - **Pulsar NBA Daily Evidence** — settlement and performance/certification refresh.
 
@@ -147,3 +147,25 @@ API key alone cannot provide NBA player and team statistical history.
 The runtime now **skips paid odds acquisition** whenever the statistics or
 official injury data are missing. A failed provider never causes an
 uncertified bet. No purchased third-party data subscription is assumed.
+
+## Locally captured PIT research bundle
+
+If official NBA endpoints work from your computer but are blocked from a
+GitHub-hosted runner, the new `nba.pit_bundle` tool provides a *manual,
+research-only* capture/import path without any second API key. It fetches the
+official schedule, season/player inputs and official injury report locally,
+then records capture timestamps and a SHA-256 checksum:
+
+    python -m nba.pit_bundle collect --date 2026-11-01 --output nba_local_bundle.json
+
+To run the structural model on that bundle:
+
+    python -m nba.pit_bundle analyze --input nba_local_bundle.json --output nba_offline_report.json
+
+You can optionally provide a JSON map of NBA game IDs to the market's
+`spread_line` and `total_line` using `--lines path/to/lines.json`.
+All imported files are explicitly **UNVERIFIED_OFFLINE_RESEARCH**: the
+checksum catches accidental changes but does not prove when or where a
+file was originally created. Offline analysis NEVER adds a paper cohort,
+certifies a model or authorizes a real bet. A manual bundle is not a
+substitute for independent live provider validation.

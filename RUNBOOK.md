@@ -14,7 +14,7 @@ Pulsar NBA Live Research runs every 20 minutes during the usual NBA game window 
 
 Pulsar NBA Daily Evidence runs once per day. It settles completed paper entries from the official NBA schedule, joins captured closes, refreshes proper scores and CLV diagnostics, and writes a certification candidate.
 
-Pulsar NBA Provider Smoke checks the official schedule, NBA.com team stats and the official injury-report feed once per day.
+Pulsar NBA Provider Smoke checks the official schedule, NBA.com team stats and the official injury-report feed once per week.
 
 ## Fail-closed rules
 
@@ -114,3 +114,24 @@ after a complete PIT provider end-to-end test is green. Changing the variable
 does not install a missing stats provider or guarantee Pinnacle coverage.
 
 Official-provider smoke runs weekly while the route remains blocked.
+
+## Offline research on a local computer
+
+`nba.pit_bundle collect` is an optional way to test data access from a
+non-GitHub network. It collects official schedule, PIT stats and injury
+reports only; it does not need an odds API secret. It requires the target
+season to have enough actual statistical history, and a submitted injury
+report for both teams. A failure is returned, not simulated data.
+
+    python -m pip install .
+    python -m nba.pit_bundle collect --date 2026-11-01 --output nba_local_bundle.json
+    python -m nba.pit_bundle analyze --input nba_local_bundle.json --output nba_offline_report.json
+
+For optional line probabilities, supply a JSON object keyed by game ID:
+
+    {"0022600123": {"spread_line": -3.5, "total_line": 226.5}}
+
+and add `--lines lines.json` to the analyze command. An imported bundle
+is always unverified research, even if the filename or timestamp looks
+official. SHA-256 detects corruption, not authentic collection time.
+Never upload a personal Odds API secret in the bundle.

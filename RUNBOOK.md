@@ -152,3 +152,26 @@ for diagnosis. Whole-slate calibration is computed independently from paper
 selection to avoid hiding model errors by reporting only high-edge picks.
 Late historical closes refresh the derived performance view, never rewrite
 settlement rows. These changes do not re-enable any scheduled workflow.
+
+## V1.4 provider contract and CI end-to-end test
+
+All new acquisition adapters must return a validated ProviderSnapshot.
+The contract enforces season, target date, previous-day statistical cutoff,
+timezone-aware timestamps and pre-tip capture. Provider adapters do not gain
+permission to certify data merely by implementing the interface.
+
+Run the network-free integration proof with:
+
+    python -m nba.e2e_dryrun
+
+This deterministic fixture is SYNTHETIC_CI_ONLY and is prohibited from the
+prospective evidence branch. It is intended to catch integration regressions
+while external providers remain unavailable from GitHub-hosted runners.
+
+V2 shadow review readiness is evaluated separately:
+
+    python -m nba.v2_gate --input runtime/research/v2_shadow.json
+
+A review_ready=true result never modifies the champion, never writes a live
+certification and never authorizes a wager. Promotion requires explicit source
+changes, human review and a fresh prospective validation cycle.

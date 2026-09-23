@@ -13,7 +13,6 @@ from .acquisition import fetch_nba_odds
 from .data_quality import assess
 from .injury_pdf import fetch_latest_report, game_report_ready
 from .live_inputs import acquire_stat_pack, prior_day_cutoff, team_id, team_metric_from_pack
-from .lineage import build_input_manifest
 from .market import fresh_quote
 from .odds_normalizer import normalize_game
 from .pipeline import analyze_game
@@ -169,7 +168,7 @@ def run(
         injuries = fetch_latest_report(season=season)
         if not injuries.get("team_status"):
             raise RuntimeError("official injury PDF has no team submission rows")
-        injury_snapshot = persist_snapshot(snapshot_root, kind="injuries",
+        persist_snapshot(snapshot_root, kind="injuries",
                          observed_at=injuries["reported_at"],
                          payload=injuries, source=injuries["source_url"])
     except Exception as exc:
@@ -256,17 +255,8 @@ def run(
                 analysis["commence_time"] = game.commence_time
                 analysis["injury_report_at"] = injuries["reported_at"]
                 analysis["input_quality"] = freshness
-                input_manifest = build_input_manifest(
-                    context=context, home=home, away=away,
-                    home_rotation=hr, away_rotation=ar,
-                    stats_snapshot_sha256=stats["snapshot"]["sha256"],
-                    stats_observed_at=stats["observed_at"],
-                    injury_snapshot_sha256=injury_snapshot["sha256"],
-                    injury_reported_at=injuries["reported_at"],
-                )
-                analysis["input_manifest"] = input_manifest
-                analysis["source_snapshot_sha256"] = input_manifest["sha256"]
-                analysis["source_snapshot_at"] = input_manifest["source_snapshot_at"]
+                analysis["source_snapshot_sha256"] = stats["snapshot"]["sha256"]
+                analysis["source_snapshot_at"] = stats["observed_at"]
                 analysis["rotation_home"] = [asdict(row) for row in hr]
                 analysis["rotation_away"] = [asdict(row) for row in ar]
                 out["games"].append(analysis)

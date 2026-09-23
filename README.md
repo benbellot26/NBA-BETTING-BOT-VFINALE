@@ -4,7 +4,7 @@ Pulsar NBA is a standalone NBA probability, market, research and decision engine
 
 ## Current status
 
-**V1.3.0 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
+**V1.2.1 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
 
 ## End-to-end chain
 
@@ -169,28 +169,3 @@ checksum catches accidental changes but does not prove when or where a
 file was originally created. Offline analysis NEVER adds a paper cohort,
 certifies a model or authorizes a real bet. A manual bundle is not a
 substitute for independent live provider validation.
-
-## V1.3 — predictive input lineage and unbiased calibration
-
-Each LIVE FINAL forecast records a SHA-256 input manifest binding the exact
-team statistics snapshot, official injury PDF snapshot, player rotations,
-team strengths, calendar context, model generation and probability policy.
-A later paper selection can legitimately use an updated injury snapshot,
-but must carry its OWN manifest. The first eligible FINAL forecast is frozen
-for the unselected whole-slate evaluation cohort.
-
-`nba.evidence_audit` checks the chain from predictive inputs to forecast,
-paper entry, close, official outcome and settlement. It checks timestamp
-ordering, incompatible betting contracts and portfolio result arithmetic.
-Its result is a research audit, never permission to wager.
-
-Brier, LogLoss and ECE now report an **all-analyzable-games** ML, HOME
-spread and OVER total cohort separately from selected paper bets. A push
-has no binary label and is excluded from that market's resolved sample.
-Certification requires prospective whole-slate calibration in addition
-to selected paper/paired-sharp/CLV evidence. Late historical closes are
-joined into derived performance without changing the original settlement.
-
-The project is still **not live-operational** on GitHub-hosted runners:
-official NBA stats/schedule/injuries failed independent provider checks.
-The `NBA_LIVE_ENABLED` repository variable must remain unset/false.

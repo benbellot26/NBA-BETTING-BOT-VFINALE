@@ -135,20 +135,3 @@ and add `--lines lines.json` to the analyze command. An imported bundle
 is always unverified research, even if the filename or timestamp looks
 official. SHA-256 detects corruption, not authentic collection time.
 Never upload a personal Odds API secret in the bundle.
-
-## V1.3 evidence audit and outcome calibration
-
-The prospective chain now preserves a full predictive input SHA-256 manifest
-for every eligible FINAL forecast and later qualifying paper entry. Do not
-edit these ledgers or substitute corrected post-tip inputs. Source checksums
-prove consistency with the stored bytes, not third-party data authenticity.
-
-After the official-score settlement, the daily workflow runs:
-
-    python -m nba.evidence_audit
-
-A failed audit blocks normal runtime-data persistence and leaves an artifact
-for diagnosis. Whole-slate calibration is computed independently from paper
-selection to avoid hiding model errors by reporting only high-edge picks.
-Late historical closes refresh the derived performance view, never rewrite
-settlement rows. These changes do not re-enable any scheduled workflow.

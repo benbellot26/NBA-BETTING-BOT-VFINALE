@@ -48,10 +48,16 @@ def _close_row(entry: dict[str, Any], event: dict[str, Any],
         raise ValueError("Pinnacle close missing")
     options = [row for row in pin.get("selections") or [] if row.get("selection") == left]
     pair = None
-    for candidate in options:
-        pair = paired_price_rows(pin, left, right, point=candidate.get("point"))
-        if pair is not None:
-            break
+    # Prefer the exact entry contract for price CLV. If the exact line no
+    # longer exists, retain a paired current line for line CLV only.
+    entry_point = entry.get("line")
+    if entry["market"] != "ML" and entry_point is not None:
+        pair = paired_price_rows(pin, left, right, point=float(entry_point))
+    if pair is None:
+        for candidate in options:
+            pair = paired_price_rows(pin, left, right, point=candidate.get("point"))
+            if pair is not None:
+                break
     if pair is None:
         raise ValueError("paired Pinnacle close at the same contract missing")
     left_row, right_row = pair

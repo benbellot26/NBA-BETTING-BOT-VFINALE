@@ -27,3 +27,7 @@ A wager cannot be authorized unless its market is certified, prices are fresh, P
 ## Research
 
 Sensitivity and ablation tooling is read-only. Any learned coefficients, alternate distributions, referee effects, garbage-time effects or player-impact systems must be promoted explicitly after chronological/OOS and prospective evidence.
+
+## Operational boundary
+
+Synthetic rehearsal, local bundles and JSON snapshots are separate trust domains and cannot authorize paper/live evidence. Live prediction accepts only an OfficialNBAProvider prospective snapshot. Settlement reads final scores through OfficialOutcomeProvider. Operational health and provider availability are observable state, not model features and not betting certification.

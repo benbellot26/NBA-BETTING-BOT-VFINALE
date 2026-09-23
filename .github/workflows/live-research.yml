@@ -44,6 +44,10 @@ jobs:
       - name: Refresh health report
         if: always()
         run: python -m nba.health_report || true
+      - name: Operational alert gate
+        if: always()
+        run: |
+          if [ -f runtime/health.json ]; then python -m nba.health_gate; fi
       - name: Upload runtime evidence
         if: always()
         uses: actions/upload-artifact@v4

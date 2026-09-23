@@ -16,10 +16,10 @@ def _default_headers(url: str) -> dict[str, str]:
     """Use provider-appropriate headers; never send NBA origin to third parties."""
     headers = dict(BASE_HEADERS)
     host = (urlsplit(url).hostname or "").lower()
-    if host == "nba.com" or host.endswith(".nba.com"):
-        headers.update({"Origin": "https://www.nba.com", "Referer": "https://www.nba.com/"})
-    elif host == "official.nba.com" or host.endswith(".official.nba.com"):
+    if host == "official.nba.com" or host.endswith(".official.nba.com"):
         headers.update({"Referer": "https://official.nba.com/"})
+    elif host == "nba.com" or host.endswith(".nba.com"):
+        headers.update({"Origin": "https://www.nba.com", "Referer": "https://www.nba.com/"})
     return headers
 
 

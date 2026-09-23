@@ -4,7 +4,7 @@ Pulsar NBA is a standalone NBA probability, market, research and decision engine
 
 ## Current status
 
-**V1.5.0 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
+**V1.6.0 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
 
 ## End-to-end chain
 
@@ -241,3 +241,16 @@ It checks imports, the deterministic six-market end-to-end fixture, locked
 source-controlled certification and the static live-workflow guards. A green
 software check is not proof of upstream provider availability. The report
 explicitly says live_operational=false and odds_api_requests=0.
+
+## V1.6 — preseason operations
+
+V1.6 prepares the operating layer without pretending that future NBA evidence already exists. It adds provider-specific HTTP headers, an outcome-provider adapter for settlement, two synthetic rehearsals, persistent health reporting, a workflow alert gate, manual NBA/Pinnacle market diagnostics with quota telemetry, exact-entry-line preference for closing CLV, DST coverage tests, and crash-safe runtime-data persistence.
+
+Useful commands:
+
+    python -m nba.preseason_rehearsal
+    python -m nba.full_rehearsal
+    python -m nba.health_report
+    python -m nba.market_smoke
+
+The market smoke is manual because it consumes one Odds API request. Synthetic rehearsals are never prospective evidence.

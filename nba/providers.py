@@ -5,7 +5,7 @@ from dataclasses import dataclass, replace
 from datetime import datetime, timezone
 from pathlib import Path
 import json
-from typing import Any
+from typing import Any, Callable
 
 from .injury_pdf import fetch_latest_report
 from .live_inputs import acquire_stat_pack
@@ -90,10 +90,11 @@ class JsonSnapshotProvider:
 @dataclass
 class OfficialOutcomeProvider:
     """Read-only official schedule outcomes used by the settlement runtime."""
+    fetcher: Callable[[], list[ScheduleGame]] = fetch_schedule
     provider_id: str = "official-nba-schedule"
 
     def finals(self) -> dict[str, ScheduleGame]:
         return {
-            game.game_id: game for game in fetch_schedule()
+            game.game_id: game for game in self.fetcher()
             if game.final and game.home_score is not None and game.away_score is not None
         }

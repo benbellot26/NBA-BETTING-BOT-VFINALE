@@ -1,5 +1,5 @@
 """Pulsar NBA package identity."""
-VERSION="1.2.1"
+VERSION="1.3.0"
 MODEL_GENERATION="pulsar-nba-v1-structural"
 PROBABILITY_POLICY_ID="pulsar-nba-probability-policy-v1"
 SCHEMA="pulsar-nba-probability-v1"

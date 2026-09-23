@@ -129,3 +129,21 @@ Configure the repository secret `ODDS_API_KEY` for live odds. No credential is c
 Historical Pinnacle close recovery is available with `python -m nba.close_runtime --mode historical` when the Odds API subscription supports historical data.
 
 See `ARCHITECTURE.md` and `RUNBOOK.md`.
+
+## Current acquisition limitation (September 2026)
+
+The Odds API authentication smoke is green, but official NBA schedule requests
+return HTTP 403, NBA stats time out, and the expected official injury PDF
+index is not available on GitHub-hosted runners. Independent ESPN/CDN probes
+also returned 403. These are production-blocking provider-access failures,
+not proof that NBA markets or prediction code are broken.
+
+The scheduled live and daily-evidence jobs are therefore **disabled by default**.
+They require an explicit repository Actions variable `NBA_LIVE_ENABLED=true`
+after independent provider smoke checks succeed. Keep it disabled until a
+reachable, point-in-time-safe NBA stats/injury source is integrated. The Odds
+API key alone cannot provide NBA player and team statistical history.
+
+The runtime now **skips paid odds acquisition** whenever the statistics or
+official injury data are missing. A failed provider never causes an
+uncertified bet. No purchased third-party data subscription is assumed.

@@ -13,6 +13,8 @@ on:
     - cron: '*/20 0-6 * * *'
 jobs:
   live:
+    # Disabled until all required NBA providers are verified on GitHub Actions.
+    if: ${{ vars.NBA_LIVE_ENABLED == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write

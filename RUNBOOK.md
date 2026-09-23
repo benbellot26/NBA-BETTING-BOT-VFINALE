@@ -100,3 +100,17 @@ Then choose chronological, pre-registered train and holdout cutoffs:
 The V2 result is SHADOW and cannot change the live decision code. Do not
 present synthetic tests or historical data downloaded today as true archived
 point-in-time performance.
+
+## Operational stop after provider smoke (23 September 2026)
+
+The Odds API secret is valid (non-billable sports-catalog test passed). However,
+GitHub-hosted runners cannot currently access the NBA official stats/schedule,
+and alternate ESPN/CDN endpoints were also blocked. Treat the live system as
+NOT OPERATIONAL for NBA predictions until that is resolved.
+
+`NBA_LIVE_ENABLED` is an explicit GitHub Actions variable. Absent or false
+disables scheduled live research and daily evidence. It should become true only
+after a complete PIT provider end-to-end test is green. Changing the variable
+does not install a missing stats provider or guarantee Pinnacle coverage.
+
+Official-provider smoke runs weekly while the route remains blocked.

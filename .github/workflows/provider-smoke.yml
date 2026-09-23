@@ -7,7 +7,7 @@ on:
       - 'nba/provider_smoke.py'
       - '.github/workflows/provider-smoke.yml'
   schedule:
-    - cron: '10 13 * * *'
+    - cron: '10 13 * * 3'
 jobs:
   smoke:
     runs-on: ubuntu-latest

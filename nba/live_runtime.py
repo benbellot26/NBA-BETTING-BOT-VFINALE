@@ -156,14 +156,6 @@ def run(
         return out
 
     try:
-        odds = [normalize_game(item) for item in fetch_nba_odds()]
-        persist_snapshot(snapshot_root, kind="odds", observed_at=observed,
-                         payload=odds, source="the-odds-api")
-    except Exception as exc:
-        odds = []
-        out["failures"].append(f"odds:{exc}")
-
-    try:
         stats = acquire_stat_pack(season=season, game_date=target_date,
                                   observed_at=observed, snapshot_root=snapshot_root)
         if stats.get("date_to") != prior_day_cutoff(target_date):
@@ -182,6 +174,23 @@ def run(
     except Exception as exc:
         injuries = None
         out["failures"].append(f"injuries:{exc}")
+
+    # Avoid spending odds credits while required statistics/injury sources are down.
+    if stats is not None and injuries is not None and any(
+        game_report_ready(injuries, game_date=game.game_date,
+                          home=game.home, away=game.away) for game in slate
+    ):
+        try:
+            odds = [normalize_game(item) for item in fetch_nba_odds()]
+            persist_snapshot(snapshot_root, kind="odds", observed_at=observed,
+                             payload=odds, source="the-odds-api")
+        except Exception as exc:
+            odds = []
+            out["failures"].append(f"odds:{exc}")
+
+    else:
+        odds = []
+        out["failures"].append("odds_skipped:required_statistics_or_official_injuries_unavailable")
 
     cert = _load_cert(certification_path)
     if stats is not None and odds and injuries is not None:

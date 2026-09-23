@@ -40,7 +40,7 @@ def at(hour, minute):
 class CloseChronologyTests(unittest.TestCase):
     def _capture(self, directory, response_time, quote):
         paper=Path(directory)/"paper.jsonl"
-        paper.write_text(json.dumps(ENTRY)+"\\n",encoding="utf-8")
+        paper.write_text(json.dumps(ENTRY)+chr(10),encoding="utf-8")
         close=Path(directory)/"close.jsonl"
         budget=Path(directory)/"budget.json"
         with patch("nba.close_runtime.datetime", wraps=datetime) as clock, patch(

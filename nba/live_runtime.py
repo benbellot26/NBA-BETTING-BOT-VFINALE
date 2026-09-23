@@ -16,7 +16,7 @@ from .live_inputs import acquire_stat_pack, prior_day_cutoff, team_id, team_metr
 from .market import fresh_quote
 from .odds_normalizer import normalize_game
 from .pipeline import analyze_game
-from .prospective import record_paper_candidates
+from .prospective import record_paper_candidates, record_final_forecasts
 from .rotation_projection import normalized_player_name, project_rotation
 from .schedule import fetch_schedule, games_on, season_for_date
 from .schedule_context import build_game_context
@@ -241,6 +241,8 @@ def run(
                 analysis["commence_time"] = game.commence_time
                 analysis["injury_report_at"] = injuries["reported_at"]
                 analysis["input_quality"] = freshness
+                analysis["source_snapshot_sha256"] = stats["snapshot"]["sha256"]
+                analysis["source_snapshot_at"] = stats["observed_at"]
                 analysis["rotation_home"] = [asdict(row) for row in hr]
                 analysis["rotation_away"] = [asdict(row) for row in ar]
                 out["games"].append(analysis)
@@ -251,6 +253,7 @@ def run(
         out["status"] = "NO_ANALYSIS"
     Path(output).parent.mkdir(parents=True, exist_ok=True)
     out["paper_recording"] = record_paper_candidates(out, paper_path)
+    out["final_forecasts"] = record_final_forecasts(out, "runtime/evidence/final_forecasts.jsonl")
     Path(output).write_text(json.dumps(out, indent=2), encoding="utf-8")
     return out
 

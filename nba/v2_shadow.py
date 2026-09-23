@@ -49,14 +49,15 @@ def validate_row(row: dict[str, Any]) -> dict[str, Any]:
     )
     if not snapshot <= forecast < tip < outcome:
         raise ValueError("look-ahead: source/forecast/tip/outcome timestamps are not ordered")
+    clean = dict(row)
     for name in ("baseline_margin", "baseline_total", "baseline_margin_sd",
                  "baseline_total_sd", "home_score", "away_score"):
-        _number(row, name)
-    if row["baseline_margin_sd"] <= 0 or row["baseline_total_sd"] <= 0:
+        clean[name] = _number(row, name)
+    if clean["baseline_margin_sd"] <= 0 or clean["baseline_total_sd"] <= 0:
         raise ValueError("positive baseline standard deviations are required")
-    if row["home_score"] < 0 or row["away_score"] < 0:
+    if clean["home_score"] < 0 or clean["away_score"] < 0:
         raise ValueError("final scores must be nonnegative")
-    return row
+    return clean
 
 
 def load_jsonl(path: str | Path) -> list[dict[str, Any]]:

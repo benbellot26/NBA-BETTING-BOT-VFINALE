@@ -1,0 +1,25 @@
+name: Pulsar NBA Odds Key Smoke
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'nba/odds_smoke.py'
+      - '.github/workflows/odds-smoke.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  key-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Validate Odds API authentication without exposing credentials
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: python -m nba.odds_smoke

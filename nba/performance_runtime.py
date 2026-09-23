@@ -1,5 +1,6 @@
 from __future__ import annotations
 import argparse,json
+from datetime import datetime,timezone
 from pathlib import Path
 from typing import Any
 from .certification import certify
@@ -15,9 +16,17 @@ def _read(path:str|Path)->list[dict[str,Any]]:
 def _write(path:str|Path,payload:Any)->None:
     p=Path(path);p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(payload,indent=2,sort_keys=True),encoding="utf-8")
 
-def refresh(*,paper_path:str,close_path:str,settled_path:str,performance_path:str,certification_path:str)->dict[str,Any]:
+def refresh(*,paper_path:str,close_path:str,settled_path:str,performance_path:str,certification_path:str,forecasts_path:str="runtime/evidence/final_forecasts.jsonl",outcomes_path:str="runtime/evidence/final_outcomes.jsonl")->dict[str,Any]:
     paper=_read(paper_path);closes={r["entry_key"]:r for r in _read(close_path)};settled_existing={r["entry_key"]:r for r in _read(settled_path)}
     finals={g.game_id:g for g in fetch_schedule() if g.final and g.home_score is not None and g.away_score is not None}
+    forecasts=_read(forecasts_path)
+    known={r.get("game_id") for r in _read(outcomes_path)}
+    for forecast in forecasts:
+        game_id=forecast.get("game_id")
+        if game_id in known or game_id not in finals:continue
+        final=finals[game_id]
+        append_jsonl(outcomes_path,{"game_id":game_id,"home_score":final.home_score,"away_score":final.away_score,"outcome_at":datetime.now(timezone.utc).isoformat(),"source":"official_nba_schedule"})
+        known.add(game_id)
     for entry in paper:
         key=entry["entry_key"]
         if key in settled_existing or entry["game_id"] not in finals:continue
@@ -33,5 +42,5 @@ def refresh(*,paper_path:str,close_path:str,settled_path:str,performance_path:st
     state=certify(evidence);state["evidence"]=evidence;_write(performance_path,evidence);_write(certification_path,state);return state
 
 def main()->None:
-    p=argparse.ArgumentParser();p.add_argument("--paper",default="runtime/evidence/paper_entries.jsonl");p.add_argument("--close",default="runtime/evidence/close_ledger.jsonl");p.add_argument("--settled",default="runtime/evidence/settled_paper.jsonl");p.add_argument("--performance",default="runtime/evidence/performance.json");p.add_argument("--certification",default="runtime/evidence/certification_candidate.json");a=p.parse_args();print(json.dumps(refresh(paper_path=a.paper,close_path=a.close,settled_path=a.settled,performance_path=a.performance,certification_path=a.certification),indent=2))
+    p=argparse.ArgumentParser();p.add_argument("--paper",default="runtime/evidence/paper_entries.jsonl");p.add_argument("--close",default="runtime/evidence/close_ledger.jsonl");p.add_argument("--settled",default="runtime/evidence/settled_paper.jsonl");p.add_argument("--performance",default="runtime/evidence/performance.json");p.add_argument("--certification",default="runtime/evidence/certification_candidate.json");p.add_argument("--forecasts",default="runtime/evidence/final_forecasts.jsonl");p.add_argument("--outcomes",default="runtime/evidence/final_outcomes.jsonl");a=p.parse_args();print(json.dumps(refresh(paper_path=a.paper,close_path=a.close,settled_path=a.settled,performance_path=a.performance,certification_path=a.certification,forecasts_path=a.forecasts,outcomes_path=a.outcomes),indent=2))
 if __name__=="__main__":main()

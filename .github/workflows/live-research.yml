@@ -1,4 +1,7 @@
 name: Pulsar NBA Live Research
+concurrency:
+  group: nba-runtime-data
+  cancel-in-progress: false
 on:
   workflow_dispatch:
     inputs:

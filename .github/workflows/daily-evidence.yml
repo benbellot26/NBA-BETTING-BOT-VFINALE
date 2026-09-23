@@ -1,4 +1,7 @@
 name: Pulsar NBA Daily Evidence
+concurrency:
+  group: nba-runtime-data
+  cancel-in-progress: false
 on:
   workflow_dispatch:
   schedule:

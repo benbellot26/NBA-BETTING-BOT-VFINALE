@@ -1,0 +1,37 @@
+name: Pulsar NBA Manual Market Smoke
+on:
+  workflow_dispatch:
+    inputs:
+      require_events:
+        description: Fail unless current NBA + Pinnacle ML/spread/total coverage exists
+        type: boolean
+        required: false
+        default: false
+permissions:
+  contents: read
+jobs:
+  market-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - run: python -m pip install .
+      - name: Check current NBA markets (one Odds API request)
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          REQUIRE_EVENTS: ${{ inputs.require_events }}
+        run: |
+          ARG=""
+          if [ "$REQUIRE_EVENTS" = "true" ]; then ARG="--require-events"; fi
+          python -m nba.market_smoke $ARG --output runtime/market_smoke.json
+      - name: Upload market diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pulsar-nba-market-smoke-${{ github.run_id }}
+          path: runtime/market_smoke.json
+          if-no-files-found: ignore
+          retention-days: 30

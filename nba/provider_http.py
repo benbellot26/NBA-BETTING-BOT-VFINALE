@@ -66,3 +66,31 @@ def get_json(url: str, **kwargs: Any) -> Any:
         return json.loads(get_text(url, **kwargs))
     except json.JSONDecodeError:
         raise ProviderError(f"invalid JSON from {_safe_endpoint(url)}") from None
+
+
+def get_bytes_with_headers(url: str, *, headers: dict[str, str] | None = None,
+                           timeout: float = 20.0, retries: int = 2) -> tuple[bytes, dict[str, str]]:
+    """Fetch bytes plus response headers without ever exposing URL query secrets."""
+    merged = headers_for(url, headers)
+    error: Exception | None = None
+    for attempt in range(retries + 1):
+        try:
+            request = Request(url, headers=merged)
+            with urlopen(request, timeout=timeout) as response:  # nosec B310
+                meta = {str(k).lower(): str(v) for k, v in response.headers.items()}
+                return response.read(), meta
+        except Exception as exc:
+            error = exc
+            if attempt < retries:
+                time.sleep(0.5 * (2 ** attempt))
+    code = getattr(error, "code", None)
+    detail = f"HTTP {code}" if isinstance(code, int) else type(error).__name__
+    raise ProviderError(f"GET {_safe_endpoint(url)} failed: {detail}") from None
+
+
+def get_json_with_headers(url: str, **kwargs: Any) -> tuple[Any, dict[str, str]]:
+    raw, headers = get_bytes_with_headers(url, **kwargs)
+    try:
+        return json.loads(raw.decode("utf-8", errors="replace")), headers
+    except json.JSONDecodeError:
+        raise ProviderError(f"invalid JSON from {_safe_endpoint(url)}") from None

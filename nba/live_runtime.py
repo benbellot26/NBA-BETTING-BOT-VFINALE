@@ -135,13 +135,24 @@ def run(
     certification_path: str = "data/nba_betting_certification.json",
     paper_path: str = "runtime/evidence/paper_entries.jsonl",
     forecasts_path: str = "runtime/evidence/final_forecasts.jsonl",
+    mode: str = "regular",
+    minimum_team_games: int | None = None,
 ) -> dict[str, Any]:
+    if mode not in {"regular", "preseason"}:
+        raise ValueError("mode must be regular or preseason")
+    rehearsal = mode == "preseason"
+    minimum_games = (0 if rehearsal else 5) if minimum_team_games is None else int(minimum_team_games)
+    if minimum_games < 0:
+        raise ValueError("minimum_team_games must be nonnegative")
     started_at = datetime.now(timezone.utc).isoformat()
     season = season_for_date(target_date)
     out: dict[str, Any] = {
         "schema": "pulsar-nba-live-run-v3", "target_date": target_date,
         "season": season, "generated_at": started_at, "status": "OK",
-        "source_provider": "official-nba", "failures": [], "games": [],
+        "source_provider": "official-nba", "mode": mode,
+        "role": "PRESEASON_REHEARSAL_ONLY" if rehearsal else "PROSPECTIVE_RESEARCH",
+        "evidence_eligible": not rehearsal,
+        "failures": [], "games": [],
     }
     # The live path always constructs its OWN official provider. JSON files,
     # local bundles and CI fixtures have no route to live/paper certification.
@@ -213,7 +224,7 @@ def run(
         observed = now.isoformat()
         out["generated_at"] = observed
 
-    cert = _load_cert(certification_path)
+    cert = {"certified": False, "markets": {}} if rehearsal else _load_cert(certification_path)
     if stats is not None and odds and injuries is not None:
         for game in slate:
             try:
@@ -242,8 +253,9 @@ def run(
                 team_rows = stats["advanced_windows"].get(0) or stats["advanced_windows"].get("0") or []
                 gp = {canonical_team(str(row.get("TEAM_NAME") or "")): int(row.get("GP") or 0)
                       for row in team_rows}
-                if min(gp.get(game.home, 0), gp.get(game.away, 0)) < 5:
-                    raise ValueError("early-season sample below five completed team games")
+                if min(gp.get(game.home, 0), gp.get(game.away, 0)) < minimum_games:
+                    raise ValueError(
+                        f"early-season sample below {minimum_games} completed team games")
                 home = team_metric_from_pack(game.home, stats, home=True)
                 away = team_metric_from_pack(game.away, stats, home=False)
                 hr = project_rotation(
@@ -298,8 +310,12 @@ def run(
     if not out["games"]:
         out["status"] = "NO_ANALYSIS"
     Path(output).parent.mkdir(parents=True, exist_ok=True)
-    out["paper_recording"] = record_paper_candidates(out, paper_path)
-    out["final_forecasts"] = record_final_forecasts(out, forecasts_path)
+    if rehearsal:
+        out["paper_recording"] = {"added": 0, "reason": "preseason_rehearsal_never_writes_evidence"}
+        out["final_forecasts"] = {"added": 0, "reason": "preseason_rehearsal_never_writes_evidence"}
+    else:
+        out["paper_recording"] = record_paper_candidates(out, paper_path)
+        out["final_forecasts"] = record_final_forecasts(out, forecasts_path)
     Path(output).write_text(json.dumps(out, indent=2), encoding="utf-8")
     return out
 
@@ -311,9 +327,12 @@ def main() -> None:
     parser.add_argument("--snapshot-root", default="runtime/snapshots")
     parser.add_argument("--certification", default="data/nba_betting_certification.json")
     parser.add_argument("--paper", default="runtime/evidence/paper_entries.jsonl")
+    parser.add_argument("--forecasts", default="runtime/evidence/final_forecasts.jsonl")
+    parser.add_argument("--mode", choices=("regular", "preseason"), default="regular")
     args = parser.parse_args()
     result = run(target_date=args.date, output=args.output, snapshot_root=args.snapshot_root,
-                 certification_path=args.certification, paper_path=args.paper)
+                 certification_path=args.certification, paper_path=args.paper,
+                 forecasts_path=args.forecasts, mode=args.mode)
     print(json.dumps({"status": result["status"], "games": len(result["games"]),
                       "paper": result.get("paper_recording"), "failures": result["failures"]}, indent=2))
 

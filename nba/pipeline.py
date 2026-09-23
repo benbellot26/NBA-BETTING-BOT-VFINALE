@@ -39,7 +39,8 @@ def analyze_game(
     certification: dict[str, Any] | None = None,
     home_rotation: Iterable[RotationPlayer] | None = None,
     away_rotation: Iterable[RotationPlayer] | None = None,
-    market_fresh: bool = True, betting_window_ok: bool = False,\n    lineup_uncertain: bool = False,
+    market_fresh: bool = True, betting_window_ok: bool = False,
+    lineup_uncertain: bool = False,
 ) -> dict[str, Any]:
     projection, components = project_game(home=home, away=away, context=context,
                                            home_rotation=home_rotation, away_rotation=away_rotation)

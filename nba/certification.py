@@ -53,7 +53,7 @@ def certify(evidence: dict[str, Any]) -> dict[str, Any]:
             errors.append(f"paired_sharp_n<{MIN_PAIRED_SHARP_N}")
         if _integer(current, "clv_n") < MIN_CLV_N:
             errors.append(f"clv_n<{MIN_CLV_N}")
-        if _rate(current, "positive_clv_rate") < MIN_POSITIVE_CLV_RATE:
+        if not math.isfinite(_rate(current, "positive_clv_rate")) or _rate(current, "positive_clv_rate") < MIN_POSITIVE_CLV_RATE:
             errors.append(f"positive_clv_rate<{MIN_POSITIVE_CLV_RATE}")
         market_state[market] = {
             "betting_certified": not errors and not failures, "failures": errors,

@@ -28,6 +28,8 @@ jobs:
           fi
       - name: Settle and refresh evidence
         run: python -m nba.performance_runtime
+      - name: Verify prospective evidence integrity
+        run: python -m nba.evidence_audit
       - name: Upload evidence
         if: always()
         uses: actions/upload-artifact@v4

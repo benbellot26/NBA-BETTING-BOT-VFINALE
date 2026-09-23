@@ -31,6 +31,7 @@ def corpus():
         "forecast_at": context.analyzed_at,
         "tipoff_at": "2026-11-15T22:20:00Z",
         "input_manifest": manifest,
+        "probabilities": {"home_ml":0.6,"away_ml":0.4,"home_spread":0.55,"away_spread":0.45,"over":0.52,"under":0.48,"spread_line":-3.5,"total_line":225.5},
     }
     paper = {
         "entry_key": "g|ML|home_ml", "game_id": "g", "market": "ML",

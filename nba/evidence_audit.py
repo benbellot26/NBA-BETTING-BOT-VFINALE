@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from .lineage import validate_manifest
+from .model import ProbabilitySurface
 from .settlement import settle_candidate
 
 SCHEMA = "pulsar-nba-evidence-audit-v1"
@@ -64,6 +65,10 @@ def audit_records(
     for key, row in f.items():
         try:
             manifest = validate_manifest(row["input_manifest"])
+            probabilities = row["probabilities"]
+            if not isinstance(probabilities, dict):
+                raise ValueError("missing complete probability surface")
+            ProbabilitySurface(**probabilities).validated()
             if row["role"] != "PIT_FINAL_FORECAST":
                 raise ValueError("wrong prospective cohort role")
             if (str(row["game_id"]) != str(manifest["game_id"])

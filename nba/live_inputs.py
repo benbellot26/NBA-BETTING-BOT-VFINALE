@@ -1,12 +1,13 @@
 from __future__ import annotations
 
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 import json
 from pathlib import Path
 from typing import Any
 
 from .nba_stats_api import player_stats, team_stats
-from .snapshot_store import persist_snapshot
+from .snapshot_store import canonical_bytes, persist_snapshot
+import hashlib
 from .team_inputs import build_team_metrics
 from .teams import team_info
 
@@ -28,7 +29,21 @@ def acquire_stat_pack(
         payload = json.loads(cache.read_text(encoding="utf-8"))
         if payload.get("season") != season or payload.get("date_to") != date_to:
             raise RuntimeError("stats cache has mismatched PIT cutoff")
-        return payload
+        snapshot = payload.get("snapshot") or {}
+        raw = {key: value for key, value in payload.items() if key != "snapshot"}
+        if snapshot.get("sha256") != hashlib.sha256(canonical_bytes(raw)).hexdigest():
+            raise RuntimeError("stats cache snapshot fingerprint mismatch")
+        cached_at = datetime.fromisoformat(str(payload["observed_at"]).replace("Z", "+00:00"))
+        evaluated_at = datetime.fromisoformat(observed_at.replace("Z", "+00:00"))
+        if cached_at.tzinfo is None or evaluated_at.tzinfo is None:
+            raise RuntimeError("stats cache timestamps require timezone")
+        age = (evaluated_at.astimezone(timezone.utc)
+               - cached_at.astimezone(timezone.utc)).total_seconds() / 60
+        if age < -2:
+            raise RuntimeError("stats cache was captured in the future")
+        # Refresh an expired cache; never relabel old bytes with a new timestamp.
+        if age <= 1440:
+            return payload
     advanced = {n: team_stats(season=season, last_n_games=n, measure_type="Advanced", date_to=date_to)
                 for n in WINDOWS}
     base = team_stats(season=season, measure_type="Base", date_to=date_to)
@@ -46,7 +61,9 @@ def acquire_stat_pack(
     payload["snapshot"] = persist_snapshot(snapshot_root, kind="nba_stats", observed_at=observed_at,
                                             payload=payload, source="stats.nba.com")
     cache.parent.mkdir(parents=True, exist_ok=True)
-    cache.write_text(json.dumps(payload, sort_keys=True, separators=(",", ":")), encoding="utf-8")
+    temporary = cache.with_suffix(".tmp")
+    temporary.write_text(json.dumps(payload, sort_keys=True, separators=(",", ":")), encoding="utf-8")
+    temporary.replace(cache)
     return payload
 
 

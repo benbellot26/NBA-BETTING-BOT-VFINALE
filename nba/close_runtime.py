@@ -35,7 +35,7 @@ def _match(entry: dict[str, Any], events: list[dict[str, Any]]) -> dict[str, Any
     return next((
         game for game in events if canonical_team(game["home"]) == canonical_team(entry["home"])
         and canonical_team(game["away"]) == canonical_team(entry["away"])
-        and _dt(game["commence_time"]) == _dt(entry["commence_time"])
+        and abs((_dt(game["commence_time"]) - _dt(entry["commence_time"])).total_seconds()) <= 300
     ), None)
 
 
@@ -89,29 +89,52 @@ def capture(*, paper_path: str, close_path: str, mode: str = "live",
     now = datetime.now(timezone.utc)
     added = 0
     failures: list[str] = []
+    if mode not in {"live", "historical"}:
+        raise ValueError("unsupported close capture mode")
     if not pending:
-        return {"added": 0, "pending": 0, "failures": []}
-    live_events: list[dict[str, Any]] | None = None
-    historical_cache: dict[str, Any] = {}
-    if mode == "live":
-        try:
-            live_events = [normalize_game(row) for row in fetch_nba_odds(bookmakers="pinnacle")]
-        except Exception as exc:
-            return {"added": 0, "pending": len(pending), "failures": [f"live_odds:{exc}"]}
+        return {"added": 0, "pending": 0, "eligible_now": 0, "odds_requests": 0, "failures": []}
+    # Never spend an odds credit on old or far-future paper entries.
+    eligible_entries = []
     for entry in pending:
         try:
             tip = _dt(entry["commence_time"])
+            if mode == "historical" or 0 <= (tip - now).total_seconds() / 60 <= live_window_minutes:
+                eligible_entries.append(entry)
+        except (KeyError, ValueError, TypeError) as exc:
+            failures.append(f"{entry.get('entry_key')}:invalid_tip:{type(exc).__name__}")
+    if not eligible_entries:
+        return {"added": 0, "pending": len(pending), "eligible_now": 0,
+                "odds_requests": 0, "failures": failures}
+    live_events: list[dict[str, Any]] | None = None
+    historical_cache: dict[str, Any] = {}
+    odds_requests = 0
+    if mode == "live":
+        try:
+            odds_requests += 1
+            live_events = [normalize_game(row) for row in fetch_nba_odds(bookmakers="pinnacle")]
+        except Exception as exc:
+            return {"added": 0, "pending": len(pending), "eligible_now": len(eligible_entries),
+                    "odds_requests": odds_requests, "failures": failures + [f"live_odds:{exc}"]}
+    for entry in eligible_entries:
+        try:
+            tip = _dt(entry["commence_time"])
             if mode == "live":
-                minutes = (tip - now).total_seconds() / 60.0
+                # Use the time AFTER provider response as the actual close
+                # capture time, not the timestamp before network acquisition.
+                captured_dt = datetime.now(timezone.utc)
+                minutes = (tip - captured_dt).total_seconds() / 60.0
                 if not 0 <= minutes <= live_window_minutes:
                     continue
+                if captured_dt < _dt(entry["entry_at"]):
+                    raise ValueError("close quote predates paper entry")
                 event = _match(entry, live_events or [])
-                captured = now.isoformat()
+                captured = captured_dt.isoformat()
             else:
                 if tip > now:
                     continue
                 target = (tip - timedelta(minutes=1)).isoformat()
                 if target not in historical_cache:
+                    odds_requests += 1
                     historical_cache[target] = fetch_historical_nba_odds(
                         date_iso=target, bookmakers="pinnacle")
                 payload = historical_cache[target]
@@ -119,6 +142,8 @@ def capture(*, paper_path: str, close_path: str, mode: str = "live",
                 captured = str(payload.get("timestamp") or "")
                 if not captured or _dt(captured) >= tip:
                     raise ValueError("historical close was not before tip")
+                if _dt(captured) < _dt(entry["entry_at"]):
+                    raise ValueError("historical close predates paper entry")
             if event is None:
                 raise ValueError("event not found in close snapshot")
             pinnacle = next((book for book in event["markets"][entry["market"]]
@@ -130,7 +155,9 @@ def capture(*, paper_path: str, close_path: str, mode: str = "live",
             added += 1
         except Exception as exc:
             failures.append(f"{entry.get('entry_key')}:{exc}")
-    return {"added": added, "pending": len(pending) - added, "failures": failures}
+    return {"added": added, "pending": len(pending) - added,
+            "eligible_now": len(eligible_entries), "odds_requests": odds_requests,
+            "failures": failures}
 
 
 def main() -> None:

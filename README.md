@@ -270,3 +270,13 @@ The NBA market diagnostic now requires valid paired Pinnacle ML, Spread and
 Total contracts **on the same event**; other bookmakers cannot falsely make
 Pinnacle coverage appear ready. It is manual-only to avoid unrequested paid
 API calls on a routine code merge.
+
+## V1.6.3 — persisted stats/cache integrity
+
+Each cached NBA statistics pack is validated against its canonical content
+SHA-256, cutoff/season, capture metadata, and original snapshot file before
+the model can read it. A missing or modified original snapshot fails closed
+rather than silently rebuilding the evidence or reusing stale metadata.
+Integer advanced-window keys are normalized after JSON reload so canonical
+digests remain consistent. These hashes detect local inconsistency; they do
+not independently prove upstream provider authenticity or publication time.

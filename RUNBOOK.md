@@ -220,3 +220,11 @@ arrives after tip or the Pinnacle book's quote timestamp is in the future,
 before paper entry or after tip, no close is recorded. The market smoke
 uses only valid paired Pinnacle contracts on the same NBA event. Its workflow
 runs only by explicit manual dispatch; no push-triggered paid checks.
+
+## V1.6.3 — stats cache repair procedure
+
+If the cached stats integrity check fails, preserve the failed runtime
+artifact for diagnosis. Do not modify the cached JSON or its SHA manually.
+After confirming the required cutoff and source are reachable, obtain a
+new official prospective capture before tip. Never backdate a new capture
+or treat a local file checksum as independent proof of provider authenticity.

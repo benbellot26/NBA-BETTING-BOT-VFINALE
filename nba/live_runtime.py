@@ -62,12 +62,23 @@ def _line(books: list[dict[str, Any]], selection: str) -> float | None:
     return None
 
 
+def _same_tip(a: str, b: str) -> bool:
+    try:
+        ta = datetime.fromisoformat(a.replace("Z", "+00:00"))
+        tb = datetime.fromisoformat(b.replace("Z", "+00:00"))
+        if ta.tzinfo is None or tb.tzinfo is None:
+            return False
+        return abs((ta.astimezone(timezone.utc) - tb.astimezone(timezone.utc)).total_seconds()) <= 300
+    except (ValueError, TypeError):
+        return False
+
+
 def _match(game: Any, rows: list[dict[str, Any]]) -> dict[str, Any] | None:
     return next((
         row for row in rows
         if canonical_team(row["home"]) == canonical_team(game.home)
         and canonical_team(row["away"]) == canonical_team(game.away)
-        and row.get("commence_time") == game.commence_time
+        and _same_tip(str(row.get("commence_time") or ""), game.commence_time)
     ), None)
 
 

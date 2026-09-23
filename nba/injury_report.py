@@ -33,6 +33,7 @@ class InjuryRecord:
 
 
 def latest_point_in_time(records: Iterable[InjuryRecord], *, cutoff: str) -> dict[str, InjuryRecord]:
+    """Latest report for each player at cutoff; preserves the v1 player-ID API."""
     cutoff_dt = _dt(cutoff)
     latest: dict[str, InjuryRecord] = {}
     for row in records:
@@ -40,8 +41,7 @@ def latest_point_in_time(records: Iterable[InjuryRecord], *, cutoff: str) -> dic
         at = _dt(row.reported_at)
         if at > cutoff_dt:
             continue
-        key = f"{row.team}|{row.player_id}|{row.game_date}"
-        current = latest.get(key)
+        current = latest.get(row.player_id)
         if current is None or _dt(current.reported_at) < at:
-            latest[key] = row
+            latest[row.player_id] = row
     return latest

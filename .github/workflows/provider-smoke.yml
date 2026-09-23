@@ -1,6 +1,11 @@
 name: Pulsar NBA Provider Smoke
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'nba/provider_smoke.py'
+      - '.github/workflows/provider-smoke.yml'
   schedule:
     - cron: '10 13 * * *'
 jobs:

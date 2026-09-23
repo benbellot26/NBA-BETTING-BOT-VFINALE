@@ -75,3 +75,28 @@ These are necessary gates, not proof of profitability. Predictive changes requir
 ## Season timing
 
 The 2026-27 regular season begins October 20, 2026. Before regular-season data exists, empty current-season stats should not be treated as evidence. The provider smoke may use the previous season only to verify that the upstream stats endpoint is healthy; production predictions remain point-in-time to their target season.
+
+## Verification after adding an odds key
+
+The Odds Key Smoke workflow runs once when its script/workflow is merged into
+main. It makes one authenticated sports-catalog request, logging only an
+authorization boolean and sport count. Check its GitHub Actions result.
+A successful check does NOT establish access to NBA spreads/totals, Pinnacle
+or historical snapshots; those require live provider coverage and plan support.
+
+## PIT training data and research V2
+
+FINAL forecasts are retained in runtime/evidence/final_forecasts.jsonl even
+when no paper bets meet the decision thresholds. The daily settlement workflow
+writes independently observed outcomes to final_outcomes.jsonl. Generate the
+joined corpus only after both exist:
+
+    python -m nba.replay_export
+
+Then choose chronological, pre-registered train and holdout cutoffs:
+
+    python -m nba.v2_shadow --input runtime/research/pit_dataset.jsonl --train-cutoff 2027-01-01T00:00:00Z --holdout-start 2027-01-02T00:00:00Z
+
+The V2 result is SHADOW and cannot change the live decision code. Do not
+present synthetic tests or historical data downloaded today as true archived
+point-in-time performance.

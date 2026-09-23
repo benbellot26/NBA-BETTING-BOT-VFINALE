@@ -207,6 +207,11 @@ def run(
                     raise ValueError("PIT data-quality gate: " + ",".join(freshness["failures"]))
                 phase = _phase(_minutes_to(game.commence_time, now))
                 context = build_game_context(game, schedule, analyzed_at=observed, phase=phase)
+                team_rows = stats["advanced_windows"].get(0) or stats["advanced_windows"].get("0") or []
+                gp = {canonical_team(str(row.get("TEAM_NAME") or "")): int(row.get("GP") or 0)
+                      for row in team_rows}
+                if min(gp.get(game.home, 0), gp.get(game.away, 0)) < 5:
+                    raise ValueError("early-season sample below five completed team games")
                 home = team_metric_from_pack(game.home, stats, home=True)
                 away = team_metric_from_pack(game.away, stats, home=False)
                 hr = project_rotation(

@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from .acquisition import fetch_historical_nba_odds, fetch_nba_odds
-from .market import no_vig_pair, paired_price_rows
+from .market import no_vig_pair, paired_price_rows, fresh_quote
 from .odds_normalizer import normalize_game
 from .teams import canonical_team
 from .tracking import append_jsonl
@@ -121,6 +121,10 @@ def capture(*, paper_path: str, close_path: str, mode: str = "live",
                     raise ValueError("historical close was not before tip")
             if event is None:
                 raise ValueError("event not found in close snapshot")
+            pinnacle = next((book for book in event["markets"][entry["market"]]
+                                 if str(book.get("bookmaker") or "").lower() == "pinnacle"), None)
+            if pinnacle is None or not fresh_quote(pinnacle.get("last_update"), captured, max_age_minutes=30):
+                raise ValueError("Pinnacle close quote is stale or missing")
             append_jsonl(close_path, _close_row(entry, event, captured, mode))
             closed.add(entry["entry_key"])
             added += 1

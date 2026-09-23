@@ -4,7 +4,7 @@ Pulsar NBA is a standalone NBA probability, market, research and decision engine
 
 ## Current status
 
-**V1.1.1 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
+**V1.2.0 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
 
 ## End-to-end chain
 
@@ -81,6 +81,34 @@ System/paper ROI is hypothetical and must not be represented as realized user RO
 - **Pulsar NBA Provider Smoke** — daily health check of official schedule/stats/injury sources.
 - **Pulsar NBA Live Research** — scheduled pregame analysis, paper cohort and live Pinnacle close capture.
 - **Pulsar NBA Daily Evidence** — settlement and performance/certification refresh.
+
+## Live hardening and V2 shadow
+
+The live runtime refuses games whose official injury report is NOT YET SUBMITTED,
+whose player names do not resolve to the projected rotation (excluding G League
+assignments), or whose NBA.com/statistical snapshots or executable odds are stale.
+Pinnacle spread pairs use opposite handicaps; totals use an identical number.
+Whole-point spread/total contracts remain research-only until push probability
+is modeled explicitly. The current basketball champion and real-bet certification
+are unchanged.
+
+The Odds API key is tested with an authenticated, low-cost sports-catalog
+request by the Odds Key Smoke workflow. It verifies authentication only; current
+NBA markets, Pinnacle coverage, available bookmakers and subscription quota
+can vary. No key is printed or committed.
+
+Every eligible FINAL game, regardless of whether its candidate qualifies for
+paper betting, is archived as an immutable pre-tip forecast. Completed-game
+outcomes are joined from the official NBA schedule. The resulting PIT replay
+dataset can be used by the independent V2 shadow calibrator:
+
+    python -m nba.replay_export
+    python -m nba.v2_shadow --input runtime/research/pit_dataset.jsonl --train-cutoff 2027-01-01T00:00:00Z --holdout-start 2027-01-02T00:00:00Z
+
+The dates above are examples, not a claim that the corpus exists today.
+V2 requires at least 400 historical PIT training observations and 100 subsequent
+out-of-sample games by default. It only reports paired metrics; it does not
+promote itself or authorize real betting.
 
 ## Setup
 

@@ -5,6 +5,7 @@ from typing import Any
 from .model import TeamMetrics
 from .team_strength import TimeWindow, blend_team_metrics
 from .teams import canonical_team
+from .stat_contract import validate_team_stats
 
 
 def _num(row: dict[str, Any] | None, key: str, default: float) -> float:
@@ -29,6 +30,9 @@ def build_team_metrics(
     home: bool = False,
 ) -> TeamMetrics:
     team = canonical_team(team_name)
+    validated = validate_team_stats(
+        team, advanced_windows=advanced_windows,
+        base_season=base_season, min_games=5)
     maps = {n: _by_name(rows) for n, rows in advanced_windows.items()}
     season = maps.get(0, {}).get(team)
     if season is None:
@@ -41,14 +45,12 @@ def build_team_metrics(
             last10=_num(maps.get(10, {}).get(team), key, league_default) if 10 in maps else None,
             last5=_num(maps.get(5, {}).get(team), key, league_default) if 5 in maps else None,
         )
-    base = _by_name(base_season or []).get(team) or {}
-    fga = max(1.0, _num(base, "FGA", 88.0))
     style = {
-        "efg": _num(season, "EFG_PCT", .55),
-        "tov_pct": _num(season, "TM_TOV_PCT", _num(season, "TOV_PCT", 13.0)) / (100.0 if _num(season, "TM_TOV_PCT", 13.0) > 1 else 1.0),
-        "orb_pct": _num(season, "OREB_PCT", .25),
-        "ft_rate": _num(base, "FTA", 22.0) / fga,
-        "three_pa_rate": _num(base, "FG3A", 35.0) / fga,
+        "efg": float(season["EFG_PCT"]),
+        "tov_pct": validated["tov_rate"],
+        "orb_pct": float(season["OREB_PCT"]),
+        "ft_rate": validated["ft_rate"],
+        "three_pa_rate": validated["three_pa_rate"],
     }
     return blend_team_metrics(
         team,

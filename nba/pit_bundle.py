@@ -23,6 +23,7 @@ from .rotation_projection import project_rotation
 from .schedule import ScheduleGame, fetch_schedule, games_on, season_for_date
 from .schedule_context import build_game_context
 from .structural import project_game
+from .stat_contract import validate_game_stat_pack
 
 SCHEMA = "pulsar-nba-offline-input-bundle-v1"
 ROLE = "UNVERIFIED_OFFLINE_RESEARCH"
@@ -81,6 +82,10 @@ def validate(bundle: dict[str, Any]) -> dict[str, Any]:
         raise ValueError("offline bundle has no NBA games on target date")
     if any(_dt(game.commence_time) <= captured for game in slate):
         raise ValueError("offline bundle must be captured before every target tip-off")
+    for game in slate:
+        validate_game_stat_pack(
+            stats, game.home, game.away, min_team_games=5,
+            strict_live=False)
     return bundle
 
 

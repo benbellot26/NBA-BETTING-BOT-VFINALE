@@ -13,6 +13,7 @@ from .acquisition import fetch_nba_odds
 from .data_quality import assess
 from .injury_pdf import fetch_latest_report, game_report_ready
 from .live_inputs import acquire_stat_pack, prior_day_cutoff, team_id, team_metric_from_pack
+from .stat_contract import validate_game_stat_pack
 from .market import fresh_quote
 from .odds_normalizer import normalize_game
 from .pipeline import analyze_game
@@ -164,6 +165,17 @@ def run(
         stats = None
         out["failures"].append(f"stats:{exc}")
 
+    valid_stat_games: dict[str, dict[str, Any]] = {}
+    if stats is not None:
+        for game in slate:
+            try:
+                valid_stat_games[game.game_id] = validate_game_stat_pack(
+                    stats, game.home, game.away, min_team_games=5, strict_live=True)
+            except (KeyError, TypeError, ValueError) as exc:
+                out["failures"].append(f"{game.game_id}:stat_contract:{exc}")
+        if not valid_stat_games:
+            stats = None
+
     try:
         injuries = fetch_latest_report(season=season)
         if not injuries.get("team_status"):
@@ -177,7 +189,7 @@ def run(
 
     # Avoid spending odds credits while required statistics/injury sources are down.
     if stats is not None and injuries is not None and any(
-        game_report_ready(injuries, game_date=game.game_date,
+        game.game_id in valid_stat_games and game_report_ready(injuries, game_date=game.game_date,
                           home=game.home, away=game.away) for game in slate
     ):
         try:
@@ -196,6 +208,8 @@ def run(
     if stats is not None and odds and injuries is not None:
         for game in slate:
             try:
+                if game.game_id not in valid_stat_games:
+                    raise ValueError("required statistical contract not satisfied")
                 if not game_report_ready(injuries, game_date=game.game_date,
                                          home=game.home, away=game.away):
                     raise ValueError("game injury report not submitted for both teams")
@@ -255,6 +269,7 @@ def run(
                 analysis["commence_time"] = game.commence_time
                 analysis["injury_report_at"] = injuries["reported_at"]
                 analysis["input_quality"] = freshness
+                analysis["stat_contract"] = valid_stat_games[game.game_id]
                 analysis["source_snapshot_sha256"] = stats["snapshot"]["sha256"]
                 analysis["source_snapshot_at"] = stats["observed_at"]
                 analysis["rotation_home"] = [asdict(row) for row in hr]

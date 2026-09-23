@@ -11,8 +11,8 @@ def example():
     schedule = [ScheduleGame("g", date, "2026-10-21T23:00:00Z",
                              home, away, 1, "Scheduled")]
     team_rows = [
-        {"TEAM_NAME": home, "OFF_RATING": 118, "DEF_RATING": 111, "PACE": 99, "GP": 8},
-        {"TEAM_NAME": away, "OFF_RATING": 115, "DEF_RATING": 114, "PACE": 98, "GP": 8},
+        {"TEAM_NAME": home, "OFF_RATING": 118, "DEF_RATING": 111, "PACE": 99, "GP": 8, "EFG_PCT": .56, "OREB_PCT": .27, "TM_TOV_PCT": 12.5},
+        {"TEAM_NAME": away, "OFF_RATING": 115, "DEF_RATING": 114, "PACE": 98, "GP": 8, "EFG_PCT": .53, "OREB_PCT": .25, "TM_TOV_PCT": 13.8},
     ]
     ids = ((1610612738, "Boston"), (1610612752, "New York"))
     players = []

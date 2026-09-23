@@ -1,11 +1,11 @@
 [project]
 name = "pulsar-nba"
-version = "1.0.0"
+version = "1.1.0"
 description = "Pulsar NBA probability, research and decision engine"
 requires-python = ">=3.12,<3.13"
-dependencies = []
+dependencies = ["pypdf==6.19.0"]
 
 [tool.pulsar]
 model-generation = "pulsar-nba-v1-structural"
 probability-policy = "pulsar-nba-probability-policy-v1"
-runtime-dependency-policy = "stdlib-only"
+runtime-dependency-policy = "stdlib-core; pinned-pypdf-acquisition"

@@ -186,3 +186,25 @@ This check calls no websites and does not use ODDS_API_KEY. It validates the
 software and static workflow gates only. Keep NBA_LIVE_ENABLED unset/false
 until a separate official data-provider smoke and full live paper rehearsal
 succeed on the intended runner. Do not count synthetic CI games as evidence.
+
+## V1.6 operating rehearsal
+
+Before enabling scheduled research:
+
+1. Run python -m nba.preseason_check.
+2. Run python -m nba.preseason_rehearsal.
+3. Run python -m nba.full_rehearsal.
+4. When real NBA events are listed by the odds provider, manually dispatch Pulsar NBA Manual Market Smoke with require_events=true.
+5. Re-run the official provider smoke on the intended GitHub runner.
+6. Only after both real-provider checks pass should NBA_LIVE_ENABLED be considered for paper research.
+
+The live workflow writes runtime/health.json. ANALYSIS_BLOCKED and PROVIDER_DEGRADED states fail the Actions job after artifacts/state are persisted, so GitHub workflow-failure notifications act as the operational alert.
+
+The shared persistence script is idempotent and serialised by the nba-runtime-data concurrency group. It creates runtime-data if absent and converts legacy contents to a data-only branch. Daily artifacts provide an additional retained backup.
+
+The market-smoke workflow is also triggered once by the V1.6 merge because its workflow file is new. Normal future checks remain manual unless the diagnostic code/workflow changes.
+
+
+### Odds request budget and explicit preseason mode
+
+Paid/current market calls share `runtime/odds_budget.json`. The default daily cap is 48 requests and can be lowered with `NBA_ODDS_DAILY_REQUEST_BUDGET`. A request is reserved before the HTTP call, so failures still count conservatively. `python -m nba.live_runtime --mode preseason` never writes paper entries or FINAL prospective forecasts. Scheduled production research remains `regular`.

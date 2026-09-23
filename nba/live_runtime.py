@@ -16,6 +16,7 @@ from .live_inputs import prior_day_cutoff, team_id, team_metric_from_pack
 from .lineage import build_input_manifest
 from .market import fresh_quote
 from .odds_normalizer import normalize_game
+from .odds_budget import reserve as reserve_odds_request
 from .pipeline import analyze_game
 from .provider_contract import NoGamesOnTargetDate
 from .providers import OfficialNBAProvider
@@ -135,13 +136,19 @@ def run(
     certification_path: str = "data/nba_betting_certification.json",
     paper_path: str = "runtime/evidence/paper_entries.jsonl",
     forecasts_path: str = "runtime/evidence/final_forecasts.jsonl",
+    odds_budget_path: str = "runtime/odds_budget.json",
+    operating_mode: str = "regular",
 ) -> dict[str, Any]:
+    if operating_mode not in {"regular", "preseason"}:
+        raise ValueError("operating_mode must be regular or preseason")
     started_at = datetime.now(timezone.utc).isoformat()
     season = season_for_date(target_date)
     out: dict[str, Any] = {
         "schema": "pulsar-nba-live-run-v3", "target_date": target_date,
         "season": season, "generated_at": started_at, "status": "OK",
         "source_provider": "official-nba", "failures": [], "games": [],
+        "odds_api_requests": 0, "operating_mode": operating_mode,
+        "prospective_evidence_eligible": operating_mode == "regular",
     }
     # The live path always constructs its OWN official provider. JSON files,
     # local bundles and CI fixtures have no route to live/paper certification.
@@ -198,6 +205,8 @@ def run(
         return out
 
     try:
+        reserve_odds_request(path=odds_budget_path, purpose="live_analysis")
+        out["odds_api_requests"] += 1
         odds = [normalize_game(item) for item in fetch_nba_odds()]
         # Analysis time is AFTER quote acquisition, never the earlier start
         # of a slow source request. The FINAL gate uses this later timestamp.
@@ -213,7 +222,8 @@ def run(
         observed = now.isoformat()
         out["generated_at"] = observed
 
-    cert = _load_cert(certification_path)
+    cert = (_load_cert(certification_path) if operating_mode == "regular"
+            else {"certified": False, "markets": {}})
     if stats is not None and odds and injuries is not None:
         for game in slate:
             try:
@@ -242,8 +252,9 @@ def run(
                 team_rows = stats["advanced_windows"].get(0) or stats["advanced_windows"].get("0") or []
                 gp = {canonical_team(str(row.get("TEAM_NAME") or "")): int(row.get("GP") or 0)
                       for row in team_rows}
-                if min(gp.get(game.home, 0), gp.get(game.away, 0)) < 5:
-                    raise ValueError("early-season sample below five completed team games")
+                minimum_games = 5 if operating_mode == "regular" else 0
+                if min(gp.get(game.home, 0), gp.get(game.away, 0)) < minimum_games:
+                    raise ValueError(f"early-season sample below {minimum_games} completed team games")
                 home = team_metric_from_pack(game.home, stats, home=True)
                 away = team_metric_from_pack(game.away, stats, home=False)
                 hr = project_rotation(
@@ -298,8 +309,12 @@ def run(
     if not out["games"]:
         out["status"] = "NO_ANALYSIS"
     Path(output).parent.mkdir(parents=True, exist_ok=True)
-    out["paper_recording"] = record_paper_candidates(out, paper_path)
-    out["final_forecasts"] = record_final_forecasts(out, forecasts_path)
+    if operating_mode == "regular":
+        out["paper_recording"] = record_paper_candidates(out, paper_path)
+        out["final_forecasts"] = record_final_forecasts(out, forecasts_path)
+    else:
+        out["paper_recording"] = {"added": 0, "reason": "preseason_not_evidence"}
+        out["final_forecasts"] = {"added": 0, "reason": "preseason_not_evidence"}
     Path(output).write_text(json.dumps(out, indent=2), encoding="utf-8")
     return out
 
@@ -311,9 +326,11 @@ def main() -> None:
     parser.add_argument("--snapshot-root", default="runtime/snapshots")
     parser.add_argument("--certification", default="data/nba_betting_certification.json")
     parser.add_argument("--paper", default="runtime/evidence/paper_entries.jsonl")
+    parser.add_argument("--mode", choices=("regular","preseason"), default="regular")
     args = parser.parse_args()
     result = run(target_date=args.date, output=args.output, snapshot_root=args.snapshot_root,
-                 certification_path=args.certification, paper_path=args.paper)
+                 certification_path=args.certification, paper_path=args.paper,
+                 operating_mode=args.mode)
     print(json.dumps({"status": result["status"], "games": len(result["games"]),
                       "paper": result.get("paper_recording"), "failures": result["failures"]}, indent=2))
 

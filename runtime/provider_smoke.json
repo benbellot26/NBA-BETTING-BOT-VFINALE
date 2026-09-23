@@ -1,0 +1,20 @@
+{
+  "schema": "pulsar-nba-provider-smoke-v1",
+  "checked_at": "2026-09-23T14:13:28.563389+00:00",
+  "season": "2026-27",
+  "providers": {
+    "schedule": {
+      "ok": false,
+      "error": "GET https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_1.json failed: HTTP 403"
+    },
+    "stats": {
+      "ok": false,
+      "error": "GET https://stats.nba.com/stats/leaguedashteamstats failed: TimeoutError"
+    },
+    "injuries": {
+      "ok": false,
+      "error": "official NBA injury page exposed no timestamped PDF report"
+    }
+  },
+  "ok": false
+}

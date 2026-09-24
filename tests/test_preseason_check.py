@@ -45,6 +45,10 @@ class PreseasonCheckTests(unittest.TestCase):
         result = check(root=ROOT)
         self.assertTrue(result["checks"]["data_runner_portable"])
 
+    def test_manual_preseason_can_run_without_opening_regular_live_gate(self):
+        result = check(root=ROOT)
+        self.assertTrue(result["checks"]["safe_manual_preseason_dispatch"])
+
     def test_source_controlled_certification_must_remain_false(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

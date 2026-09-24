@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-health-v1",
-  "generated_at": "2026-09-24T07:43:20.736158+00:00",
+  "generated_at": "2026-09-24T17:51:33.163860+00:00",
   "state": "PROVIDER_DEGRADED",
   "live_operational": false,
   "real_betting_authorized": false,
@@ -11,9 +11,9 @@
   "provider_ok": false,
   "provider_state": "BLOCKED",
   "diagnostics": {
-    "provider_age_hours": 0.0048274730555555555,
+    "provider_age_hours": 0.009060635277777779,
     "provider_fresh": true,
-    "market_age_hours": 0.6256761047222222,
+    "market_age_hours": 10.7624615775,
     "market_fresh": true
   },
   "provider_details": {
@@ -55,7 +55,7 @@
     "no_complete_pinnacle_event"
   ],
   "runner_probe": {
-    "checked_at": "2026-09-24T07:42:50.724174+00:00",
+    "checked_at": "2026-09-24T17:50:45.225816+00:00",
     "reachable_routes": [
       "nba_pr_schedule_release",
       "www_nba_stats_page"
@@ -65,42 +65,42 @@
         "name": "cdn_schedule_json",
         "ok": false,
         "state": "ACCESS_BLOCKED",
-        "elapsed_ms": 87.2,
+        "elapsed_ms": 195.0,
         "error": "GET https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_1.json failed: HTTP 403"
       },
       "api_hub_schedule_page": {
         "name": "api_hub_schedule_page",
         "ok": false,
         "state": "UNAVAILABLE",
-        "elapsed_ms": 97.4,
+        "elapsed_ms": 434.3,
         "error": "GET https://api-hub.nba.com/schedule failed: HTTP 461"
       },
       "nba_pr_schedule_release": {
         "name": "nba_pr_schedule_release",
         "ok": true,
         "state": "REACHABLE",
-        "elapsed_ms": 209.3,
+        "elapsed_ms": 614.2,
         "size": 128072
       },
       "www_nba_stats_page": {
         "name": "www_nba_stats_page",
         "ok": true,
         "state": "REACHABLE",
-        "elapsed_ms": 332.0,
-        "size": 325785
+        "elapsed_ms": 371.3,
+        "size": 325902
       },
       "official_injury_page": {
         "name": "official_injury_page",
         "ok": false,
         "state": "NOT_PUBLISHED",
-        "elapsed_ms": 102.7,
+        "elapsed_ms": 579.7,
         "error": "GET https://official.nba.com/nba-injury-report-2026-27-season/ failed: HTTP 404"
       },
       "historical_stats_api": {
         "name": "historical_stats_api",
         "ok": false,
         "state": "TIMEOUT",
-        "elapsed_ms": 10068.3,
+        "elapsed_ms": 10122.8,
         "error": "GET https://stats.nba.com/stats/leaguedashteamstats failed: TimeoutError"
       }
     }
@@ -123,15 +123,15 @@
     }
   },
   "www_stats_probe": {
-    "checked_at": "2026-09-24T07:43:01.726782+00:00",
+    "checked_at": "2026-09-24T17:50:57.620141+00:00",
     "season": "2025-26",
     "all_pages_reachable": true,
     "structured_candidate_for_reference_parser": true,
     "pages": {
       "teams_advanced": {
         "ok": true,
-        "bytes": 325972,
-        "sha256": "0f14ea7f2b07b6843112b19f84efb76b779b927c94abb70bfaabe2b7788951e6",
+        "bytes": 326089,
+        "sha256": "b9de3d24e6bb18df36645e1ba19f1156951c19b83d25a92ae2fe5e390f1743a1",
         "marker_counts": {
           "OFF_RATING": 0,
           "DEF_RATING": 0,
@@ -160,8 +160,8 @@
       },
       "teams_traditional": {
         "ok": true,
-        "bytes": 326002,
-        "sha256": "0dfe102333e5d59ba94ff4b4c17b1bc10333d22604cfcbe507fd50d36ad9707a",
+        "bytes": 326119,
+        "sha256": "61fc8f0f1d8e59dd365ac243d1b117dc6572126be7a5014c48743e9bded46854",
         "marker_counts": {
           "OFF_RATING": 0,
           "DEF_RATING": 0,
@@ -190,8 +190,8 @@
       },
       "players_advanced": {
         "ok": true,
-        "bytes": 403635,
-        "sha256": "87ec32743ec18a6480076dd21b4bdd06cf52978498b262f8befbda431f88470d",
+        "bytes": 403752,
+        "sha256": "7a3ee91a975519efd216af2e41c788a47fbaf21e37cb9b89bcafe0b87fd8a56c",
         "marker_counts": {
           "OFF_RATING": 0,
           "DEF_RATING": 0,
@@ -220,8 +220,8 @@
       },
       "players_traditional": {
         "ok": true,
-        "bytes": 403665,
-        "sha256": "6752a273ff0ebcd097e81c50754866e003d22e597a752985e25381c8901a7972",
+        "bytes": 403782,
+        "sha256": "c7fbca3f2612f0acbd75e93275d9c4edc1e8cf8c92d18985d114f1a89d49a2fb",
         "marker_counts": {
           "OFF_RATING": 0,
           "DEF_RATING": 0,

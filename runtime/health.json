@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-health-v1",
-  "generated_at": "2026-09-24T07:16:52.491696+00:00",
+  "generated_at": "2026-09-24T07:22:59.390978+00:00",
   "state": "PROVIDER_DEGRADED",
   "live_operational": false,
   "real_betting_authorized": false,
@@ -11,9 +11,9 @@
   "provider_ok": false,
   "provider_state": "BLOCKED",
   "diagnostics": {
-    "provider_age_hours": 0.005015834166666667,
+    "provider_age_hours": 0.004792122222222222,
     "provider_fresh": true,
-    "market_age_hours": 0.18449708750000002,
+    "market_age_hours": 0.28641355472222224,
     "market_fresh": true
   },
   "provider_details": {
@@ -55,7 +55,7 @@
     "no_complete_pinnacle_event"
   ],
   "runner_probe": {
-    "checked_at": "2026-09-24T07:16:22.267121+00:00",
+    "checked_at": "2026-09-24T07:22:29.757971+00:00",
     "reachable_routes": [
       "nba_pr_schedule_release",
       "www_nba_stats_page"
@@ -65,42 +65,42 @@
         "name": "cdn_schedule_json",
         "ok": false,
         "state": "ACCESS_BLOCKED",
-        "elapsed_ms": 197.2,
+        "elapsed_ms": 147.9,
         "error": "GET https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_1.json failed: HTTP 403"
       },
       "api_hub_schedule_page": {
         "name": "api_hub_schedule_page",
         "ok": false,
         "state": "UNAVAILABLE",
-        "elapsed_ms": 318.5,
+        "elapsed_ms": 242.1,
         "error": "GET https://api-hub.nba.com/schedule failed: HTTP 461"
       },
       "nba_pr_schedule_release": {
         "name": "nba_pr_schedule_release",
         "ok": true,
         "state": "REACHABLE",
-        "elapsed_ms": 670.6,
+        "elapsed_ms": 193.4,
         "size": 128072
       },
       "www_nba_stats_page": {
         "name": "www_nba_stats_page",
         "ok": true,
         "state": "REACHABLE",
-        "elapsed_ms": 342.1,
-        "size": 325811
+        "elapsed_ms": 275.1,
+        "size": 325970
       },
       "official_injury_page": {
         "name": "official_injury_page",
         "ok": false,
         "state": "NOT_PUBLISHED",
-        "elapsed_ms": 401.2,
+        "elapsed_ms": 74.8,
         "error": "GET https://official.nba.com/nba-injury-report-2026-27-season/ failed: HTTP 404"
       },
       "historical_stats_api": {
         "name": "historical_stats_api",
         "ok": false,
         "state": "TIMEOUT",
-        "elapsed_ms": 10123.0,
+        "elapsed_ms": 10133.2,
         "error": "GET https://stats.nba.com/stats/leaguedashteamstats failed: TimeoutError"
       }
     }
@@ -120,6 +120,134 @@
       "unibet_nl": 8,
       "betsson": 5,
       "nordicbet": 5
+    }
+  },
+  "www_stats_probe": {
+    "checked_at": "2026-09-24T07:22:40.931271+00:00",
+    "season": "2025-26",
+    "all_pages_reachable": true,
+    "structured_candidate_for_reference_parser": true,
+    "pages": {
+      "teams_advanced": {
+        "ok": true,
+        "bytes": 326157,
+        "sha256": "7098e4d424e04d0bfbeecdf5beab19cef04072da3762b32245033af766f2f635",
+        "marker_counts": {
+          "OFF_RATING": 0,
+          "DEF_RATING": 0,
+          "PACE": 0,
+          "GP": 0,
+          "TEAM_NAME": 0,
+          "PLAYER_NAME": 0,
+          "rowSet": 0,
+          "resultSet": 0,
+          "resultSets": 0,
+          "__NEXT_DATA__": 1,
+          "self.__next_f.push": 0
+        },
+        "script_ids": [
+          "__NEXT_DATA__",
+          "gam-src",
+          "tealium-override",
+          "tealium-script",
+          "theme-loader",
+          "user-consent"
+        ],
+        "json_script_tags": 2,
+        "next_stream_chunks": 0,
+        "structured_payload_signal": true,
+        "basketball_field_signal": false
+      },
+      "teams_traditional": {
+        "ok": true,
+        "bytes": 326187,
+        "sha256": "fe2ec241f0d5a7a36e4e53530da57d12a1a52bd6b666bc15cbdbc502fd0c0d31",
+        "marker_counts": {
+          "OFF_RATING": 0,
+          "DEF_RATING": 0,
+          "PACE": 0,
+          "GP": 0,
+          "TEAM_NAME": 0,
+          "PLAYER_NAME": 0,
+          "rowSet": 0,
+          "resultSet": 0,
+          "resultSets": 0,
+          "__NEXT_DATA__": 1,
+          "self.__next_f.push": 0
+        },
+        "script_ids": [
+          "__NEXT_DATA__",
+          "gam-src",
+          "tealium-override",
+          "tealium-script",
+          "theme-loader",
+          "user-consent"
+        ],
+        "json_script_tags": 2,
+        "next_stream_chunks": 0,
+        "structured_payload_signal": true,
+        "basketball_field_signal": false
+      },
+      "players_advanced": {
+        "ok": true,
+        "bytes": 403820,
+        "sha256": "b2c9318ef07d60d6708ad5eef076b7fd2fed6b0e225ce689f0bec01c52e12e17",
+        "marker_counts": {
+          "OFF_RATING": 0,
+          "DEF_RATING": 0,
+          "PACE": 0,
+          "GP": 0,
+          "TEAM_NAME": 0,
+          "PLAYER_NAME": 0,
+          "rowSet": 0,
+          "resultSet": 0,
+          "resultSets": 0,
+          "__NEXT_DATA__": 1,
+          "self.__next_f.push": 0
+        },
+        "script_ids": [
+          "__NEXT_DATA__",
+          "gam-src",
+          "tealium-override",
+          "tealium-script",
+          "theme-loader",
+          "user-consent"
+        ],
+        "json_script_tags": 2,
+        "next_stream_chunks": 0,
+        "structured_payload_signal": true,
+        "basketball_field_signal": false
+      },
+      "players_traditional": {
+        "ok": true,
+        "bytes": 403850,
+        "sha256": "3db0bd910ca3d4556f847a6327a307fc2d4ec4c30063a79044fd2835467f375d",
+        "marker_counts": {
+          "OFF_RATING": 0,
+          "DEF_RATING": 0,
+          "PACE": 0,
+          "GP": 0,
+          "TEAM_NAME": 0,
+          "PLAYER_NAME": 0,
+          "rowSet": 0,
+          "resultSet": 0,
+          "resultSets": 0,
+          "__NEXT_DATA__": 1,
+          "self.__next_f.push": 0
+        },
+        "script_ids": [
+          "__NEXT_DATA__",
+          "gam-src",
+          "tealium-override",
+          "tealium-script",
+          "theme-loader",
+          "user-consent"
+        ],
+        "json_script_tags": 2,
+        "next_stream_chunks": 0,
+        "structured_payload_signal": true,
+        "basketball_field_signal": false
+      }
     }
   },
   "odds_budget": {

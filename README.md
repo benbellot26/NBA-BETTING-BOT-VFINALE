@@ -4,7 +4,7 @@ Pulsar NBA is a standalone NBA probability, market, research and decision engine
 
 ## Current status
 
-**V1.6.6 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
+**V1.6.7 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
 
 ## End-to-end chain
 
@@ -303,3 +303,12 @@ trusted runner because live research can receive repository secrets. Changing
 the runner does not bypass PIT checks, certification gates or provider
 validation. An HTTP 404 from the season-specific official injury page is now
 classified as NOT_PUBLISHED rather than a generic transport outage.
+
+## V1.6.7 — safe manual preseason dispatch
+
+A manual GitHub Actions dispatch can now run `operating_mode=preseason`
+without setting `NBA_LIVE_ENABLED=true`. Scheduled jobs and manual
+`regular` research remain locked behind that variable. The preseason path
+runs a fresh official-provider smoke first and still cannot write paper entries
+or FINAL prospective forecasts. This allows real plumbing rehearsal without
+opening the regular-season automation gate.

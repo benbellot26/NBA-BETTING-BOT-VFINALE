@@ -250,3 +250,13 @@ variable may point to a trusted runner label with working network access.
 Never use an untrusted public runner: live research receives ODDS_API_KEY and
 writes prospective evidence. Switching runners does not make stale or
 post-tip data valid and does not enable NBA_LIVE_ENABLED automatically.
+
+## V1.6.7 — manual preseason rehearsal without live enablement
+
+Use the **Pulsar NBA Live Research** workflow with
+`operating_mode=preseason` for a real-source rehearsal while
+`NBA_LIVE_ENABLED` remains unset/false. The workflow first refreshes the
+official-provider smoke on the selected NBA_DATA_RUNNER, then runs the
+preseason runtime. Manual or scheduled `regular` research still requires
+`NBA_LIVE_ENABLED=true`. Preseason mode never writes paper/prospective
+evidence and never captures a regular close ledger.

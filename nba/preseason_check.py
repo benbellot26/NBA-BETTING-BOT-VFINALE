@@ -87,6 +87,23 @@ def check(*, root: str | Path = ".") -> dict[str, Any]:
             if f"missing workflow: {relative}" not in errors:
                 errors.append(f"missing workflow: {relative}")
 
+    safe_manual_preseason = True
+    try:
+        live_workflow = (directory / ".github/workflows/live-research.yml").read_text(
+            encoding="utf-8")
+        required_fragments = (
+            "github.event_name == 'workflow_dispatch'",
+            "inputs.operating_mode == 'preseason'",
+            'type: choice',
+            'default: preseason',
+            'Regular research requires NBA_LIVE_ENABLED=true.',
+        )
+        if not all(fragment in live_workflow for fragment in required_fragments):
+            safe_manual_preseason = False
+            errors.append("manual preseason dispatch safety gate is missing")
+    except OSError:
+        safe_manual_preseason = False
+
     return {
         "schema": "pulsar-nba-preseason-software-check-v1",
         "checked_at": datetime.now(timezone.utc).isoformat(),
@@ -107,6 +124,7 @@ def check(*, root: str | Path = ".") -> dict[str, Any]:
             "source_certification_locked": locked,
             "live_workflow_gate_present": gate,
             "data_runner_portable": portable_runner,
+            "safe_manual_preseason_dispatch": safe_manual_preseason,
         },
         "errors": errors,
     }

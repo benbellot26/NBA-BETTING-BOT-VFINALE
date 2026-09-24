@@ -18,7 +18,7 @@ on:
 jobs:
   live:
     if: ${{ vars.NBA_LIVE_ENABLED == 'true' }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.NBA_DATA_RUNNER || 'ubuntu-latest' }}
     timeout-minutes: 15
     permissions:
       contents: write

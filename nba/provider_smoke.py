@@ -17,8 +17,10 @@ def _previous(season: str) -> str:
     return f"{start}-{str(start + 1)[-2:]}"
 
 
-def _classify_failure(exc: Exception) -> str:
+def _classify_failure(exc: Exception, *, source: str = "generic") -> str:
     message = str(exc).lower()
+    if source == "injuries" and "http 404" in message:
+        return "NOT_PUBLISHED"
     if "http 401" in message or "http 403" in message:
         return "ACCESS_BLOCKED"
     if "timeout" in message:
@@ -93,7 +95,7 @@ def run() -> dict[str, Any]:
             teams=len(report.get("team_status") or {}),
             reported_at=report["reported_at"])
     except Exception as exc:
-        state = _classify_failure(exc)
+        state = _classify_failure(exc, source="injuries")
         row = _provider_row(
             state=state, operational_ready=False,
             reachable=(True if state == "NOT_PUBLISHED"
@@ -114,7 +116,7 @@ def run() -> dict[str, Any]:
             except Exception as probe_exc:
                 row["historical_probe"] = {
                     "ok": False, "season": previous,
-                    "state": _classify_failure(probe_exc),
+                    "state": _classify_failure(probe_exc, source="injuries"),
                 }
         providers["injuries"] = row
 

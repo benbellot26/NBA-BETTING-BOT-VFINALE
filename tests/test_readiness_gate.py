@@ -14,6 +14,8 @@ NOW="2026-09-24T06:00:00+00:00"
 class ReadinessGateTests(unittest.TestCase):
     def test_failure_classification_separates_blocked_timeout_and_publication(self):
         self.assertEqual(_classify_failure(RuntimeError("HTTP 403")), "ACCESS_BLOCKED")
+        self.assertEqual(_classify_failure(RuntimeError("HTTP 404"), source="injuries"), "NOT_PUBLISHED")
+        self.assertEqual(_classify_failure(RuntimeError("HTTP 404"), source="stats"), "UNAVAILABLE")
         self.assertEqual(_classify_failure(RuntimeError("TimeoutError")), "TIMEOUT")
         self.assertEqual(
             _classify_failure(RuntimeError(

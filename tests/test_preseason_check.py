@@ -41,6 +41,10 @@ class PreseasonCheckTests(unittest.TestCase):
         self.assertFalse(report["software_ready"])
         self.assertFalse(report["checks"]["live_workflow_gate_present"])
 
+    def test_network_workflows_keep_configurable_runner_fallback(self):
+        result = check(root=ROOT)
+        self.assertTrue(result["checks"]["data_runner_portable"])
+
     def test_source_controlled_certification_must_remain_false(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

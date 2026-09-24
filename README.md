@@ -4,7 +4,7 @@ Pulsar NBA is a standalone NBA probability, market, research and decision engine
 
 ## Current status
 
-**V1.6.4 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
+**V1.6.6 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
 
 ## End-to-end chain
 
@@ -292,3 +292,14 @@ into paper-entry and closing-price evidence. Close capture prefers this stable
 provider event id and refuses to fall back to a same-team/time match when an
 expected id disappears. The id is execution metadata only: it is deliberately
 excluded from the predictive input manifest and model features.
+
+## V1.6.6 — portable NBA data runner
+
+The official-NBA provider, live-research and daily-settlement workflows now use
+`NBA_DATA_RUNNER` when configured and otherwise fall back to
+`ubuntu-latest`. This gives the acquisition layer a clean migration path to a
+trusted runner/network if GitHub-hosted egress remains blocked. Only use a
+trusted runner because live research can receive repository secrets. Changing
+the runner does not bypass PIT checks, certification gates or provider
+validation. An HTTP 404 from the season-specific official injury page is now
+classified as NOT_PUBLISHED rather than a generic transport outage.

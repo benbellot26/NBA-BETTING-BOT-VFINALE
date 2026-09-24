@@ -15,6 +15,8 @@ WORKFLOWS = (
     ".github/workflows/live-research.yml",
     ".github/workflows/daily-evidence.yml",
 )
+DATA_RUNNER_WORKFLOWS = WORKFLOWS + (".github/workflows/provider-smoke.yml",)
+
 MARKETS = ("ML", "SPREAD", "TOTAL")
 
 
@@ -73,6 +75,18 @@ def check(*, root: str | Path = ".") -> dict[str, Any]:
             gate = False
             errors.append(f"missing workflow: {relative}")
 
+    portable_runner = True
+    for relative in DATA_RUNNER_WORKFLOWS:
+        try:
+            content = (directory / relative).read_text(encoding="utf-8")
+            if "vars.NBA_DATA_RUNNER" not in content or "ubuntu-latest" not in content:
+                portable_runner = False
+                errors.append(f"missing configurable NBA data runner: {relative}")
+        except OSError:
+            portable_runner = False
+            if f"missing workflow: {relative}" not in errors:
+                errors.append(f"missing workflow: {relative}")
+
     return {
         "schema": "pulsar-nba-preseason-software-check-v1",
         "checked_at": datetime.now(timezone.utc).isoformat(),
@@ -92,6 +106,7 @@ def check(*, root: str | Path = ".") -> dict[str, Any]:
             "synthetic_candidate_count": fixture.get("candidate_count") if fixture else 0,
             "source_certification_locked": locked,
             "live_workflow_gate_present": gate,
+            "data_runner_portable": portable_runner,
         },
         "errors": errors,
     }

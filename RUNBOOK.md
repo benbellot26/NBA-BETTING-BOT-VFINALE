@@ -240,3 +240,13 @@ New paper entries carry the Odds API event id observed at entry. Closing
 capture must find that same provider event id plus the same home/away teams.
 Legacy rows without an event id retain the stricter team + exact-tip fallback.
 Never edit an event id in a prospective ledger to make a later close match.
+
+## V1.6.6 — alternate trusted data runner
+
+The provider, live-research and daily-evidence workflows read the repository
+Actions variable `NBA_DATA_RUNNER`. Leave it unset to use `ubuntu-latest`.
+If official NBA endpoints remain blocked from GitHub-hosted runners, the
+variable may point to a trusted runner label with working network access.
+Never use an untrusted public runner: live research receives ODDS_API_KEY and
+writes prospective evidence. Switching runners does not make stale or
+post-tip data valid and does not enable NBA_LIVE_ENABLED automatically.

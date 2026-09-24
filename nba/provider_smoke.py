@@ -5,6 +5,7 @@ from pathlib import Path
 import json
 from typing import Any
 
+from .communications_schedule import fetch_reference_schedule
 from .injury_pdf import fetch_latest_report
 from .nba_stats_api import team_stats
 from .schedule import fetch_schedule, season_for_date
@@ -55,14 +56,26 @@ def run() -> dict[str, Any]:
             state="OK", operational_ready=True, reachable=True, games=len(games))
     except Exception as exc:
         state = _classify_failure(exc)
-        providers["schedule"] = _provider_row(
+        row = _provider_row(
             state=state, operational_ready=False,
             reachable=False if state in HARD_FAILURE_STATES else None,
             error=str(exc))
+        try:
+            reference = fetch_reference_schedule(season=season)
+            row["communications_reference"] = {
+                "state": "REFERENCE_ONLY", "games": len(reference),
+                "production_schedule_authority": False,
+            }
+        except Exception as ref_exc:
+            row["communications_reference"] = {
+                "state": "UNAVAILABLE", "error_type": type(ref_exc).__name__,
+            }
+        providers["schedule"] = row
 
     stats_season = season
     try:
-        rows = team_stats(season=stats_season, last_n_games=0, measure_type="Advanced")
+        rows = team_stats(season=stats_season, last_n_games=0, measure_type="Advanced",
+                          timeout=12.0, retries=0)
         if len(rows) >= 25:
             providers["stats"] = _provider_row(
                 state="OK", operational_ready=True, reachable=True,
@@ -70,7 +83,8 @@ def run() -> dict[str, Any]:
         else:
             previous = _previous(season)
             historical = team_stats(
-                season=previous, last_n_games=0, measure_type="Advanced")
+                season=previous, last_n_games=0, measure_type="Advanced",
+                timeout=12.0, retries=0)
             if len(historical) < 25:
                 raise RuntimeError(
                     f"unexpected team-stat row count current={len(rows)} historical={len(historical)}")

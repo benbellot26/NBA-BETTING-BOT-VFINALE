@@ -302,3 +302,11 @@ official provider stack is operational, then the freshness gate, then a
 PRESEASON live-runtime rehearsal. A non-green result is expected before feeds
 are ready and must not be bypassed. The workflow never changes
 `NBA_LIVE_ENABLED` and never promotes betting certification.
+
+## V1.7.1 — www NBA __NEXT_DATA__ inspection
+
+`runtime/www_nextdata_probe.json` is a structure-only diagnostic. It can help
+decide whether the reachable web pages contain actual statistical payloads or
+only Next.js configuration. It deliberately strips query strings from endpoint
+hints and never stores raw HTML. Do not promote this route into
+`OfficialNBAProvider` solely because the probe reports a candidate.

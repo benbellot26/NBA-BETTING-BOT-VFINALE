@@ -1,6 +1,6 @@
 # Pulsar NBA preseason readiness
 
-Updated for V1.7.0 on 24 September 2026.
+Updated for V1.7.1 on 24 September 2026.
 
 ## Implemented now
 
@@ -23,6 +23,7 @@ Updated for V1.7.0 on 24 September 2026.
 - One-shot bookmaker discovery records current market coverage without changing Pinnacle.
 - Daily www.nba.com team/player stats pages are scanned for structured-data signals without storing raw HTML.
 - One-click fail-closed preseason validation stops before paid market calls when official providers are not operational.
+- Reachable NBA stats pages have a structure-only __NEXT_DATA__ reference probe; no raw page or stat rows are persisted.
 - DST coverage test for the broad NBA Actions window.
 - One-request NBA/Pinnacle market coverage and quota diagnostic.
 - Exact entry-contract preference for closing-price CLV.

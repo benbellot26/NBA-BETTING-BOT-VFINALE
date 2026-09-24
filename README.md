@@ -4,7 +4,7 @@ Pulsar NBA is a standalone NBA probability, market, research and decision engine
 
 ## Current status
 
-**V1.7.0 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
+**V1.7.1 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
 
 ## End-to-end chain
 
@@ -366,3 +366,13 @@ which still cannot write paper or prospective evidence or authorize betting.
 The matching GitHub Actions workflow uses `NBA_DATA_RUNNER` when configured.
 The V1.7.0 merge runs it once through a one-time path marker; with the current
 blocked official-provider state it should stop before any paid market request.
+
+## V1.7.1 — NBA __NEXT_DATA__ reference probe
+
+The daily provider diagnostic now parses the `__NEXT_DATA__` JSON embedded in
+reachable `www.nba.com/stats` pages. It records only structural metadata,
+hashes, key-path hints and query-stripped endpoint hints; raw HTML and
+basketball rows are not persisted. A page is only marked as a reference-data
+candidate when both basketball field names and sufficiently large
+team/player/stat arrays are present. Even then it remains REFERENCE_ONLY and
+cannot replace the official stats API without separate parity and PIT review.

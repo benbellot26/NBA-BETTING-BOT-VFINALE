@@ -17,6 +17,7 @@ ENTRY = {
     "home":"Boston Celtics","away":"New York Knicks",
     "commence_time":TIP,"entry_at":"2026-11-15T22:00:00Z",
     "market":"ML","selection":"home_ml","price":2.0,"line":None,
+    "odds_event_id":"nba-market-test",
 }
 
 
@@ -98,6 +99,25 @@ class CloseChronologyTests(unittest.TestCase):
         event={"home":game.home,"away":game.away,"commence_time":TIP}
         with self.assertRaisesRegex(ValueError,"ambiguous duplicate"):
             _match(game,[event,event.copy()])
+
+    def test_close_match_prefers_provider_event_id_over_shifted_tip(self):
+        from nba.close_runtime import _match as close_match
+        entry=dict(ENTRY)
+        events=[
+            {"event_id":"other","home":entry["home"],"away":entry["away"],
+             "commence_time":entry["commence_time"],"markets":{}},
+            {"event_id":"nba-market-test","home":entry["home"],"away":entry["away"],
+             "commence_time":"2026-11-15T22:25:00Z","markets":{}},
+        ]
+        matched=close_match(entry,events)
+        self.assertEqual(matched["event_id"],"nba-market-test")
+
+    def test_close_match_does_not_fallback_when_expected_event_id_disappears(self):
+        from nba.close_runtime import _match as close_match
+        entry=dict(ENTRY)
+        wrong={"event_id":"different","home":entry["home"],"away":entry["away"],
+               "commence_time":entry["commence_time"],"markets":{}}
+        self.assertIsNone(close_match(entry,[wrong]))
 
 
 if __name__=="__main__":

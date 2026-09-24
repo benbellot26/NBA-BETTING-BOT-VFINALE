@@ -284,3 +284,11 @@ not independently prove upstream provider authenticity or publication time.
 ## V1.6.4 — freshness-aware operational readiness
 
 Provider smoke now reports explicit states such as READY, BLOCKED and WAITING_FOR_PUBLICATION, with per-source states including ACCESS_BLOCKED, TIMEOUT, NOT_PUBLISHED and HISTORICAL_ONLY. A previous-season stats/injury probe can demonstrate transport/parser health but can never make current-season acquisition operational. The offline `nba.readiness_gate` requires recent provider and paired-Pinnacle diagnostics before declaring the system ready for a real rehearsal. It never enables live workflows or betting.
+
+## V1.6.5 — Odds event execution lineage
+
+The Odds API event identifier is now preserved from the matched pregame market
+into paper-entry and closing-price evidence. Close capture prefers this stable
+provider event id and refuses to fall back to a same-team/time match when an
+expected id disappears. The id is execution metadata only: it is deliberately
+excluded from the predictive input manifest and model features.

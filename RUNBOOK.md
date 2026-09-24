@@ -233,3 +233,10 @@ or treat a local file checksum as independent proof of provider authenticity.
 ## V1.6.4 — operational readiness
 
 Provider smoke now distinguishes a transport failure from data that simply has not been published yet. Before a real preseason rehearsal, manually refresh provider smoke and market smoke, then run `python -m nba.readiness_gate`. The default gate requires both diagnostics to be no more than 24 hours old. A passing gate is permission to rehearse the data path only; NBA_LIVE_ENABLED remains a separate manual control and source-controlled betting certification remains false.
+
+## V1.6.5 — event matching for closes
+
+New paper entries carry the Odds API event id observed at entry. Closing
+capture must find that same provider event id plus the same home/away teams.
+Legacy rows without an event id retain the stricter team + exact-tip fallback.
+Never edit an event id in a prospective ledger to make a later close match.

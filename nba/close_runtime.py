@@ -33,11 +33,27 @@ def _dt(value: str) -> datetime:
 
 
 def _match(entry: dict[str, Any], events: list[dict[str, Any]]) -> dict[str, Any] | None:
-    return next((
-        game for game in events if canonical_team(game["home"]) == canonical_team(entry["home"])
+    expected_id = str(entry.get("odds_event_id") or "").strip()
+    if expected_id:
+        matching = [
+            game for game in events
+            if str(game.get("event_id") or "").strip() == expected_id
+            and canonical_team(game["home"]) == canonical_team(entry["home"])
+            and canonical_team(game["away"]) == canonical_team(entry["away"])
+        ]
+        if len(matching) > 1:
+            raise ValueError("duplicate odds event id in close snapshot")
+        return matching[0] if matching else None
+    # Legacy research rows created before V1.6.5 have no provider event id.
+    matching = [
+        game for game in events
+        if canonical_team(game["home"]) == canonical_team(entry["home"])
         and canonical_team(game["away"]) == canonical_team(entry["away"])
         and _dt(game["commence_time"]) == _dt(entry["commence_time"])
-    ), None)
+    ]
+    if len(matching) > 1:
+        raise ValueError("ambiguous legacy close event match")
+    return matching[0] if matching else None
 
 
 def _close_row(entry: dict[str, Any], event: dict[str, Any],
@@ -78,6 +94,7 @@ def _close_row(entry: dict[str, Any], event: dict[str, Any],
                     if entry["selection"] == "over" else float(entry_point) - float(close_point))
     return {
         "entry_key": entry["entry_key"], "game_id": entry["game_id"],
+        "odds_event_id": str(event.get("event_id") or entry.get("odds_event_id") or "") or None,
         "market": entry["market"], "selection": entry["selection"],
         "entry_line": entry_point, "close_line": close_point,
         "entry_price": entry["price"], "pinnacle_close_price": float(left_row["price"]),

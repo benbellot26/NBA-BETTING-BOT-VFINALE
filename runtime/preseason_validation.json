@@ -1,0 +1,57 @@
+{
+  "schema": "pulsar-nba-preseason-validation-v1",
+  "role": "PRESEASON_VALIDATION_ONLY",
+  "checked_at": "2026-09-24T07:39:15.543470+00:00",
+  "target_date": "2026-09-24",
+  "status": "PROVIDER_BLOCKED",
+  "provider": {
+    "schema": "pulsar-nba-provider-smoke-v2",
+    "checked_at": "2026-09-24T07:39:15.543478+00:00",
+    "season": "2026-27",
+    "state": "BLOCKED",
+    "transport_ok": false,
+    "operational_ready": false,
+    "ok": false,
+    "providers": {
+      "schedule": {
+        "state": "ACCESS_BLOCKED",
+        "operational_ready": false,
+        "reachable": false,
+        "error": "GET https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_1.json failed: HTTP 403",
+        "communications_reference": {
+          "state": "REFERENCE_ONLY",
+          "games": 1200,
+          "production_schedule_authority": false
+        }
+      },
+      "stats": {
+        "state": "TIMEOUT",
+        "operational_ready": false,
+        "reachable": false,
+        "error": "GET https://stats.nba.com/stats/leaguedashteamstats failed: TimeoutError"
+      },
+      "injuries": {
+        "state": "NOT_PUBLISHED",
+        "operational_ready": false,
+        "reachable": true,
+        "season": "2026-27",
+        "error": "GET https://official.nba.com/nba-injury-report-2026-27-season/ failed: HTTP 404",
+        "historical_probe": {
+          "ok": false,
+          "season": "2025-26",
+          "state": "NOT_PUBLISHED"
+        }
+      }
+    }
+  },
+  "market": null,
+  "readiness": null,
+  "rehearsal": null,
+  "odds_api_requests": 0,
+  "prospective_evidence_eligible": false,
+  "real_betting_authorized": false,
+  "betting_certified": false,
+  "failures": [
+    "provider_not_operational:BLOCKED"
+  ]
+}

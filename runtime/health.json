@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-health-v1",
-  "generated_at": "2026-09-24T07:16:06.623089+00:00",
+  "generated_at": "2026-09-24T07:16:52.491696+00:00",
   "state": "PROVIDER_DEGRADED",
   "live_operational": false,
   "real_betting_authorized": false,
@@ -11,9 +11,9 @@
   "provider_ok": false,
   "provider_state": "BLOCKED",
   "diagnostics": {
-    "provider_age_hours": 0.20270104277777778,
+    "provider_age_hours": 0.005015834166666667,
     "provider_fresh": true,
-    "market_age_hours": 0.1717558077777778,
+    "market_age_hours": 0.18449708750000002,
     "market_fresh": true
   },
   "provider_details": {
@@ -21,7 +21,12 @@
       "state": "ACCESS_BLOCKED",
       "operational_ready": false,
       "reachable": false,
-      "error": "GET https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_1.json failed: HTTP 403"
+      "error": "GET https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_1.json failed: HTTP 403",
+      "communications_reference": {
+        "state": "REFERENCE_ONLY",
+        "games": 1200,
+        "production_schedule_authority": false
+      }
     },
     "stats": {
       "state": "TIMEOUT",
@@ -50,44 +55,52 @@
     "no_complete_pinnacle_event"
   ],
   "runner_probe": {
-    "checked_at": "2026-09-24T07:02:23.860085+00:00",
+    "checked_at": "2026-09-24T07:16:22.267121+00:00",
     "reachable_routes": [
-      "nba_pr_schedule_release"
+      "nba_pr_schedule_release",
+      "www_nba_stats_page"
     ],
     "probes": {
       "cdn_schedule_json": {
         "name": "cdn_schedule_json",
         "ok": false,
         "state": "ACCESS_BLOCKED",
-        "elapsed_ms": 78.2,
+        "elapsed_ms": 197.2,
         "error": "GET https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_1.json failed: HTTP 403"
       },
       "api_hub_schedule_page": {
         "name": "api_hub_schedule_page",
         "ok": false,
         "state": "UNAVAILABLE",
-        "elapsed_ms": 183.5,
+        "elapsed_ms": 318.5,
         "error": "GET https://api-hub.nba.com/schedule failed: HTTP 461"
       },
       "nba_pr_schedule_release": {
         "name": "nba_pr_schedule_release",
         "ok": true,
         "state": "REACHABLE",
-        "elapsed_ms": 670.1,
+        "elapsed_ms": 670.6,
         "size": 128072
+      },
+      "www_nba_stats_page": {
+        "name": "www_nba_stats_page",
+        "ok": true,
+        "state": "REACHABLE",
+        "elapsed_ms": 342.1,
+        "size": 325811
       },
       "official_injury_page": {
         "name": "official_injury_page",
         "ok": false,
         "state": "NOT_PUBLISHED",
-        "elapsed_ms": 229.7,
+        "elapsed_ms": 401.2,
         "error": "GET https://official.nba.com/nba-injury-report-2026-27-season/ failed: HTTP 404"
       },
       "historical_stats_api": {
         "name": "historical_stats_api",
         "ok": false,
         "state": "TIMEOUT",
-        "elapsed_ms": 91808.7,
+        "elapsed_ms": 10123.0,
         "error": "GET https://stats.nba.com/stats/leaguedashteamstats failed: TimeoutError"
       }
     }

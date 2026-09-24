@@ -1,6 +1,6 @@
 # Pulsar NBA preseason readiness
 
-Updated for V1.6.8 on 24 September 2026.
+Updated for V1.6.9 on 24 September 2026.
 
 ## Implemented now
 
@@ -19,6 +19,8 @@ Updated for V1.6.8 on 24 September 2026.
 - Manual preseason workflow dispatch is allowed while regular live automation stays disabled.
 - Daily no-credit provider monitoring and a network-only runner route probe are persisted.
 - Provider/market runs refresh readiness and health snapshots automatically.
+- NBA Communications schedule PDF is used as REFERENCE_ONLY fallback diagnostics.
+- One-shot bookmaker discovery records current market coverage without changing Pinnacle.
 - DST coverage test for the broad NBA Actions window.
 - One-request NBA/Pinnacle market coverage and quota diagnostic.
 - Exact entry-contract preference for closing-price CLV.

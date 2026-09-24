@@ -9,6 +9,8 @@ on:
     paths:
       - 'nba/provider_smoke.py'
       - 'nba/provider_http.py'
+      - 'nba/communications_schedule.py'
+      - 'nba/runner_probe.py'
       - '.github/workflows/provider-smoke.yml'
   schedule:
     - cron: '10 13 * * *'

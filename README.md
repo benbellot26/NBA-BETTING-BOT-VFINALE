@@ -4,7 +4,7 @@ Pulsar NBA is a standalone NBA probability, market, research and decision engine
 
 ## Current status
 
-**V1.6.8 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
+**V1.6.9 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
 
 ## End-to-end chain
 
@@ -326,3 +326,16 @@ readiness and health snapshots. Readiness rejects legacy diagnostic schemas so
 an old green-looking report cannot satisfy the current gate. This release also
 contains a one-time push marker that refreshes the current V2 Pinnacle market
 diagnostic after merge; normal future market checks remain manual.
+
+## V1.6.9 — official schedule reference and bookmaker discovery
+
+When the production NBA CDN schedule is blocked, diagnostics now attempt the
+official NBA Communications schedule-by-date PDF. It is parsed into a separate
+REFERENCE_ONLY structure with deterministic reference IDs and ET-to-UTC times.
+It cannot replace the production schedule/outcome provider because the PDF
+does not supply official NBA game IDs or final scores.
+
+Provider and runner stats probes use short diagnostic timeouts while production
+acquisition keeps its longer retry policy. A one-time bookmaker discovery
+request records which currently listed NBA books expose ML, spread and total
+markets. It never changes the configured Pinnacle benchmark automatically.

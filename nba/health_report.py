@@ -32,6 +32,8 @@ def build(root: str | Path = "runtime", *, at: str | None = None) -> dict[str, A
     performance=_json(ev/"performance.json") or {}
     market=_json(root/"market_smoke.json") or {}
     budget=_json(root/"odds_budget.json") or {}
+    readiness=_json(root/"readiness_gate.json") or {}
+    runner_probe=_json(root/"runner_probe.json") or {}
     audit=_json(ev/"audit.json") or {}
     forecasts=_jsonl(ev/"final_forecasts.jsonl")
     paper=_jsonl(ev/"paper_entries.jsonl")
@@ -68,6 +70,9 @@ def build(root: str | Path = "runtime", *, at: str | None = None) -> dict[str, A
         "diagnostics":{"provider_age_hours":provider_age,"provider_fresh":provider_fresh,"market_age_hours":market_age,"market_fresh":market_fresh},
         "provider_details":provider.get("providers") or {},
         "market_coverage_ready":market.get("coverage_ready"),
+        "ready_for_real_rehearsal":readiness.get("ready_for_real_rehearsal"),
+        "readiness_failures":readiness.get("failures") or [],
+        "runner_probe":{"checked_at":runner_probe.get("checked_at"),"reachable_routes":runner_probe.get("reachable_routes") or [],"probes":runner_probe.get("probes") or {}},
         "odds_budget":{"used":int(budget.get("used") or 0),"limit":budget.get("limit"),"remaining":budget.get("remaining"),"purposes":budget.get("purposes") or {}},
         "evidence":{
             "forecasts":len(forecasts),"paper_entries":len(paper),

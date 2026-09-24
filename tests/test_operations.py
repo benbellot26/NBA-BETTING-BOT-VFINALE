@@ -31,6 +31,7 @@ class OperationsTests(unittest.TestCase):
             result=build(d)
         self.assertFalse(result["live_operational"])
         self.assertEqual(result["evidence"]["forecasts"],0)
+        self.assertEqual(result["runner_probe"]["reachable_routes"],[])
 
     def test_outcomes_are_behind_provider_adapter(self):
         games=[ScheduleGame("g","2026-10-20","2026-10-20T23:00:00Z","Boston Celtics","New York Knicks",3,"Final",120,110)]

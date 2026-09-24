@@ -36,6 +36,8 @@ def assess(*, provider: dict[str, Any] | None,
     if not provider:
         failures.append("provider_smoke_missing")
     else:
+        if provider.get("schema") != "pulsar-nba-provider-smoke-v2":
+            failures.append("provider_smoke_schema_unsupported")
         try:
             ages["provider"] = _age_hours(provider["checked_at"], now)
             if ages["provider"] < -0.1:
@@ -55,6 +57,8 @@ def assess(*, provider: dict[str, Any] | None,
     if not market:
         failures.append("market_smoke_missing")
     else:
+        if market.get("schema") != "pulsar-nba-market-smoke-v2":
+            failures.append("market_smoke_schema_unsupported")
         try:
             ages["market"] = _age_hours(market["checked_at"], now)
             if ages["market"] < -0.1:

@@ -3,6 +3,10 @@ concurrency:
   group: nba-runtime-data
   cancel-in-progress: false
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'ops/market-smoke-refresh-2026-09-24.flag'
   workflow_dispatch:
     inputs:
       require_events:
@@ -32,12 +36,21 @@ jobs:
           ARG=""
           if [ "$REQUIRE_EVENTS" = "true" ]; then ARG="--require-events"; fi
           python -m nba.market_smoke $ARG --output runtime/market_smoke.json
+      - name: Refresh readiness snapshot
+        if: always()
+        run: python -m nba.readiness_gate --output runtime/readiness_gate.json || true
+      - name: Refresh health snapshot
+        if: always()
+        run: python -m nba.health_report --output runtime/health.json || true
       - name: Upload market diagnostic
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: pulsar-nba-market-smoke-${{ github.run_id }}
-          path: runtime/market_smoke.json
+          path: |
+            runtime/market_smoke.json
+            runtime/readiness_gate.json
+            runtime/health.json
           if-no-files-found: ignore
           retention-days: 30
       - name: Persist market diagnostic

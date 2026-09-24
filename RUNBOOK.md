@@ -14,7 +14,7 @@ Pulsar NBA Live Research runs every 20 minutes during the usual NBA game window 
 
 Pulsar NBA Daily Evidence runs once per day. It settles completed paper entries from the official NBA schedule, joins captured closes, refreshes proper scores and CLV diagnostics, and writes a certification candidate.
 
-Pulsar NBA Provider Smoke checks the official schedule, NBA.com team stats and the official injury-report feed once per week.
+Pulsar NBA Provider Smoke checks the official schedule, NBA.com team stats and the official injury-report feed once per day.
 
 ## Fail-closed rules
 
@@ -113,7 +113,7 @@ disables scheduled live research and daily evidence. It should become true only
 after a complete PIT provider end-to-end test is green. Changing the variable
 does not install a missing stats provider or guarantee Pinnacle coverage.
 
-Official-provider smoke runs weekly while the route remains blocked.
+Official-provider smoke runs daily while the route remains blocked; it uses no Odds API credits.
 
 ## Offline research on a local computer
 
@@ -260,3 +260,14 @@ official-provider smoke on the selected NBA_DATA_RUNNER, then runs the
 preseason runtime. Manual or scheduled `regular` research still requires
 `NBA_LIVE_ENABLED=true`. Preseason mode never writes paper/prospective
 evidence and never captures a regular close ledger.
+
+## V1.6.8 — daily source watch
+
+The provider workflow now runs daily and also writes
+`runtime/runner_probe.json`, `runtime/readiness_gate.json` and
+`runtime/health.json`. The runner probe never reads ODDS_API_KEY. It is meant
+to reveal whether an alternate official NBA route becomes reachable from the
+selected NBA_DATA_RUNNER; it does not authorize using that route in the model.
+The V1.6.8 merge performs one current market diagnostic through a one-time path
+marker. After that bootstrap refresh, market smoke remains manual to preserve
+the Odds API quota.

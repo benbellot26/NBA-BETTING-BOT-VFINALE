@@ -1,0 +1,26 @@
+{
+  "schema": "pulsar-nba-operational-readiness-v1",
+  "role": "PRESEASON_OPERATIONAL_GATE_ONLY",
+  "checked_at": "2026-09-24T07:05:33.245546+00:00",
+  "max_age_hours": 24.0,
+  "diagnostic_age_hours": {
+    "provider": 0.026762836388888888,
+    "market": null
+  },
+  "ready_for_real_rehearsal": false,
+  "live_operational": false,
+  "real_betting_authorized": false,
+  "betting_certified": false,
+  "failures": [
+    "provider_not_operational:BLOCKED",
+    "market_smoke_schema_unsupported",
+    "market_smoke_timestamp_invalid",
+    "pinnacle_market_coverage_not_ready",
+    "no_complete_pinnacle_event"
+  ],
+  "warnings": [
+    "provider:schedule:ACCESS_BLOCKED",
+    "provider:stats:TIMEOUT",
+    "provider:injuries:NOT_PUBLISHED"
+  ]
+}

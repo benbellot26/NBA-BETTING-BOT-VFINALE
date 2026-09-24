@@ -1,0 +1,49 @@
+{
+  "schema": "pulsar-nba-runner-network-probe-v1",
+  "checked_at": "2026-09-24T07:02:23.860085+00:00",
+  "season": "2026-27",
+  "probe_season": "2025-26",
+  "role": "NETWORK_DIAGNOSTIC_ONLY",
+  "predictive_evidence_eligible": false,
+  "odds_api_requests": 0,
+  "reachable_routes": [
+    "nba_pr_schedule_release"
+  ],
+  "probes": {
+    "cdn_schedule_json": {
+      "name": "cdn_schedule_json",
+      "ok": false,
+      "state": "ACCESS_BLOCKED",
+      "elapsed_ms": 78.2,
+      "error": "GET https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_1.json failed: HTTP 403"
+    },
+    "api_hub_schedule_page": {
+      "name": "api_hub_schedule_page",
+      "ok": false,
+      "state": "UNAVAILABLE",
+      "elapsed_ms": 183.5,
+      "error": "GET https://api-hub.nba.com/schedule failed: HTTP 461"
+    },
+    "nba_pr_schedule_release": {
+      "name": "nba_pr_schedule_release",
+      "ok": true,
+      "state": "REACHABLE",
+      "elapsed_ms": 670.1,
+      "size": 128072
+    },
+    "official_injury_page": {
+      "name": "official_injury_page",
+      "ok": false,
+      "state": "NOT_PUBLISHED",
+      "elapsed_ms": 229.7,
+      "error": "GET https://official.nba.com/nba-injury-report-2026-27-season/ failed: HTTP 404"
+    },
+    "historical_stats_api": {
+      "name": "historical_stats_api",
+      "ok": false,
+      "state": "TIMEOUT",
+      "elapsed_ms": 91808.7,
+      "error": "GET https://stats.nba.com/stats/leaguedashteamstats failed: TimeoutError"
+    }
+  }
+}

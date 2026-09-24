@@ -1,6 +1,7 @@
 """Manual current NBA market-coverage diagnostic. One Odds API request."""
 from __future__ import annotations
 import argparse, json
+from datetime import datetime, timezone
 from pathlib import Path
 from .acquisition import fetch_nba_odds_diagnostic
 from .odds_normalizer import normalize_game
@@ -37,7 +38,7 @@ def run(*, require_events: bool=False, budget_path: str='runtime/odds_budget.jso
         pinnacle_events+=int(has_pin)
         complete_pinnacle_events+=int(len(event_pairs)==3)
     result={
-        "schema":"pulsar-nba-market-smoke-v2","request_count":1,
+        "schema":"pulsar-nba-market-smoke-v2","checked_at":datetime.now(timezone.utc).isoformat(),"request_count":1,
         "events":len(events),"pinnacle_events":pinnacle_events,
         "market_book_counts":market_counts,
         "paired_pinnacle_market_events":paired_pinnacle_counts,

@@ -228,3 +228,8 @@ artifact for diagnosis. Do not modify the cached JSON or its SHA manually.
 After confirming the required cutoff and source are reachable, obtain a
 new official prospective capture before tip. Never backdate a new capture
 or treat a local file checksum as independent proof of provider authenticity.
+
+
+## V1.6.4 — operational readiness
+
+Provider smoke now distinguishes a transport failure from data that simply has not been published yet. Before a real preseason rehearsal, manually refresh provider smoke and market smoke, then run `python -m nba.readiness_gate`. The default gate requires both diagnostics to be no more than 24 hours old. A passing gate is permission to rehearse the data path only; NBA_LIVE_ENABLED remains a separate manual control and source-controlled betting certification remains false.

@@ -1,0 +1,42 @@
+name: Pulsar NBA Operational Readiness
+concurrency:
+  group: nba-runtime-data
+  cancel-in-progress: false
+on:
+  workflow_dispatch:
+    inputs:
+      max_age_hours:
+        description: Maximum age for provider and market diagnostics
+        required: false
+        default: '24'
+permissions:
+  contents: write
+jobs:
+  readiness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - run: python -m pip install .
+      - name: Hydrate persisted diagnostics
+        run: .github/scripts/hydrate-runtime-data.sh
+      - name: Evaluate readiness without network calls
+        env:
+          MAX_AGE: ${{ inputs.max_age_hours }}
+        run: python -m nba.readiness_gate --max-age-hours "$MAX_AGE"
+      - name: Upload readiness report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pulsar-nba-readiness-${{ github.run_id }}
+          path: runtime/readiness_gate.json
+          if-no-files-found: ignore
+          retention-days: 30
+      - name: Persist readiness report
+        if: always()
+        run: .github/scripts/persist-runtime-data.sh

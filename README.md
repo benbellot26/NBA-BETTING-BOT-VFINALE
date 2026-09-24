@@ -4,7 +4,7 @@ Pulsar NBA is a standalone NBA probability, market, research and decision engine
 
 ## Current status
 
-**V1.6.0 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
+**V1.6.4 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
 
 ## End-to-end chain
 
@@ -280,3 +280,7 @@ rather than silently rebuilding the evidence or reusing stale metadata.
 Integer advanced-window keys are normalized after JSON reload so canonical
 digests remain consistent. These hashes detect local inconsistency; they do
 not independently prove upstream provider authenticity or publication time.
+
+## V1.6.4 — freshness-aware operational readiness
+
+Provider smoke now reports explicit states such as READY, BLOCKED and WAITING_FOR_PUBLICATION, with per-source states including ACCESS_BLOCKED, TIMEOUT, NOT_PUBLISHED and HISTORICAL_ONLY. A previous-season stats/injury probe can demonstrate transport/parser health but can never make current-season acquisition operational. The offline `nba.readiness_gate` requires recent provider and paired-Pinnacle diagnostics before declaring the system ready for a real rehearsal. It never enables live workflows or betting.

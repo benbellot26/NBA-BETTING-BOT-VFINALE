@@ -1,6 +1,6 @@
 # Pulsar NBA preseason readiness
 
-Updated for V1.6 on 23 September 2026.
+Updated for V1.6.4 on 24 September 2026.
 
 ## Implemented now
 
@@ -13,6 +13,8 @@ Updated for V1.6 on 23 September 2026.
 - Runtime-data hydrate/persist scripts with first-run bootstrap and data-only conversion.
 - Serialised runtime workflows and retained Actions artifacts.
 - Health report and workflow failure alert gate.
+- Freshness-aware provider/market readiness gate with no network calls.
+- Provider states distinguish access blocks, timeouts, unpublished reports and historical-only stats.
 - DST coverage test for the broad NBA Actions window.
 - One-request NBA/Pinnacle market coverage and quota diagnostic.
 - Exact entry-contract preference for closing-price CLV.
@@ -33,3 +35,12 @@ These are not coding TODOs and cannot be manufactured before the games/data exis
 7. Consider any real-betting certification only after the configured evidence gates are satisfied and manually reviewed.
 
 Synthetic fixtures, manually imported bundles and data downloaded after games do not count toward these gates.
+
+
+## Operational readiness gate
+
+After manually refreshing both the official-provider smoke and the Pinnacle market smoke, run:
+
+    python -m nba.readiness_gate
+
+A pass only means the persisted diagnostics are recent and show the inputs needed for a real preseason rehearsal. It never sets NBA_LIVE_ENABLED, never certifies a market and never authorizes betting.

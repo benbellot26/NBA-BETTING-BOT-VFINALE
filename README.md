@@ -4,7 +4,7 @@ Pulsar NBA is a standalone NBA probability, market, research and decision engine
 
 ## Current status
 
-**V1.6.9 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
+**V1.6.10 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
 
 ## End-to-end chain
 
@@ -339,3 +339,16 @@ Provider and runner stats probes use short diagnostic timeouts while production
 acquisition keeps its longer retry policy. A one-time bookmaker discovery
 request records which currently listed NBA books expose ML, spread and total
 markets. It never changes the configured Pinnacle benchmark automatically.
+
+## V1.6.10 — www.nba.com stats structure probe
+
+Because the public NBA stats web pages are reachable while the JSON stats API
+times out on GitHub-hosted runners, daily provider diagnostics now inspect four
+official web pages (team/player traditional/advanced) for embedded
+machine-readable data signals. The probe persists only content hashes, byte
+counts, script identifiers and marker counts; raw page HTML is not stored.
+
+A positive structured signal only permits work on a REFERENCE_ONLY parser. It
+does not authorize the web page as a production stats provider and cannot enter
+predictive evidence until independent historical parity and PIT validation are
+completed.

@@ -11,6 +11,7 @@ on:
       - 'nba/provider_http.py'
       - 'nba/communications_schedule.py'
       - 'nba/runner_probe.py'
+      - 'nba/stats_page_probe.py'
       - '.github/workflows/provider-smoke.yml'
   schedule:
     - cron: '10 13 * * *'
@@ -31,6 +32,9 @@ jobs:
       - name: Runner network probe
         if: always()
         run: python -m nba.runner_probe --output runtime/runner_probe.json
+      - name: Inspect reachable www NBA stats pages
+        if: always()
+        run: python -m nba.stats_page_probe --output runtime/www_stats_probe.json
       - name: Official-provider smoke
         run: python -m nba.provider_smoke --output runtime/provider_smoke.json
       - name: Refresh readiness snapshot
@@ -47,6 +51,7 @@ jobs:
           path: |
             runtime/provider_smoke.json
             runtime/runner_probe.json
+            runtime/www_stats_probe.json
             runtime/readiness_gate.json
             runtime/health.json
           if-no-files-found: ignore

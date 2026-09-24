@@ -283,3 +283,12 @@ The bookmaker-discovery report is diagnostic only. Seeing another bookmaker
 with all three featured markets does not authorize replacing Pinnacle. Any
 benchmark change must be explicit in source control and would require a fresh
 prospective validation cycle.
+
+## V1.6.10 — www NBA stats structure probe
+
+Daily provider monitoring writes `runtime/www_stats_probe.json`. It checks
+team/player traditional/advanced pages for fields and embedded application data
+without persisting raw HTML. If all pages contain a stable structured payload,
+the next step is a REFERENCE_ONLY parser plus historical parity tests. Do not
+wire web-page data into `OfficialNBAProvider` merely because the page is
+reachable or contains familiar field names.

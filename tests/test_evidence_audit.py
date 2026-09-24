@@ -36,6 +36,7 @@ def corpus():
     paper = {
         "entry_key": "g|ML|home_ml", "game_id": "g", "market": "ML",
         "selection": "home_ml", "status": "PAPER", "phase": "FINAL",
+        "odds_event_id": "odds-g",
         "model_generation": MODEL_GENERATION,
         "source_snapshot_sha256": manifest["sha256"],
         "source_snapshot_at": manifest["source_snapshot_at"],
@@ -51,7 +52,8 @@ def corpus():
     settled = settle_candidate(paper, home_score=116, away_score=111)
     close = {
         "entry_key": paper["entry_key"], "game_id": "g", "market": "ML",
-        "selection": "home_ml", "captured_at": "2026-11-15T22:19:00Z",
+        "selection": "home_ml", "odds_event_id": "odds-g",
+        "captured_at": "2026-11-15T22:19:00Z",
         "pinnacle_close_no_vig_probability": .52,
         "price_clv_comparable": True, "clv_pp": 2.0,
     }
@@ -119,6 +121,14 @@ class EvidenceAuditTests(unittest.TestCase):
         result = audit_records(forecasts=[f], paper=[p], outcomes=[o],
                                closes=[c], settled=[s])
         self.assertTrue(any("settlement" in e for e in result["errors"]))
+
+    def test_changed_odds_event_id_rejected(self):
+        f, p, o, c, s = corpus()
+        c["odds_event_id"] = "different-event"
+        result = audit_records(forecasts=[f], paper=[p], outcomes=[o],
+                               closes=[c], settled=[s])
+        self.assertFalse(result["ok"])
+        self.assertTrue(any("odds event id" in e for e in result["errors"]))
 
     def test_empty_corpus_is_not_certification(self):
         result = audit_records(forecasts=[], paper=[], outcomes=[],

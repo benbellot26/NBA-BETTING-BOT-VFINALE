@@ -147,6 +147,10 @@ def audit_records(
                     or row["market"] != original["market"]
                     or row["selection"] != original["selection"]):
                 raise ValueError("close and paper settlement contract differ")
+            paper_event = str(original.get("odds_event_id") or "").strip()
+            close_event = str(row.get("odds_event_id") or "").strip()
+            if paper_event and close_event != paper_event:
+                raise ValueError("close odds event id differs from paper entry")
             captured = _dt(row["captured_at"])
             if captured < _dt(original["entry_at"]) or captured >= _dt(original["commence_time"]):
                 raise ValueError("close snapshot was not between entry and tip-off")

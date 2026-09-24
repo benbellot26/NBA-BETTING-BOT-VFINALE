@@ -260,6 +260,9 @@ def run(
                 market = _match(game, odds)
                 if market is None:
                     raise ValueError("odds event/team/tip time unmatched")
+                odds_event_id = str(market.get("event_id") or "").strip()
+                if not odds_event_id:
+                    raise ValueError("odds event id missing")
                 spread = _line(market["markets"]["SPREAD"], "HOME")
                 total = _line(market["markets"]["TOTAL"], "OVER")
                 if spread is None or total is None:
@@ -312,6 +315,8 @@ def run(
                     lineup_uncertain=key_lineup_unresolved,
                 )
                 analysis["commence_time"] = game.commence_time
+                # Execution lineage only; never included in predictive inputs.
+                analysis["odds_event_id"] = odds_event_id
                 analysis["injury_report_at"] = injuries["reported_at"]
                 analysis["input_quality"] = freshness
                 input_manifest = build_input_manifest(

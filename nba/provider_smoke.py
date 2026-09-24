@@ -154,7 +154,7 @@ def main() -> None:
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(payload, encoding="utf-8")
     print(payload)
-    if not result["operational_ready"]:
+    if result["state"] in {"BLOCKED", "DEGRADED"}:
         raise SystemExit(1)
 
 

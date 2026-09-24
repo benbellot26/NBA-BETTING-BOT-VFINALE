@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-health-v1",
-  "generated_at": "2026-09-24T07:05:48.431070+00:00",
+  "generated_at": "2026-09-24T07:16:06.623089+00:00",
   "state": "PROVIDER_DEGRADED",
   "live_operational": false,
   "real_betting_authorized": false,
@@ -11,9 +11,9 @@
   "provider_ok": false,
   "provider_state": "BLOCKED",
   "diagnostics": {
-    "provider_age_hours": 0.0309810375,
+    "provider_age_hours": 0.20270104277777778,
     "provider_fresh": true,
-    "market_age_hours": 3.58025e-05,
+    "market_age_hours": 0.1717558077777778,
     "market_fresh": true
   },
   "provider_details": {
@@ -92,11 +92,29 @@
       }
     }
   },
+  "bookmaker_discovery": {
+    "checked_at": "2026-09-24T07:16:06.567907+00:00",
+    "pinnacle_present": false,
+    "complete_featured_market_events": {
+      "draftkings": 41,
+      "onexbet": 39,
+      "sport888": 20,
+      "betmgm": 19,
+      "gtbets": 19,
+      "bovada": 17,
+      "fanduel": 10,
+      "betrivers": 8,
+      "unibet_nl": 8,
+      "betsson": 5,
+      "nordicbet": 5
+    }
+  },
   "odds_budget": {
-    "used": 1,
+    "used": 2,
     "limit": 48,
-    "remaining": 47,
+    "remaining": 46,
     "purposes": {
+      "bookmaker_discovery": 1,
       "market_smoke": 1
     }
   },

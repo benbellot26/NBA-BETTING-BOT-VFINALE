@@ -1,20 +1,30 @@
 {
-  "schema": "pulsar-nba-provider-smoke-v1",
-  "checked_at": "2026-09-23T17:50:22.335233+00:00",
+  "schema": "pulsar-nba-provider-smoke-v2",
+  "checked_at": "2026-09-24T06:34:00.103645+00:00",
   "season": "2026-27",
+  "state": "BLOCKED",
+  "transport_ok": false,
+  "operational_ready": false,
+  "ok": false,
   "providers": {
     "schedule": {
-      "ok": false,
+      "state": "ACCESS_BLOCKED",
+      "operational_ready": false,
+      "reachable": false,
       "error": "GET https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_1.json failed: HTTP 403"
     },
     "stats": {
-      "ok": false,
+      "state": "TIMEOUT",
+      "operational_ready": false,
+      "reachable": false,
       "error": "GET https://stats.nba.com/stats/leaguedashteamstats failed: TimeoutError"
     },
     "injuries": {
-      "ok": false,
-      "error": "official NBA injury page exposed no timestamped PDF report"
+      "state": "UNAVAILABLE",
+      "operational_ready": false,
+      "reachable": false,
+      "season": "2026-27",
+      "error": "GET https://official.nba.com/nba-injury-report-2026-27-season/ failed: HTTP 404"
     }
-  },
-  "ok": false
+  }
 }

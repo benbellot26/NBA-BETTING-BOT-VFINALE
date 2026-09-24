@@ -1,5 +1,6 @@
 {
-  "schema": "pulsar-nba-market-smoke-v1",
+  "schema": "pulsar-nba-market-smoke-v2",
+  "checked_at": "2026-09-24T07:05:48.302181+00:00",
   "request_count": 1,
   "events": 41,
   "pinnacle_events": 0,
@@ -8,9 +9,15 @@
     "SPREAD": 0,
     "TOTAL": 0
   },
+  "paired_pinnacle_market_events": {
+    "ML": 0,
+    "SPREAD": 0,
+    "TOTAL": 0
+  },
+  "complete_pinnacle_events": 0,
   "quota": {
-    "remaining": 497,
-    "used": 3,
+    "remaining": 494,
+    "used": 6,
     "last_cost": 3
   },
   "coverage_ready": false,

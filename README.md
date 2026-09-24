@@ -4,7 +4,7 @@ Pulsar NBA is a standalone NBA probability, market, research and decision engine
 
 ## Current status
 
-**V1.6.10 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
+**V1.7.0 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
 
 ## End-to-end chain
 
@@ -352,3 +352,17 @@ A positive structured signal only permits work on a REFERENCE_ONLY parser. It
 does not authorize the web page as a production stats provider and cannot enter
 predictive evidence until independent historical parity and PIT validation are
 completed.
+
+## V1.7.0 — one-click preseason validation
+
+`python -m nba.preseason_ops` chains the remaining real-source validation
+steps in a fail-closed order: official providers first, Pinnacle market check
+second, offline readiness third and a real-source PRESEASON runtime rehearsal
+last. If official providers are not operational, it spends **zero** Odds API
+requests. If Pinnacle coverage is absent, it stops after the single market
+diagnostic. Only a fully green chain performs the final preseason runtime,
+which still cannot write paper or prospective evidence or authorize betting.
+
+The matching GitHub Actions workflow uses `NBA_DATA_RUNNER` when configured.
+The V1.7.0 merge runs it once through a one-time path marker; with the current
+blocked official-provider state it should stop before any paid market request.

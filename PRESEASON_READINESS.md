@@ -1,6 +1,6 @@
 # Pulsar NBA preseason readiness
 
-Updated for V1.6.10 on 24 September 2026.
+Updated for V1.7.0 on 24 September 2026.
 
 ## Implemented now
 
@@ -22,6 +22,7 @@ Updated for V1.6.10 on 24 September 2026.
 - NBA Communications schedule PDF is used as REFERENCE_ONLY fallback diagnostics.
 - One-shot bookmaker discovery records current market coverage without changing Pinnacle.
 - Daily www.nba.com team/player stats pages are scanned for structured-data signals without storing raw HTML.
+- One-click fail-closed preseason validation stops before paid market calls when official providers are not operational.
 - DST coverage test for the broad NBA Actions window.
 - One-request NBA/Pinnacle market coverage and quota diagnostic.
 - Exact entry-contract preference for closing-price CLV.

@@ -292,3 +292,13 @@ without persisting raw HTML. If all pages contain a stable structured payload,
 the next step is a REFERENCE_ONLY parser plus historical parity tests. Do not
 wire web-page data into `OfficialNBAProvider` merely because the page is
 reachable or contains familiar field names.
+
+## V1.7.0 — one-click preseason validation
+
+Run `python -m nba.preseason_ops --date YYYY-MM-DD` or manually dispatch
+**Pulsar NBA One-Click Preseason Validation**. The order is intentionally
+cost-aware: provider smoke first (no Odds API), market smoke only when the
+official provider stack is operational, then the freshness gate, then a
+PRESEASON live-runtime rehearsal. A non-green result is expected before feeds
+are ready and must not be bypassed. The workflow never changes
+`NBA_LIVE_ENABLED` and never promotes betting certification.

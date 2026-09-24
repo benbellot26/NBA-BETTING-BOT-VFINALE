@@ -1,0 +1,46 @@
+name: Pulsar NBA Bookmaker Discovery
+concurrency:
+  group: nba-runtime-data
+  cancel-in-progress: false
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'ops/bookmaker-discovery-2026-09-24.flag'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - run: python -m pip install .
+      - name: Hydrate runtime state
+        run: .github/scripts/hydrate-runtime-data.sh
+      - name: Discover currently listed NBA bookmakers
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: python -m nba.bookmaker_discovery --output runtime/bookmaker_discovery.json
+      - name: Refresh health snapshot
+        if: always()
+        run: python -m nba.health_report --output runtime/health.json || true
+      - name: Upload discovery report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pulsar-nba-bookmaker-discovery-${{ github.run_id }}
+          path: |
+            runtime/bookmaker_discovery.json
+            runtime/health.json
+          if-no-files-found: ignore
+          retention-days: 30
+      - name: Persist discovery report
+        if: always()
+        run: .github/scripts/persist-runtime-data.sh

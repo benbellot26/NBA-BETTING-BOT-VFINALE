@@ -66,7 +66,7 @@ class ReadinessGateTests(unittest.TestCase):
         with patch("nba.provider_smoke.fetch_schedule",return_value=[object()]*1000), patch(
             "nba.provider_smoke.team_stats",
             side_effect=[[{"TEAM_NAME":"x"}]*10,[{"TEAM_NAME":"x"}]*30]
-        ), patch("nba.provider_smoke.fetch_latest_report",
+        ), patch("nba.provider_smoke.fetch_reference_schedule",return_value=[]), patch("nba.provider_smoke.fetch_latest_report",
                  return_value={"team_status":{"x":"SUBMITTED"},
                                "record_count":0,"reported_at":"2026-09-24T05:00:00Z"}):
             result=provider_run()

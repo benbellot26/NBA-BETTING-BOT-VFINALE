@@ -1,0 +1,3 @@
+V1.6.9 one-time bookmaker discovery.
+This intentionally consumes one Odds API request on merge.
+Do not edit unless another paid discovery refresh is intended.

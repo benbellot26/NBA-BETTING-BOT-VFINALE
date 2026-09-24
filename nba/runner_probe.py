@@ -50,6 +50,10 @@ def run() -> dict[str, Any]:
             lambda: get_text(
                 f"https://pr.nba.com/{season}-nba-regular-season-schedule",
                 timeout=10.0, retries=0)),
+        "www_nba_stats_page": _timed(
+            "www_nba_stats_page", "stats",
+            lambda: get_text(f"https://www.nba.com/stats/teams/advanced?Season={previous}",
+                             timeout=10.0, retries=0)),
         "official_injury_page": _timed(
             "official_injury_page", "injuries",
             lambda: get_text(injury_page_url(season),
@@ -57,7 +61,8 @@ def run() -> dict[str, Any]:
         "historical_stats_api": _timed(
             "historical_stats_api", "stats",
             lambda: team_stats(
-                season=previous, last_n_games=0, measure_type="Advanced")),
+                season=previous, last_n_games=0, measure_type="Advanced",
+                timeout=10.0, retries=0)),
     }
     reachable = [name for name, row in probes.items() if row["ok"]]
     return {

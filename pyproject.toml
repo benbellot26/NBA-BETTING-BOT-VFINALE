@@ -1,6 +1,6 @@
 [project]
 name = "pulsar-nba"
-version = "1.6.8"
+version = "1.6.9"
 description = "Pulsar NBA probability, research and decision engine"
 requires-python = ">=3.12,<3.13"
 dependencies = ["pypdf==6.19.0"]

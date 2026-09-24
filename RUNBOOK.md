@@ -271,3 +271,15 @@ selected NBA_DATA_RUNNER; it does not authorize using that route in the model.
 The V1.6.8 merge performs one current market diagnostic through a one-time path
 marker. After that bootstrap refresh, market smoke remains manual to preserve
 the Odds API quota.
+
+## V1.6.9 — NBA Communications schedule reference
+
+If CDN schedule acquisition is blocked, diagnostics attempt the official
+schedule-by-date PDF linked from NBA Communications. Treat this source as
+REFERENCE_ONLY: it is suitable for date/team/time publication checks, not for
+assigning production game IDs, settling outcomes or prospective certification.
+
+The bookmaker-discovery report is diagnostic only. Seeing another bookmaker
+with all three featured markets does not authorize replacing Pinnacle. Any
+benchmark change must be explicit in source control and would require a fresh
+prospective validation cycle.

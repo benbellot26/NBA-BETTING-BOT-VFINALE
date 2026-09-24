@@ -33,18 +33,26 @@ def _common(season: str, last_n_games: int, measure_type: str, date_to: str | No
     }
 
 
-def _fetch(endpoint: str, params: dict[str, Any]) -> list[dict[str, Any]]:
-    return _result_rows(get_json(f"{BASE}/{endpoint}?{urlencode(params)}", timeout=30.0, retries=2))
+def _fetch(endpoint: str, params: dict[str, Any], *, timeout: float = 30.0,
+           retries: int = 2) -> list[dict[str, Any]]:
+    return _result_rows(get_json(
+        f"{BASE}/{endpoint}?{urlencode(params)}", timeout=timeout, retries=retries))
 
 
 def team_stats(*, season: str, last_n_games: int = 0,
-               measure_type: str = "Advanced", date_to: str | None = None) -> list[dict[str, Any]]:
-    return _fetch("leaguedashteamstats", _common(season, last_n_games, measure_type, date_to))
+               measure_type: str = "Advanced", date_to: str | None = None,
+               timeout: float = 30.0, retries: int = 2) -> list[dict[str, Any]]:
+    return _fetch("leaguedashteamstats",
+                  _common(season, last_n_games, measure_type, date_to),
+                  timeout=timeout, retries=retries)
 
 
 def player_stats(*, season: str, last_n_games: int = 0,
-                 measure_type: str = "Base", date_to: str | None = None) -> list[dict[str, Any]]:
-    return _fetch("leaguedashplayerstats", _common(season, last_n_games, measure_type, date_to))
+                 measure_type: str = "Base", date_to: str | None = None,
+                 timeout: float = 30.0, retries: int = 2) -> list[dict[str, Any]]:
+    return _fetch("leaguedashplayerstats",
+                  _common(season, last_n_games, measure_type, date_to),
+                  timeout=timeout, retries=retries)
 
 
 def indexed(rows: list[dict[str, Any]], key: str) -> dict[Any, dict[str, Any]]:

@@ -13,7 +13,7 @@ class RunnerProbeTests(unittest.TestCase):
         self.assertEqual(report["role"],"NETWORK_DIAGNOSTIC_ONLY")
         self.assertFalse(report["predictive_evidence_eligible"])
         self.assertEqual(report["odds_api_requests"],0)
-        self.assertEqual(len(report["reachable_routes"]),5)
+        self.assertEqual(len(report["reachable_routes"]),6)
 
     def test_runner_probe_records_failure_without_raising(self):
         with patch("nba.runner_probe.get_json",side_effect=RuntimeError("HTTP 403")), patch(

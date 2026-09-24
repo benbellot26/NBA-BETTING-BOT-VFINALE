@@ -34,9 +34,9 @@ class ReadinessGateTests(unittest.TestCase):
             "NOT_PUBLISHED")
 
     def test_fresh_ready_provider_and_market_pass_rehearsal_gate(self):
-        provider={"checked_at":"2026-09-24T05:00:00Z","state":"READY",
+        provider={"schema":"pulsar-nba-provider-smoke-v2","checked_at":"2026-09-24T05:00:00Z","state":"READY",
                   "operational_ready":True,"providers":{}}
-        market={"checked_at":"2026-09-24T05:30:00Z","coverage_ready":True,
+        market={"schema":"pulsar-nba-market-smoke-v2","checked_at":"2026-09-24T05:30:00Z","coverage_ready":True,
                 "complete_pinnacle_events":3}
         result=assess(provider=provider,market=market,at=NOW,max_age_hours=24)
         self.assertTrue(result["ready_for_real_rehearsal"])

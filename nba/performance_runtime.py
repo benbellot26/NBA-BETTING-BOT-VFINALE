@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 import json
 import math
 from pathlib import Path
+from statistics import median
 from typing import Any
 
 from .certification import certify
@@ -87,6 +88,21 @@ def full_game_cohorts(
     }
 
 
+def _percentile(values: list[float], fraction: float) -> float | None:
+    if not values:
+        return None
+    ordered = sorted(float(value) for value in values)
+    if len(ordered) == 1:
+        return ordered[0]
+    position = max(0.0, min(1.0, fraction)) * (len(ordered) - 1)
+    low = int(math.floor(position))
+    high = int(math.ceil(position))
+    if low == high:
+        return ordered[low]
+    weight = position - low
+    return ordered[low] * (1.0 - weight) + ordered[high] * weight
+
+
 def consensus_benchmark_cohorts(
     forecasts: list[dict[str, Any]], outcomes: list[dict[str, Any]]
 ) -> dict[str, dict[str, Any]]:
@@ -106,6 +122,12 @@ def consensus_benchmark_cohorts(
         "ML": [], "SPREAD": [], "TOTAL": [],
     }
     dispersions: dict[str, list[float]] = {
+        "ML": [], "SPREAD": [], "TOTAL": [],
+    }
+    probability_gaps_pp: dict[str, list[float]] = {
+        "ML": [], "SPREAD": [], "TOTAL": [],
+    }
+    direction_disagreements: dict[str, list[int]] = {
         "ML": [], "SPREAD": [], "TOTAL": [],
     }
     for forecast in forecasts:
@@ -147,18 +169,28 @@ def consensus_benchmark_cohorts(
             count = int(meta.get("book_count") or 0)
             if count < 3:
                 raise ValueError("evaluation consensus has fewer than three books")
+            model_value = float(model_probability[market])
             benchmark_pairs[market].append((value, int(labels[market])))
-            model_pairs[market].append(
-                (float(model_probability[market]), int(labels[market]))
-            )
+            model_pairs[market].append((model_value, int(labels[market])))
             book_counts[market].append(count)
+            probability_gaps_pp[market].append(100.0 * (model_value - value))
+            direction_disagreements[market].append(
+                int((model_value >= 0.5) != (value >= 0.5))
+            )
             if meta.get("dispersion_pp") is not None:
-                dispersions[market].append(float(meta["dispersion_pp"]))
+                dispersion = float(meta["dispersion_pp"])
+                if dispersion < 0:
+                    raise ValueError("evaluation consensus dispersion is negative")
+                dispersions[market].append(dispersion)
 
     result: dict[str, dict[str, Any]] = {}
     for market in ("ML", "SPREAD", "TOTAL"):
         benchmark = _proper_scores(benchmark_pairs[market])
         model = _proper_scores(model_pairs[market])
+        gaps = probability_gaps_pp[market]
+        disagreements = direction_disagreements[market]
+        counts = book_counts[market]
+        dispersion = dispersions[market]
         result[market] = {
             "n": benchmark["n"],
             "consensus_brier": benchmark["brier"],
@@ -167,13 +199,27 @@ def consensus_benchmark_cohorts(
             "model_brier_paired": model["brier"],
             "model_logloss_paired": model["logloss"],
             "model_ece_paired": model["ece"],
-            "mean_book_count": (
-                sum(book_counts[market]) / len(book_counts[market])
-                if book_counts[market] else None
-            ),
+            "mean_book_count": sum(counts) / len(counts) if counts else None,
+            "median_book_count": float(median(counts)) if counts else None,
+            "minimum_book_count": min(counts) if counts else None,
+            "maximum_book_count": max(counts) if counts else None,
             "mean_dispersion_pp": (
-                sum(dispersions[market]) / len(dispersions[market])
-                if dispersions[market] else None
+                sum(dispersion) / len(dispersion) if dispersion else None
+            ),
+            "median_dispersion_pp": (
+                float(median(dispersion)) if dispersion else None
+            ),
+            "p90_dispersion_pp": _percentile(dispersion, 0.90),
+            "maximum_dispersion_pp": max(dispersion) if dispersion else None,
+            "mean_model_minus_consensus_pp": (
+                sum(gaps) / len(gaps) if gaps else None
+            ),
+            "mean_absolute_model_consensus_gap_pp": (
+                sum(abs(value) for value in gaps) / len(gaps) if gaps else None
+            ),
+            "direction_disagreement_rate": (
+                sum(disagreements) / len(disagreements)
+                if disagreements else None
             ),
             "role": "EVALUATION_ONLY",
             "used_for_certification": False,

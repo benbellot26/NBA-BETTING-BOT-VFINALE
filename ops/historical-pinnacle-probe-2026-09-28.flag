@@ -1,2 +1,2 @@
-Second one-shot historical Pinnacle availability probe after archive-layout hotfix.
-Uses explicit 2026-03-20T20:00:00Z snapshot and intentionally consumes one historical Odds API request on merge.
+Third one-shot historical Pinnacle probe with scrubbed provider error-code capture.
+Intentionally consumes one historical Odds API request on merge to identify the exact HTTP 422 provider code.

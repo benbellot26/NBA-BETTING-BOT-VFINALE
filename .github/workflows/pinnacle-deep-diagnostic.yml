@@ -13,9 +13,6 @@ on:
           - basketball_nba_preseason
         required: true
         default: basketball_nba
-      historical_date:
-        description: Optional historical ISO timestamp, e.g. 2026-04-10T22:00:00Z
-        required: false
 permissions:
   contents: write
 jobs:
@@ -37,15 +34,9 @@ jobs:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
           SPORT_KEY: ${{ inputs.sport_key }}
         run: |
-          python -m nba.pinnacle_transport_probe             --sport-key "$SPORT_KEY"             --output runtime/pinnacle_transport_probe.json
-      - name: Probe historical Pinnacle snapshot
-        if: ${{ inputs.historical_date != '' }}
-        env:
-          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
-          SPORT_KEY: ${{ inputs.sport_key }}
-          HISTORICAL_DATE: ${{ inputs.historical_date }}
-        run: |
-          python -m nba.pinnacle_historical_probe             --sport-key "$SPORT_KEY"             --date "$HISTORICAL_DATE"             --output runtime/pinnacle_historical_probe.json
+          python -m nba.pinnacle_transport_probe \
+            --sport-key "$SPORT_KEY" \
+            --output runtime/pinnacle_transport_probe.json
       - name: Refresh health snapshot
         if: always()
         run: python -m nba.health_report --output runtime/health.json || true
@@ -56,7 +47,6 @@ jobs:
           name: pulsar-nba-pinnacle-diagnostic-${{ github.run_id }}
           path: |
             runtime/pinnacle_transport_probe.json
-            runtime/pinnacle_historical_probe.json
             runtime/health.json
           if-no-files-found: ignore
           retention-days: 30

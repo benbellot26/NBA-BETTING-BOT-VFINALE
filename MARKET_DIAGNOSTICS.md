@@ -99,10 +99,12 @@ benchmark, or certification.
 
 ## Historical Pinnacle probe
 
-The same manual workflow can optionally query one historical snapshot using
-`bookmakers=pinnacle`. A historical snapshot with complete ML/spread/total
-pairs yields `HISTORICAL_PINNACLE_READY`.
+Historical access remains handled by the existing **Pulsar NBA Historical
+Pinnacle Probe** workflow and `nba.historical_pinnacle_probe`. It targets a
+known past NBA game, records paired Pinnacle market availability and safely
+persists provider plan errors such as historical access being unavailable.
 
-This is useful to distinguish current slate availability from broader provider
-or account access. Historical evidence still cannot replace current Pinnacle
-quotes for betting decisions or CLV capture.
+The deep current transport probe and the historical probe are intentionally
+separate: current diagnostics may use either regular or preseason sport keys,
+while historical research keeps its established known-game contract. Neither
+can replace current Pinnacle quotes for decisions or CLV capture.

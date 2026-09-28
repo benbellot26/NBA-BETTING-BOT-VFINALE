@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import argparse
 from dataclasses import asdict
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 import hashlib
 import json
 import math
@@ -334,9 +334,7 @@ def build_reference_stat_pack(
         "production_provider_authorized": False,
         "source": SOURCE,
         "season": season,
-        "date_to": (date.fromisoformat(target_date).fromordinal(
-            date.fromisoformat(target_date).toordinal() - 1
-        )).strftime("%m/%d/%Y"),
+        "date_to": (date.fromisoformat(target_date) - timedelta(days=1)).strftime("%m/%d/%Y"),
         "observed_at": datetime.now(timezone.utc).isoformat(),
         "advanced_windows": advanced,
         "base_season": base_season,

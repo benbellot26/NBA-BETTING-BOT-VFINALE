@@ -14,7 +14,7 @@ from typing import Any, Callable
 from .communications_schedule import fetch_reference_schedule
 from .injury_pdf import injury_page_url
 from .nba_stats_api import team_stats
-from .provider_http import get_json, get_text
+from .provider_http import get_bytes, get_json, get_text
 from .provider_smoke import _classify_failure, _previous
 from .schedule import DEFAULT_SCHEDULE_URL, season_for_date
 
@@ -62,6 +62,18 @@ def run() -> dict[str, Any]:
             "official_injury_page", "injuries",
             lambda: get_text(injury_page_url(season),
                              timeout=10.0, retries=0)),
+        "historical_injury_page": _timed(
+            "historical_injury_page", "injuries",
+            lambda: get_text(injury_page_url(previous),
+                             timeout=10.0, retries=0)),
+        "known_official_injury_pdf": _timed(
+            "known_official_injury_pdf", "injuries",
+            lambda: get_bytes(
+                "https://ak-static.cms.nba.com/referee/injury/"
+                "Injury-Report_2026-02-01_11_15PM.pdf",
+                headers={"Accept": "application/pdf"},
+                timeout=10.0, retries=0,
+            )),
         "historical_stats_api": _timed(
             "historical_stats_api", "stats",
             lambda: team_stats(

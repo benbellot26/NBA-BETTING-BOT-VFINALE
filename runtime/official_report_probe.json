@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-official-report-probe-v1",
-  "checked_at": "2026-09-28T11:59:15.531070+00:00",
+  "checked_at": "2026-09-28T12:03:56.126084+00:00",
   "role": "NETWORK_DIAGNOSTIC_ONLY",
   "predictive_evidence_eligible": false,
   "production_provider_authorized": false,
@@ -82,8 +82,8 @@
   "gamebook_samples_total": 3,
   "media_central": {
     "ok": true,
-    "bytes": 273416,
-    "sha256": "954f66e7b4b74e6ca85e27139b43a3ee907e6d36ca1fd158e4c54fdea1d99a91",
+    "bytes": 273555,
+    "sha256": "1d2f5b107a331e7c5518e6091dd1d7e2822425ff389d6c2f21696cc40876fe07",
     "term_hits": {
       "Latest Boxscore Lines": false,
       "Game-by-Game": false,
@@ -149,6 +149,77 @@
       "/stats/tools/media-central-game-stats/",
       "https://cdn.nba.com/static/json/staticData/guides/nba-guide-aba.pdf",
       "https://www.nba.com/stats/tools/media-central-game-stats"
+    ],
+    "raw_html_persisted": false
+  },
+  "historical_injury_page": {
+    "ok": true,
+    "season": "2025-26",
+    "bytes": 116507,
+    "sha256": "55779ef1a045af19b5b8be4e18fdff3762e0b0d64f4ec109a084a594ef22eed7",
+    "marker_counts": {
+      "Injury-Report_": 0,
+      "ak-static.cms.nba.com": 23,
+      "referee/injury": 0,
+      "wp-json": 1,
+      "admin-ajax": 0,
+      "ajaxurl": 0,
+      "iframe": 20
+    },
+    "safe_endpoint_hints": [
+      "http://official.nba.com/nba-last-two-minute-reports-frequently-asked-questions/",
+      "http://official.nba.com/referee-assignments/",
+      "http://www.nba.com/news/referee.html",
+      "https://official.nba.com/2019-20-nba-referees-by-the-numbers/",
+      "https://official.nba.com/2025-26-nba-officiating-last-two-minute-reports/",
+      "https://official.nba.com/nba-injury-report-2022-23-season/",
+      "https://official.nba.com/nba-injury-report-2025-26-season/",
+      "https://official.nba.com/nba-last-two-minute-reports-frequently-asked-questions/",
+      "https://official.nba.com/referee-assignments/",
+      "https://official.nba.com/wp-content/uploads/sites/4/2025/10/2025-26-NBA-Referee-Headshots.pdf",
+      "https://official.nba.com/wp-json/"
+    ],
+    "script_sources": [
+      {
+        "id": null,
+        "src": "https://ak-static.cms.nba.com/wp-includes/js/jquery/jquery.min.js"
+      },
+      {
+        "id": null,
+        "src": "https://ak-static.cms.nba.com/wp-includes/js/jquery/jquery-migrate.min.js"
+      },
+      {
+        "id": null,
+        "src": "https://cdn.nba.com/user-consent/index.min.js"
+      },
+      {
+        "id": null,
+        "src": "https://ak-static.cms.nba.com/wp-content/themes/nba-official/js/bootstrap.min.js"
+      },
+      {
+        "id": null,
+        "src": "https://ak-static.cms.nba.com/wp-content/themes/nba-official/js/fluid-videos.min.js"
+      },
+      {
+        "id": null,
+        "src": "https://ak-static.cms.nba.com/wp-content/themes/nba-official/js/nba-official.min.js"
+      },
+      {
+        "id": null,
+        "src": "https://ak-static.cms.nba.com/wp-content/themes/nba-official/js/pulse-insights.js"
+      },
+      {
+        "id": null,
+        "src": "https://ak-static.cms.nba.com/wp-includes/js/jquery/ui/core.min.js"
+      },
+      {
+        "id": null,
+        "src": "https://ak-static.cms.nba.com/wp-includes/js/jquery/ui/datepicker.min.js"
+      },
+      {
+        "id": null,
+        "src": "https://official.nba.com/LsKxasDIQ/Dgfi/gCo5g/k3L1bp9u5OrEViiVV1/d2tkKgcmAQ/HAt/Ad2MIQEg"
+      }
     ],
     "raw_html_persisted": false
   }

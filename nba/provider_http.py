@@ -20,6 +20,17 @@ def _default_headers(url: str) -> dict[str, str]:
         headers.update({"Referer": "https://official.nba.com/"})
     elif host == "nba.com" or host.endswith(".nba.com"):
         headers.update({"Origin": "https://www.nba.com", "Referer": "https://www.nba.com/"})
+        if host == "stats.nba.com":
+            # stats.nba.com applies stricter request validation than the
+            # public www/CDN properties. These headers mirror the browser
+            # contract used by the NBA stats frontend and remain NBA-only.
+            headers.update({
+                "x-nba-stats-origin": "stats",
+                "x-nba-stats-token": "true",
+                "Connection": "keep-alive",
+                "Pragma": "no-cache",
+                "Cache-Control": "no-cache",
+            })
     return headers
 
 

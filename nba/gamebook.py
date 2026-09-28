@@ -24,11 +24,8 @@ HEADER_RE = {
     "away": re.compile(r"VISITOR:\s*([^\n(]+)", re.I),
     "home": re.compile(r"HOME:\s*([^\n(]+)", re.I),
 }
-TEAM_TOTAL_RE = re.compile(
-    r"^(\d{3}:\d{2})\s+"
-    + r"\s+".join([r"(-?\d+)"] * len(STAT_KEYS))
-    + r"\s*$"
-)
+TEAM_MINUTES_RE = re.compile(r"^\d{3}:\d{2}$")
+INTEGER_RE = re.compile(r"^-?\d+$")
 
 
 @dataclass(frozen=True)
@@ -122,20 +119,27 @@ def _parse_team_segment(
         raise ValueError(
             f"gamebook {side} team mismatch: {observed!r} != {expected_name!r}"
         )
-    total_match = next(
-        (TEAM_TOTAL_RE.fullmatch(line.strip()) for line in text.splitlines()
-         if TEAM_TOTAL_RE.fullmatch(line.strip())),
-        None,
-    )
-    if total_match is None:
+    tokens = text.split()
+    team_minutes_token = None
+    team_stat_tokens = None
+    for index, token in enumerate(tokens):
+        if not TEAM_MINUTES_RE.fullmatch(token):
+            continue
+        candidate = tokens[index + 1:index + 1 + len(STAT_KEYS)]
+        if len(candidate) == len(STAT_KEYS) and all(
+            INTEGER_RE.fullmatch(value) for value in candidate
+        ):
+            team_minutes_token = token
+            team_stat_tokens = candidate
+            break
+    if team_minutes_token is None or team_stat_tokens is None:
         raise ValueError(f"missing {side} team total row in gamebook")
-    total_groups = list(total_match.groups())
-    team_minutes = _minutes(total_groups[0])
+    team_minutes = _minutes(team_minutes_token)
     regulation = 240 * 60
     overtime_increment = 25 * 60
     if team_minutes < regulation or (team_minutes - regulation) % overtime_increment:
         raise ValueError(f"invalid {side} team minute total in gamebook")
-    totals = _stats(total_groups[1:])
+    totals = _stats(team_stat_tokens)
     players = tuple(
         player for line in text.splitlines()
         if (player := _player_line(line)) is not None

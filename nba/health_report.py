@@ -38,6 +38,7 @@ def build(root: str | Path = "runtime", *, at: str | None = None) -> dict[str, A
     www_stats_probe=_json(root/"www_stats_probe.json") or {}
     official_report_probe=_json(root/"official_report_probe.json") or {}
     gamebook_reference=_json(root/"gamebook_reference"/"stat_pack.json") or {}
+    canonical_stats_reference=_json(root/"canonical_stats_reference"/"status.json") or {}
     audit=_json(ev/"audit.json") or {}
     forecasts=_jsonl(ev/"final_forecasts.jsonl")
     paper=_jsonl(ev/"paper_entries.jsonl")
@@ -79,6 +80,19 @@ def build(root: str | Path = "runtime", *, at: str | None = None) -> dict[str, A
         "runner_probe":{"checked_at":runner_probe.get("checked_at"),"reachable_routes":runner_probe.get("reachable_routes") or [],"probes":runner_probe.get("probes") or {}},
         "bookmaker_discovery":{"checked_at":bookmaker_discovery.get("checked_at"),"pinnacle_present":bookmaker_discovery.get("pinnacle_present"),"complete_featured_market_events":bookmaker_discovery.get("complete_featured_market_events") or {}},
         "www_stats_probe":{"checked_at":www_stats_probe.get("checked_at"),"season":www_stats_probe.get("season"),"all_pages_reachable":www_stats_probe.get("all_pages_reachable"),"structured_candidate_for_reference_parser":www_stats_probe.get("structured_candidate_for_reference_parser"),"pages":www_stats_probe.get("pages") or {}},
+        "canonical_stats_reference":{
+            "checked_at":canonical_stats_reference.get("checked_at"),
+            "state":canonical_stats_reference.get("state"),
+            "season":canonical_stats_reference.get("season"),
+            "date_to":canonical_stats_reference.get("date_to"),
+            "canonical_pack_available":canonical_stats_reference.get("canonical_pack_available"),
+            "team_rows":int(canonical_stats_reference.get("team_rows") or 0),
+            "player_rows":int(canonical_stats_reference.get("player_rows") or 0),
+            "parity_attempted":canonical_stats_reference.get("parity_attempted"),
+            "parity_state":canonical_stats_reference.get("parity_state"),
+            "parity_review_ready":canonical_stats_reference.get("parity_review_ready"),
+            "production_provider_authorized":canonical_stats_reference.get("production_provider_authorized"),
+        },
         "gamebook_reference":{
             "role":gamebook_reference.get("role"),
             "season":gamebook_reference.get("season"),

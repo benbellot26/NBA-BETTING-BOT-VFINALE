@@ -44,6 +44,7 @@ class TeamBox:
     side: str
     observed_name: str
     expected_name: str
+    minutes_seconds: int
     totals: dict[str, int]
     players: tuple[PlayerBox, ...]
 
@@ -128,7 +129,13 @@ def _parse_team_segment(
     )
     if total_match is None:
         raise ValueError(f"missing {side} team total row in gamebook")
-    totals = _stats(list(total_match.groups()))
+    total_groups = list(total_match.groups())
+    team_minutes = _minutes(total_groups[0])
+    regulation = 240 * 60
+    overtime_increment = 25 * 60
+    if team_minutes < regulation or (team_minutes - regulation) % overtime_increment:
+        raise ValueError(f"invalid {side} team minute total in gamebook")
+    totals = _stats(total_groups[1:])
     players = tuple(
         player for line in text.splitlines()
         if (player := _player_line(line)) is not None
@@ -137,10 +144,17 @@ def _parse_team_segment(
         raise ValueError(f"too few active {side} players in gamebook")
     if sum(player.stats["PTS"] for player in players) != totals["PTS"]:
         raise ValueError(f"{side} player points do not reconcile to team total")
+    player_minutes = sum(player.minutes_seconds for player in players)
+    if abs(player_minutes - team_minutes) > 5:
+        raise ValueError(
+            f"{side} player minutes do not reconcile to team total: "
+            f"{player_minutes} != {team_minutes}"
+        )
     return TeamBox(
         side=side,
         observed_name=observed,
         expected_name=expected_name,
+        minutes_seconds=team_minutes,
         totals=totals,
         players=players,
     )

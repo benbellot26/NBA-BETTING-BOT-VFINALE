@@ -5,6 +5,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from .research_readiness import build as build_research_readiness
+
 def _json(path: Path) -> dict[str, Any] | None:
     try: return json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError, TypeError): return None
@@ -68,12 +70,14 @@ def build(root: str | Path = "runtime", *, at: str | None = None) -> dict[str, A
     if market and not market_fresh and state=="READY_FOR_REHEARSAL":
         state="DIAGNOSTIC_STALE"
     if live.get("status")=="NO_ANALYSIS": state="ANALYSIS_BLOCKED"
+    research_readiness=build_research_readiness(root)
     return {
         "schema":"pulsar-nba-health-v1",
         "generated_at":now.isoformat(),
         "state":state,
         "live_operational":False,
         "real_betting_authorized":False,
+        "research_readiness":research_readiness,
         "last_live_status":live.get("status"),
         "last_target_date":live.get("target_date"),
         "last_odds_api_requests":int(live.get("odds_api_requests") or 0),

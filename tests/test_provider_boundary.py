@@ -2,6 +2,7 @@ import json
 import tempfile
 import unittest
 from dataclasses import asdict, replace
+from datetime import datetime
 from pathlib import Path
 from unittest.mock import patch
 
@@ -51,7 +52,8 @@ class ProviderBoundaryTests(unittest.TestCase):
             "nba.providers.acquire_stat_pack", return_value=fixture.stats
         ), patch(
             "nba.providers.fetch_latest_report", return_value=fixture.injuries
-        ):
+        ), patch("nba.providers.datetime", wraps=datetime) as clock:
+            clock.now.return_value = datetime.fromisoformat("2026-11-15T22:00:00+00:00")
             snapshot = OfficialNBAProvider().capture(target_date="2026-11-15")
         self.assertEqual(snapshot.schedule[0]["game_id"], fallback[0].game_id)
         communications.assert_called_once_with(

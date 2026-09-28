@@ -61,10 +61,11 @@ PISTONS 21 36 30 28 115
 
     def test_injury_page_probe_persists_safe_structure_only(self):
         html = (
-            '<script id="loader" src="/wp-content/injury-loader.js"></script>'
+            '<html>' + ('x' * 1200)
+            + '<script id="loader" src="/wp-content/injury-loader.js"></script>'
             '<div data-endpoint="https://official.nba.com/wp-json/injury/v1/reports?nonce=secret"></div>'
             '<script>{"pdf":"https:\\/\\/ak-static.cms.nba.com\\/referee\\/injury\\/'
-            'Injury-Report_2026-02-01_11_15PM.pdf"}</script>'
+            'Injury-Report_2026-02-01_11_15PM.pdf"}</script></html>'
         )
         result = _injury_page_probe(html, season="2025-26")
         self.assertTrue(result["ok"])

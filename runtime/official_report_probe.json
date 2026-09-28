@@ -1,34 +1,35 @@
 {
   "schema": "pulsar-nba-official-report-probe-v1",
-  "checked_at": "2026-09-28T07:54:28.621139+00:00",
+  "checked_at": "2026-09-28T08:03:36.664494+00:00",
   "role": "NETWORK_DIAGNOSTIC_ONLY",
   "predictive_evidence_eligible": false,
   "production_provider_authorized": false,
   "odds_api_requests": 0,
   "official_gamebook_candidate": false,
   "media_central_reachable": true,
-  "gamebook": {
-    "ok": false,
-    "bytes": 124975,
-    "sha256": "9e886ec034bfe67b5c4034e94b8f7bd0bf02183771a1ad8be5b32af0814d9106",
-    "pages": 19,
-    "marker_hits": {
-      "NATIONAL BASKETBALL ASSOCIATION OFFICIAL SCORER'S": true,
-      "FINAL BOX": true,
-      "VISITOR: Golden State Warriors": false,
-      "HOME: DETROIT PISTONS": false,
-      "SCORE BY": true,
-      "Warriors": true,
-      "PISTONS": true
+  "gamebook_samples": {
+    "2025_finals_ind_okc": {
+      "ok": false,
+      "error_type": "ValueError",
+      "error": "missing away team total row in gamebook"
     },
-    "stat_header_signal": true,
-    "team_total_line_count": 2,
-    "raw_text_persisted": false
+    "2026_regular_gsw_det": {
+      "ok": false,
+      "error_type": "ValueError",
+      "error": "missing away team total row in gamebook"
+    },
+    "2026_regular_lal_orl": {
+      "ok": false,
+      "error_type": "ValueError",
+      "error": "missing away team total row in gamebook"
+    }
   },
+  "gamebook_samples_ok": 0,
+  "gamebook_samples_total": 3,
   "media_central": {
     "ok": true,
-    "bytes": 273418,
-    "sha256": "1db791e87549c2012fae90d294a031b61ae965aaae6c632370b2a2fc39d1c3a1",
+    "bytes": 273419,
+    "sha256": "52b221bd0f7f1794a6a76ef54c01dd4dbfa286333b2b84fd11c4939621e72919",
     "term_hits": {
       "Latest Boxscore Lines": false,
       "Game-by-Game": false,

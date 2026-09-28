@@ -1,18 +1,18 @@
 {
   "schema": "pulsar-nba-www-stats-structure-probe-v1",
-  "checked_at": "2026-09-28T07:54:25.570038+00:00",
+  "checked_at": "2026-09-28T08:03:34.983557+00:00",
   "season": "2025-26",
   "role": "NETWORK_DIAGNOSTIC_ONLY",
   "predictive_evidence_eligible": false,
   "production_provider_authorized": false,
   "odds_api_requests": 0,
-  "all_pages_reachable": true,
-  "structured_candidate_for_reference_parser": true,
+  "all_pages_reachable": false,
+  "structured_candidate_for_reference_parser": false,
   "pages": {
     "teams_advanced": {
       "ok": true,
-      "bytes": 325995,
-      "sha256": "6c9c7118e06cb685cf46304cf42379e8034b88885e995b2f66bb93249a92aa25",
+      "bytes": 325996,
+      "sha256": "7c773ca4473c6e7ce156096043792fa56f8f8f9da1061122c7222e1444e2b9a7",
       "marker_counts": {
         "OFF_RATING": 0,
         "DEF_RATING": 0,
@@ -41,8 +41,8 @@
     },
     "teams_traditional": {
       "ok": true,
-      "bytes": 326025,
-      "sha256": "69260cce6b84836dcb0996d6e39e4b1a3706438e38633d4b2b0e78135d082e91",
+      "bytes": 326026,
+      "sha256": "b851d6ef32cb0c301392d1b460d3a0686ad5530ba00743031d39e9fa119b036c",
       "marker_counts": {
         "OFF_RATING": 0,
         "DEF_RATING": 0,
@@ -70,39 +70,14 @@
       "basketball_field_signal": false
     },
     "players_advanced": {
-      "ok": true,
-      "bytes": 403658,
-      "sha256": "254390968cdc56252e3406437b941a861dcbf607616c1e9d14772ab7f8e64548",
-      "marker_counts": {
-        "OFF_RATING": 0,
-        "DEF_RATING": 0,
-        "PACE": 0,
-        "GP": 0,
-        "TEAM_NAME": 0,
-        "PLAYER_NAME": 0,
-        "rowSet": 0,
-        "resultSet": 0,
-        "resultSets": 0,
-        "__NEXT_DATA__": 1,
-        "self.__next_f.push": 0
-      },
-      "script_ids": [
-        "__NEXT_DATA__",
-        "gam-src",
-        "tealium-override",
-        "tealium-script",
-        "theme-loader",
-        "user-consent"
-      ],
-      "json_script_tags": 2,
-      "next_stream_chunks": 0,
-      "structured_payload_signal": true,
-      "basketball_field_signal": false
+      "ok": false,
+      "error_type": "ProviderError",
+      "error": "GET https://www.nba.com/stats/players/advanced failed: HTTP 502"
     },
     "players_traditional": {
       "ok": true,
-      "bytes": 403688,
-      "sha256": "13cb66f854a166c1073998c61501d9dd2937ab840b63b7a9de9f826ffd3ff2d8",
+      "bytes": 403689,
+      "sha256": "346215fd431e247add09c566f48ebbeb5d9c75885532cf740bd0420eda55e6a0",
       "marker_counts": {
         "OFF_RATING": 0,
         "DEF_RATING": 0,

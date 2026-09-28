@@ -87,8 +87,22 @@ def assess(
 ) -> dict[str, Any]:
     if alternate.get("schema") != "pulsar-nba-gamebook-stat-pack-v1":
         raise ValueError("unsupported alternate stat-pack schema")
+    if alternate.get("role") != "ALTERNATE_REFERENCE_ONLY":
+        raise ValueError("alternate stat pack role is not reference-only")
+    if alternate.get("source") != "NBA_OFFICIAL_SCORERS_REPORT":
+        raise ValueError("alternate stat pack source mismatch")
     if alternate.get("production_provider_authorized") is not False:
         raise ValueError("alternate stat pack contains forbidden authority")
+    if alternate.get("usage_scale") != "fraction_0_to_1":
+        raise ValueError("alternate usage scale mismatch")
+    if alternate.get("possession_method") != "symmetric_boxscore_estimate":
+        raise ValueError("alternate possession method mismatch")
+    if alternate.get("player_rating_method") != "team_efficiency_neutral_baseline":
+        raise ValueError("alternate player rating method mismatch")
+    for field in ("gamebook_manifest_sha256", "stat_pack_sha256"):
+        value = str(alternate.get(field) or "")
+        if len(value) != 64 or any(ch not in "0123456789abcdef" for ch in value.lower()):
+            raise ValueError(f"alternate {field} missing or invalid")
     if canonical.get("season") != alternate.get("season"):
         raise ValueError("parity season mismatch")
     if canonical.get("date_to") != alternate.get("date_to"):

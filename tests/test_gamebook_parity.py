@@ -64,6 +64,12 @@ def pack(source: str, *, offset: float = 0.0, completeness: float = 1.0):
             "schema": "pulsar-nba-gamebook-stat-pack-v1",
             "production_provider_authorized": False,
             "source": "NBA_OFFICIAL_SCORERS_REPORT",
+            "role": "ALTERNATE_REFERENCE_ONLY",
+            "usage_scale": "fraction_0_to_1",
+            "possession_method": "symmetric_boxscore_estimate",
+            "player_rating_method": "team_efficiency_neutral_baseline",
+            "gamebook_manifest_sha256": "a" * 64,
+            "stat_pack_sha256": "b" * 64,
             "gamebook_completeness": completeness,
         })
     return result
@@ -93,6 +99,12 @@ class GamebookParityTests(unittest.TestCase):
         )
         self.assertFalse(result["review_ready"])
         self.assertTrue(any("gamebook_completeness" in item for item in result["failures"]))
+
+    def test_wrong_metric_contract_is_rejected(self):
+        alternate = pack("alternate")
+        alternate["usage_scale"] = "percent_0_to_100"
+        with self.assertRaisesRegex(ValueError, "usage scale"):
+            assess(pack("canonical"), alternate)
 
     def test_alternate_cannot_claim_authority(self):
         alternate = pack("alternate")

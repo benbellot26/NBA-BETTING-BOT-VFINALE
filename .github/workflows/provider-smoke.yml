@@ -14,6 +14,7 @@ on:
       - 'nba/stats_page_probe.py'
       - 'nba/nextdata_probe.py'
       - 'nba/official_report_probe.py'
+      - 'nba/gamebook.py'
       - '.github/workflows/provider-smoke.yml'
   schedule:
     - cron: '10 13 * * *'

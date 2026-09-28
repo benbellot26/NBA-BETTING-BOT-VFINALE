@@ -3,11 +3,13 @@
   "purposes": {
     "bookmaker_discovery": 1,
     "historical_pinnacle_probe": 2,
-    "market_smoke": 1
+    "market_smoke": 1,
+    "pinnacle_eu_probe:basketball_nba_preseason": 1,
+    "pinnacle_target_probe:basketball_nba_preseason": 1
   },
-  "remaining": 44,
+  "remaining": 42,
   "schema": "pulsar-nba-odds-budget-v1",
-  "updated_at": "2026-09-28T12:46:24.215859+00:00",
-  "used": 4,
+  "updated_at": "2026-09-28T14:27:35.311815+00:00",
+  "used": 6,
   "utc_date": "2026-09-28"
 }

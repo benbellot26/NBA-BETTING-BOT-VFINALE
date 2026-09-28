@@ -1,0 +1,62 @@
+{
+  "benchmark_bookmaker": "pinnacle",
+  "betting_certified": false,
+  "checked_at": "2026-09-28T14:27:35.078851+00:00",
+  "common_event_ids": 0,
+  "eu_region": {
+    "complete_pinnacle_events": 0,
+    "event_ids": [],
+    "events": 0,
+    "fresh_pinnacle_market_events": {
+      "ML": 0,
+      "SPREAD": 0,
+      "TOTAL": 0
+    },
+    "normalized_pinnacle_events": 0,
+    "paired_pinnacle_market_events": {
+      "ML": 0,
+      "SPREAD": 0,
+      "TOTAL": 0
+    },
+    "raw_events_with_bookmakers": 0,
+    "raw_events_with_pinnacle": 0
+  },
+  "pinnacle_replacement_allowed": false,
+  "production_market_authorized": false,
+  "region_only_event_ids": 0,
+  "regional_quota": {
+    "last_cost": 0,
+    "remaining": 479,
+    "used": 21
+  },
+  "request_count": 2,
+  "role": "MARKET_DIAGNOSTIC_ONLY",
+  "schema": "pulsar-nba-pinnacle-transport-probe-v1",
+  "season_mode": "PRESEASON",
+  "sport_key": "basketball_nba_preseason",
+  "state": "NO_EVENTS_FOR_SPORT_KEY",
+  "target_only_event_ids": 0,
+  "targeted": {
+    "complete_pinnacle_events": 0,
+    "event_ids": [],
+    "events": 0,
+    "fresh_pinnacle_market_events": {
+      "ML": 0,
+      "SPREAD": 0,
+      "TOTAL": 0
+    },
+    "normalized_pinnacle_events": 0,
+    "paired_pinnacle_market_events": {
+      "ML": 0,
+      "SPREAD": 0,
+      "TOTAL": 0
+    },
+    "raw_events_with_bookmakers": 0,
+    "raw_events_with_pinnacle": 0
+  },
+  "targeted_quota": {
+    "last_cost": 0,
+    "remaining": 479,
+    "used": 21
+  }
+}

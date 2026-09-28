@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-health-v1",
-  "generated_at": "2026-09-28T12:31:36.038207+00:00",
+  "generated_at": "2026-09-28T12:37:56.352015+00:00",
   "state": "PROVIDER_DEGRADED",
   "live_operational": false,
   "real_betting_authorized": false,
@@ -11,9 +11,9 @@
   "provider_ok": false,
   "provider_state": "BLOCKED",
   "diagnostics": {
-    "provider_age_hours": 0.39987467250000003,
+    "provider_age_hours": 0.5055173969444444,
     "provider_fresh": true,
-    "market_age_hours": 3.994583333333333e-05,
+    "market_age_hours": 0.10568267027777778,
     "market_fresh": true
   },
   "provider_details": {

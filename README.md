@@ -474,3 +474,18 @@ The capture writes explicit states such as `READY_FOR_PARITY`,
 and gamebook packs share the exact season/cutoff, the job automatically runs
 the manual-only gamebook parity gate. The workflow cannot authorize the
 alternate provider, enable betting or change the frozen V1 model.
+
+
+## Official gamebook provider shadow
+
+Because hosted runners can currently reach official NBA scorer gamebooks while
+`stats.nba.com` may time out, the repository includes a separate
+`ALTERNATE_PROVIDER_SHADOW` path. It builds PIT stats only from completed
+official gamebooks, requires complete history + submitted injury reports, and
+records market-free structural forecasts 5–30 minutes before tipoff.
+
+It does **not** replace `OfficialNBAProvider`, has no predictive/production
+authority and cannot bet. Scheduled runs require
+`NBA_PROVIDER_SHADOW_ENABLED=true`; manual dispatch remains available.
+
+See `PROVIDER_SHADOW.md`.

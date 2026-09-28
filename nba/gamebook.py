@@ -77,8 +77,7 @@ def _stats(values: list[str]) -> dict[str, int]:
     return dict(zip(STAT_KEYS, parsed))
 
 
-def _player_line(line: str) -> PlayerBox | None:
-    tokens = line.split()
+def _player_tokens(tokens: list[str]) -> PlayerBox | None:
     if len(tokens) < 2 or not tokens[0].isdigit():
         return None
     time_index = next(
@@ -87,13 +86,12 @@ def _player_line(line: str) -> PlayerBox | None:
     )
     if time_index is None:
         return None
-    after = tokens[time_index + 1:]
-    if len(after) != len(STAT_KEYS):
+    after = tokens[time_index + 1:time_index + 1 + len(STAT_KEYS)]
+    if len(after) != len(STAT_KEYS) or not all(
+        INTEGER_RE.fullmatch(value) for value in after
+    ):
         return None
-    try:
-        stats = _stats(after)
-    except ValueError:
-        return None
+    stats = _stats(after)
     name_tokens = tokens[1:time_index]
     if name_tokens and name_tokens[-1].upper() in POSITION_CODES:
         name_tokens = name_tokens[:-1]
@@ -106,6 +104,41 @@ def _player_line(line: str) -> PlayerBox | None:
         minutes_seconds=_minutes(tokens[time_index]),
         stats=stats,
     )
+
+
+def _players_from_text(text: str) -> tuple[PlayerBox, ...]:
+    """Parse active-player rows even when PDF extraction wraps stat columns."""
+    lines = text.splitlines()
+    players: list[PlayerBox] = []
+    for index, line in enumerate(lines):
+        tokens = line.split()
+        time_index = next(
+            (i for i, token in enumerate(tokens) if TIME_RE.fullmatch(token)),
+            None,
+        )
+        if time_index is None or not tokens or not tokens[0].isdigit():
+            continue
+        combined = list(tokens)
+        numeric_after = combined[time_index + 1:]
+        next_index = index + 1
+        while len(numeric_after) < len(STAT_KEYS) and next_index < len(lines):
+            continuation = lines[next_index].split()
+            added = 0
+            for token in continuation:
+                if len(numeric_after) >= len(STAT_KEYS):
+                    break
+                if not INTEGER_RE.fullmatch(token):
+                    break
+                combined.append(token)
+                numeric_after.append(token)
+                added += 1
+            if added == 0:
+                break
+            next_index += 1
+        player = _player_tokens(combined)
+        if player is not None:
+            players.append(player)
+    return tuple(players)
 
 
 def _parse_team_segment(
@@ -140,10 +173,7 @@ def _parse_team_segment(
     if team_minutes < regulation or (team_minutes - regulation) % overtime_increment:
         raise ValueError(f"invalid {side} team minute total in gamebook")
     totals = _stats(team_stat_tokens)
-    players = tuple(
-        player for line in text.splitlines()
-        if (player := _player_line(line)) is not None
-    )
+    players = _players_from_text(text)
     if len(players) < 5:
         raise ValueError(f"too few active {side} players in gamebook")
     if sum(player.stats["PTS"] for player in players) != totals["PTS"]:

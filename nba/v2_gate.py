@@ -22,6 +22,15 @@ METRICS = (
     ("total_mae", "lower", MAX_MAE_DEGRADATION),
 )
 
+OPTIONAL_MARKET_METRICS = (
+    ("spread_brier", MAX_BRIER_DEGRADATION),
+    ("spread_logloss", MAX_LOGLOSS_DEGRADATION),
+    ("spread_ece", MAX_ECE_DEGRADATION),
+    ("total_brier", MAX_BRIER_DEGRADATION),
+    ("total_logloss", MAX_LOGLOSS_DEGRADATION),
+    ("total_ece", MAX_ECE_DEGRADATION),
+)
+
 
 def _finite_number(value: Any, name: str) -> float:
     try:
@@ -50,6 +59,23 @@ def assess(report: dict[str, Any], *, minimum_holdout: int = MIN_HOLDOUT) -> dic
     comparisons: dict[str, Any] = {}
     strict_improvements = 0
     for metric, direction, tolerance in METRICS:
+        base = _finite_number(champion.get(metric), f"champion.{metric}")
+        shadow = _finite_number(challenger.get(metric), f"shadow.{metric}")
+        delta = shadow - base
+        noninferior = delta <= tolerance
+        improved = delta < 0
+        if improved:
+            strict_improvements += 1
+        if not noninferior:
+            failures.append(f"{metric}_degradation>{tolerance}")
+        comparisons[metric] = {
+            "champion": base, "shadow": shadow,
+            "delta_shadow_minus_champion": delta,
+            "noninferior": noninferior, "improved": improved,
+        }
+    for metric, tolerance in OPTIONAL_MARKET_METRICS:
+        if champion.get(metric) is None or challenger.get(metric) is None:
+            continue
         base = _finite_number(champion.get(metric), f"champion.{metric}")
         shadow = _finite_number(challenger.get(metric), f"shadow.{metric}")
         delta = shadow - base

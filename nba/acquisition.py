@@ -6,6 +6,15 @@ from urllib.parse import urlencode
 from .provider_http import get_json, get_json_with_headers, get_json_with_error_code
 
 ODDS_API_BASE="https://api.the-odds-api.com/v4"
+NBA_REGULAR_SPORT_KEY="basketball_nba"
+NBA_PRESEASON_SPORT_KEY="basketball_nba_preseason"
+VALID_NBA_ODDS_SPORT_KEYS={NBA_REGULAR_SPORT_KEY,NBA_PRESEASON_SPORT_KEY}
+
+def _sport_key(value:str|None)->str:
+    key=str(value or NBA_REGULAR_SPORT_KEY).strip()
+    if key not in VALID_NBA_ODDS_SPORT_KEYS:
+        raise ValueError(f"unsupported NBA odds sport key: {key}")
+    return key
 
 
 def _historical_timestamp(value: str) -> str:
@@ -19,19 +28,19 @@ def _key(api_key:str|None)->str:
     if not key:raise RuntimeError("ODDS_API_KEY is required for odds acquisition")
     return key
 
-def fetch_nba_odds(*,api_key:str|None=None,regions:str="eu,us",markets:str="h2h,spreads,totals",bookmakers:str|None=None)->list[dict[str,Any]]:
+def fetch_nba_odds(*,api_key:str|None=None,regions:str="eu,us",markets:str="h2h,spreads,totals",bookmakers:str|None=None,sport_key:str=NBA_REGULAR_SPORT_KEY)->list[dict[str,Any]]:
     params={"apiKey":_key(api_key),"markets":markets,"oddsFormat":"decimal","dateFormat":"iso"}
     if bookmakers:params["bookmakers"]=bookmakers
     else:params["regions"]=regions
-    data=get_json(f"{ODDS_API_BASE}/sports/basketball_nba/odds/?{urlencode(params)}")
+    data=get_json(f"{ODDS_API_BASE}/sports/{_sport_key(sport_key)}/odds/?{urlencode(params)}")
     if not isinstance(data,list):raise RuntimeError("unexpected odds provider payload")
     return data
 
-def fetch_historical_nba_odds(*,date_iso:str,api_key:str|None=None,regions:str="eu,us",markets:str="h2h,spreads,totals",bookmakers:str="pinnacle")->dict[str,Any]:
+def fetch_historical_nba_odds(*,date_iso:str,api_key:str|None=None,regions:str="eu,us",markets:str="h2h,spreads,totals",bookmakers:str="pinnacle",sport_key:str=NBA_REGULAR_SPORT_KEY)->dict[str,Any]:
     params={"apiKey":_key(api_key),"markets":markets,"oddsFormat":"decimal","dateFormat":"iso","date":_historical_timestamp(date_iso)}
     if bookmakers:params["bookmakers"]=bookmakers
     else:params["regions"]=regions
-    data=get_json(f"{ODDS_API_BASE}/historical/sports/basketball_nba/odds?{urlencode(params)}")
+    data=get_json(f"{ODDS_API_BASE}/historical/sports/{_sport_key(sport_key)}/odds?{urlencode(params)}")
     if not isinstance(data,dict) or not isinstance(data.get("data"),list):raise RuntimeError("unexpected historical odds payload")
     return data
 
@@ -43,13 +52,14 @@ def load_fixture(path:str)->Any:
 def fetch_nba_odds_diagnostic(*, api_key: str | None = None,
                               regions: str = "eu,us",
                               markets: str = "h2h,spreads,totals",
-                              bookmakers: str | None = "pinnacle") -> dict[str, Any]:
+                              bookmakers: str | None = "pinnacle",
+                              sport_key: str = NBA_REGULAR_SPORT_KEY) -> dict[str, Any]:
     """One current NBA odds request plus scrubbed quota telemetry."""
     params={"apiKey":_key(api_key),"markets":markets,"oddsFormat":"decimal","dateFormat":"iso"}
     if bookmakers: params["bookmakers"]=bookmakers
     else: params["regions"]=regions
     data, headers=get_json_with_headers(
-        f"{ODDS_API_BASE}/sports/basketball_nba/odds/?{urlencode(params)}")
+        f"{ODDS_API_BASE}/sports/{_sport_key(sport_key)}/odds/?{urlencode(params)}")
     if not isinstance(data,list): raise RuntimeError("unexpected odds provider payload")
     usage={}
     for source,target in (
@@ -71,6 +81,7 @@ def fetch_historical_nba_odds_diagnostic(
     regions: str = "eu,us",
     markets: str = "h2h,spreads,totals",
     bookmakers: str = "pinnacle",
+    sport_key: str = NBA_REGULAR_SPORT_KEY,
 ) -> dict[str, Any]:
     """Historical odds request with scrubbed provider error-code diagnostics."""
     params = {
@@ -85,7 +96,7 @@ def fetch_historical_nba_odds_diagnostic(
     else:
         params["regions"] = regions
     data, headers = get_json_with_error_code(
-        f"{ODDS_API_BASE}/historical/sports/basketball_nba/odds?{urlencode(params)}"
+        f"{ODDS_API_BASE}/historical/sports/{_sport_key(sport_key)}/odds?{urlencode(params)}"
     )
     if not isinstance(data, dict) or not isinstance(data.get("data"), list):
         raise RuntimeError("unexpected historical odds payload")

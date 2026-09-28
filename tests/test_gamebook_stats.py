@@ -2,7 +2,7 @@ import unittest
 
 from nba.communications_schedule import ReferenceScheduleGame
 from nba.gamebook import parse_final_box_text
-from nba.gamebook_stats import _validate_cached, build_reference_stat_pack
+from nba.gamebook_stats import _json_sha256, _validate_cached, build_reference_stat_pack
 from nba.rotation_projection import project_rotation
 from nba.teams import team_info
 from test_gamebook import FINAL_BOX
@@ -24,8 +24,22 @@ class GamebookStatPackTests(unittest.TestCase):
             "away": "Golden State Warriors",
             "home": "Detroit Pistons",
             "pdf_sha256": "a" * 64,
+            "parsed_sha256": _json_sha256(parsed),
             "parsed": parsed,
         }
+
+    def test_empty_preseason_history_is_complete_not_missing(self):
+        pack = build_reference_stat_pack(
+            season="2026-27",
+            target_date="2026-09-28",
+            gamebooks=[],
+            missing=[],
+        )
+        self.assertEqual(pack["expected_gamebooks"], 0)
+        self.assertEqual(pack["gamebook_completeness"], 1.0)
+        self.assertTrue(pack["collection_complete"])
+        self.assertEqual(len(pack["gamebook_manifest_sha256"]), 64)
+        self.assertEqual(len(pack["stat_pack_sha256"]), 64)
 
     def test_builds_team_windows_and_player_rows(self):
         pack = build_reference_stat_pack(
@@ -78,6 +92,12 @@ class GamebookStatPackTests(unittest.TestCase):
         record["game_date"] = "2026-03-19"
         with self.assertRaisesRegex(ValueError, "date mismatch"):
             _validate_cached(record, game)
+
+    def test_cached_gamebook_rejects_tampered_parsed_payload(self):
+        record = self._record()
+        record["parsed"]["away_score"] += 1
+        with self.assertRaisesRegex(ValueError, "parsed checksum"):
+            _validate_cached(record)
 
     def test_cached_gamebook_rejects_invalid_pdf_digest(self):
         record = self._record()

@@ -29,6 +29,9 @@ jobs:
         run: python -m nba.evidence_audit
       - name: Refresh learned V2 prospective comparison
         run: python -m nba.v2_prospective
+      - name: Refresh research readiness
+        if: always()
+        run: python -m nba.research_readiness --output runtime/research_readiness.json || true
       - name: Refresh health report
         if: always()
         run: python -m nba.health_report || true

@@ -82,3 +82,13 @@ separate non-predictive workflow. This decouples parity evidence from injuries,
 market data and live-runtime readiness. Failure to reach `stats.nba.com` is
 persisted as provider diagnostic state rather than silently selecting the
 gamebook source. Exact season/cutoff equality is required before parity runs.
+
+
+## Postgame outcome authority fallback
+
+Prospective model inputs remain isolated from outcomes. Settlement first asks
+the official NBA schedule for final scores. If that transport fails, a
+postgame-only adapter can read checksum-validated cached NBA Official Scorer
+gamebooks. The evidence audit accepts only `official_nba_schedule` and
+`official_nba_gamebook` as outcome sources. Gamebook fallback never modifies
+the predictive input manifest or model generation.

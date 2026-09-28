@@ -66,15 +66,48 @@ def _existing(path: str | Path) -> set[str]:
     }
 
 
+def _historical_access_blocked(probe_path: str | Path) -> tuple[bool, str | None]:
+    target = Path(probe_path)
+    if not target.exists():
+        return False, None
+    try:
+        probe = json.loads(target.read_text(encoding="utf-8"))
+    except (OSError, ValueError, TypeError):
+        return False, None
+    code = str(probe.get("provider_error_code") or "") or None
+    return (
+        probe.get("state") == "HISTORICAL_PROVIDER_ERROR"
+        and code == "HISTORICAL_UNAVAILABLE_ON_FREE_USAGE_PLAN",
+        code,
+    )
+
+
 def recover(
     *,
     forecasts_path: str = "runtime/evidence/final_forecasts.jsonl",
     output_path: str = "runtime/research/pinnacle_historical_entry.jsonl",
     budget_path: str = "runtime/odds_budget.json",
+    access_probe_path: str = "runtime/historical_pinnacle_probe.json",
     max_snapshots: int = 8,
 ) -> dict[str, Any]:
     if max_snapshots < 1:
         raise ValueError("max_snapshots must be positive")
+    blocked, provider_code = _historical_access_blocked(access_probe_path)
+    if blocked:
+        return {
+            "schema": "pulsar-nba-historical-pinnacle-recovery-status-v1",
+            "role": ROLE,
+            "status": "SKIPPED_ACCESS_BLOCKED",
+            "provider_error_code": provider_code,
+            "pending_forecasts": 0,
+            "snapshot_groups": 0,
+            "snapshots_attempted": 0,
+            "added": 0,
+            "failures": [],
+            "odds_api_requests": 0,
+            "used_for_certification": False,
+            "betting_certified": False,
+        }
     forecasts = [
         row for row in _read(forecasts_path)
         if row.get("role") == "PIT_FINAL_FORECAST"
@@ -177,6 +210,7 @@ def recover(
     return {
         "schema": "pulsar-nba-historical-pinnacle-recovery-status-v1",
         "role": ROLE,
+        "status": "COMPLETE",
         "pending_forecasts": len(pending),
         "snapshot_groups": len(groups),
         "snapshots_attempted": attempted,
@@ -193,12 +227,14 @@ def main() -> None:
     parser.add_argument("--forecasts", default="runtime/evidence/final_forecasts.jsonl")
     parser.add_argument("--output", default="runtime/research/pinnacle_historical_entry.jsonl")
     parser.add_argument("--budget", default="runtime/odds_budget.json")
+    parser.add_argument("--access-probe", default="runtime/historical_pinnacle_probe.json")
     parser.add_argument("--max-snapshots", type=int, default=8)
     args = parser.parse_args()
     print(json.dumps(recover(
         forecasts_path=args.forecasts,
         output_path=args.output,
         budget_path=args.budget,
+        access_probe_path=args.access_probe,
         max_snapshots=args.max_snapshots,
     ), indent=2))
 

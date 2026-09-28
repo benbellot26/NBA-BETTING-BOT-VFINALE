@@ -38,13 +38,17 @@ jobs:
             exit 0
           fi
           LIMIT="${MAX_SNAPSHOTS:-4}"
-          python -m nba.historical_pinnacle_recovery --max-snapshots "$LIMIT"
+          mkdir -p runtime/research
+          python -m nba.historical_pinnacle_recovery --max-snapshots "$LIMIT"             | tee runtime/research/pinnacle_historical_recovery_status.json
       - name: Score recovered historical Pinnacle
         if: always()
         run: |
           if [ -f runtime/research/pinnacle_historical_entry.jsonl ]; then
             python -m nba.historical_pinnacle_performance
           fi
+      - name: Refresh research readiness
+        if: always()
+        run: python -m nba.research_readiness --output runtime/research_readiness.json || true
       - name: Refresh health report
         if: always()
         run: python -m nba.health_report --output runtime/health.json || true
@@ -56,6 +60,8 @@ jobs:
           path: |
             runtime/research/pinnacle_historical_entry.jsonl
             runtime/research/pinnacle_historical_performance.json
+            runtime/research/pinnacle_historical_recovery_status.json
+            runtime/research_readiness.json
             runtime/odds_budget.json
             runtime/health.json
           if-no-files-found: ignore

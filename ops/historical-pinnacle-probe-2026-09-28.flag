@@ -1,0 +1,1 @@
+One-shot historical Pinnacle availability probe. This intentionally consumes one historical Odds API request on merge.

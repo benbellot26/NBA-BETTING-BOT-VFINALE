@@ -146,6 +146,11 @@ def evaluate(
     proper = _proper(ml_pairs)
     paired_shadow_proper = _proper(paired_shadow_ml)
     paired_v1_proper = _proper(paired_v1_ml)
+    completeness_values = [
+        float(row.get("gamebook_completeness"))
+        for row in forecasts
+        if row.get("gamebook_completeness") is not None
+    ]
     report = {
         "schema": "pulsar-nba-gamebook-provider-shadow-performance-v1",
         "role": "MANUAL_REVIEW_ONLY",
@@ -159,6 +164,9 @@ def evaluate(
         "margin_mae": mae(margin_pred, actual_margin) if resolved else None,
         "total_mae": mae(total_pred, actual_total) if resolved else None,
         "paired_v1_n": len(paired_actual_margin),
+        "minimum_gamebook_completeness": (
+            min(completeness_values) if completeness_values else None
+        ),
         "paired_shadow_margin_mae": (
             mae(paired_shadow_margin, paired_actual_margin)
             if paired_actual_margin else None

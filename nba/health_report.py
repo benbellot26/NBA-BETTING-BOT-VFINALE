@@ -41,6 +41,7 @@ def build(root: str | Path = "runtime", *, at: str | None = None) -> dict[str, A
     canonical_stats_reference=_json(root/"canonical_stats_reference"/"status.json") or {}
     provider_shadow_status=_json(root/"provider_shadow"/"status.json") or {}
     provider_shadow_performance=_json(root/"provider_shadow"/"performance.json") or {}
+    provider_shadow_gate=_json(root/"provider_shadow"/"review_gate.json") or {}
     provider_shadow_forecasts=_jsonl(root/"provider_shadow"/"gamebook_forecasts.jsonl")
     audit=_json(ev/"audit.json") or {}
     forecasts=_jsonl(ev/"final_forecasts.jsonl")
@@ -125,6 +126,8 @@ def build(root: str | Path = "runtime", *, at: str | None = None) -> dict[str, A
             "paired_v1_margin_mae":provider_shadow_performance.get("paired_v1_margin_mae"),
             "paired_shadow_total_mae":provider_shadow_performance.get("paired_shadow_total_mae"),
             "paired_v1_total_mae":provider_shadow_performance.get("paired_v1_total_mae"),
+            "review_ready":provider_shadow_gate.get("review_ready"),
+            "review_failures":provider_shadow_gate.get("failures") or [],
             "production_provider_authorized":False,
             "predictive_authority":False,
             "betting_certified":False,

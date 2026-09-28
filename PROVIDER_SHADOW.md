@@ -64,3 +64,20 @@ It makes no Odds API request and is independent of `NBA_LIVE_ENABLED`.
 A future promotion would require a new frozen provider generation, explicit
 human review and fresh prospective validation. This shadow evidence alone does
 not modify `OfficialNBAProvider`.
+
+
+## Manual review gate
+
+Prospective evidence can be checked with:
+
+    python -m nba.gamebook_shadow_gate
+
+The default gate requires at least 250 resolved shadow forecasts and at least
+100 games with a paired canonical V1 FINAL forecast. All recorded gamebook
+histories must have 100% completeness. On those paired games the shadow must
+remain within strict non-inferiority tolerances versus V1 for margin MAE, total
+MAE and ML Brier score.
+
+A passing gate sets only `review_ready=true`. It always keeps
+`production_provider_authorized=false`, `predictive_authority=false`,
+`auto_promote=false` and `betting_certified=false`.

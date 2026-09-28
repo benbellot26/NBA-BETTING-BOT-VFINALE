@@ -11,7 +11,13 @@ import math
 from typing import Any, Callable
 
 from .distribution import normal_cdf
-from .v2_dataset import dataset_fingerprint, feature_vector, targets, validate_training_row
+from .v2_dataset import (
+    dataset_fingerprint,
+    feature_vector,
+    inference_feature_vector,
+    targets,
+    validate_training_row,
+)
 from .v2_features import FEATURE_NAMES, FEATURE_SCHEMA
 
 LEARNED_GENERATION = "pulsar-nba-v2-ridge-heteroskedastic-v1"
@@ -68,7 +74,7 @@ class RidgeRegressor:
         )
 
     def predict_row(self, row: dict[str, Any]) -> float:
-        return self.predict_vector(feature_vector(row))
+        return self.predict_vector(inference_feature_vector(row))
 
 
 def _fit_ridge(
@@ -129,14 +135,14 @@ class LearnedV2Model:
     role: str = "SHADOW"
 
     def predict(self, row: dict[str, Any]) -> dict[str, float]:
-        clean = validate_training_row(row)
-        margin = self.margin_model.predict_row(clean)
-        total = self.total_model.predict_row(clean)
+        values = inference_feature_vector(row)
+        margin = self.margin_model.predict_vector(values)
+        total = self.total_model.predict_vector(values)
         margin_log_mae = max(
-            -2.0, min(4.0, self.margin_log_mae_model.predict_row(clean))
+            -2.0, min(4.0, self.margin_log_mae_model.predict_vector(values))
         )
         total_log_mae = max(
-            -2.0, min(4.0, self.total_log_mae_model.predict_row(clean))
+            -2.0, min(4.0, self.total_log_mae_model.predict_vector(values))
         )
         margin_mae = max(0.25, math.exp(margin_log_mae) - 0.5)
         total_mae = max(0.25, math.exp(total_log_mae) - 0.5)

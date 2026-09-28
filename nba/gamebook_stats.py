@@ -364,7 +364,7 @@ def build_reference_stat_pack(
     player_advanced = _player_rows(team_games, last_n=None, advanced=True)
     teams_with_games = sum(bool(rows) for rows in team_games.values())
     expected = len(gamebooks) + len(missing or [])
-    completeness = _safe_div(len(gamebooks), expected, 0.0) if expected else 0.0
+    completeness = _safe_div(len(gamebooks), expected, 0.0) if expected else 1.0
     return {
         "schema": "pulsar-nba-gamebook-stat-pack-v1",
         "role": ROLE,
@@ -379,8 +379,10 @@ def build_reference_stat_pack(
         "player_recent": player_recent,
         "player_advanced": player_advanced,
         "gamebooks": len(gamebooks),
+        "expected_gamebooks": expected,
         "missing_gamebooks": list(missing or []),
         "gamebook_completeness": completeness,
+        "collection_complete": len(missing or []) == 0,
         "teams_with_games": teams_with_games,
         "player_rating_method": "team_efficiency_neutral_baseline",
         "usage_scale": "fraction_0_to_1",

@@ -17,7 +17,7 @@ from urllib.parse import urlsplit
 
 from .gamebook import parse_gamebook_pdf
 from .injury_pdf import injury_page_url
-from .provider_http import get_bytes, get_text
+from .provider_http import get_bytes, get_json, get_text
 from .schedule import season_for_date
 
 # Fixed historical Official Scorer's Reports make runner diagnostics
@@ -68,6 +68,10 @@ ATTR_URL_RE = re.compile(
 ABS_URL_RE = re.compile(r'https?://[^"\'<>\\\s]+', re.I)
 SCRIPT_RE = re.compile(
     r'<script[^>]+(?:id=["\']([^"\']*)["\'])?[^>]*src=["\']([^"\']+)["\']',
+    re.I,
+)
+IFRAME_RE = re.compile(
+    r'<iframe[^>]+src=["\']([^"\']+)["\']',
     re.I,
 )
 INJURY_STRUCTURE_MARKERS = (
@@ -226,6 +230,20 @@ def _injury_page_probe(html: str, *, season: str) -> dict[str, Any]:
                 "id": script_id or None,
                 "src": safe,
             })
+    iframes = []
+    for src in IFRAME_RE.findall(normalized):
+        safe = _safe_url_hint(src)
+        if safe is not None:
+            iframes.append(safe)
+    cms_assets = sorted({
+        safe
+        for candidate in (
+            list(ATTR_URL_RE.findall(normalized))
+            + list(ABS_URL_RE.findall(normalized))
+        )
+        if (safe := _safe_url_hint(candidate)) is not None
+        and "ak-static.cms.nba.com" in safe.lower()
+    })[:100]
     return {
         "ok": len(normalized) > 1000,
         "season": season,
@@ -234,8 +252,33 @@ def _injury_page_probe(html: str, *, season: str) -> dict[str, Any]:
         "marker_counts": marker_counts,
         "safe_endpoint_hints": sorted(hints)[:100],
         "script_sources": scripts[:80],
+        "iframe_sources": sorted(set(iframes))[:80],
+        "cms_asset_hints": cms_assets,
         "raw_html_persisted": False,
     }
+
+
+def _wp_injury_probe(payload: Any, *, season: str) -> dict[str, Any]:
+    serialized = json.dumps(
+        payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+    )
+    structural = _injury_page_probe(serialized, season=season)
+    items = payload if isinstance(payload, list) else []
+    structural.update({
+        "response_type": type(payload).__name__,
+        "item_count": len(items),
+        "top_level_keys": (
+            sorted(str(key) for key in payload.keys())
+            if isinstance(payload, dict)
+            else []
+        ),
+        "item_keys": (
+            sorted(str(key) for key in items[0].keys())
+            if items and isinstance(items[0], dict)
+            else []
+        ),
+    })
+    return structural
 
 
 def run() -> dict[str, Any]:
@@ -245,6 +288,7 @@ def run() -> dict[str, Any]:
     gamebooks: dict[str, Any] = {}
     media: dict[str, Any]
     injury_page: dict[str, Any]
+    injury_wp_rest: dict[str, Any]
     for expected in KNOWN_GAMEBOOKS:
         name = str(expected["name"])
         try:
@@ -293,6 +337,25 @@ def run() -> dict[str, Any]:
             "error": str(exc),
             "raw_html_persisted": False,
         }
+    try:
+        injury_wp_payload = get_json(
+            "https://official.nba.com/wp-json/wp/v2/pages"
+            f"?slug=nba-injury-report-{historical_season}-season&context=view",
+            headers={"Accept": "application/json,*/*"},
+            timeout=12.0,
+            retries=0,
+        )
+        injury_wp_rest = _wp_injury_probe(
+            injury_wp_payload, season=historical_season
+        )
+    except Exception as exc:
+        injury_wp_rest = {
+            "ok": False,
+            "season": historical_season,
+            "error_type": type(exc).__name__,
+            "error": str(exc),
+            "raw_html_persisted": False,
+        }
     candidate = bool(gamebooks) and all(
         row.get("ok") is True for row in gamebooks.values()
     )
@@ -312,6 +375,7 @@ def run() -> dict[str, Any]:
         "gamebook_samples_total": len(gamebooks),
         "media_central": media,
         "historical_injury_page": injury_page,
+        "historical_injury_wp_rest": injury_wp_rest,
     }
 
 

@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-official-report-probe-v1",
-  "checked_at": "2026-09-28T09:07:54.918478+00:00",
+  "checked_at": "2026-09-28T11:59:15.531070+00:00",
   "role": "NETWORK_DIAGNOSTIC_ONLY",
   "predictive_evidence_eligible": false,
   "production_provider_authorized": false,
@@ -82,8 +82,8 @@
   "gamebook_samples_total": 3,
   "media_central": {
     "ok": true,
-    "bytes": 273527,
-    "sha256": "1dd505adc16632aa6f4f5409ac12efc8c3b7a92e790be5f53db4c1291f293734",
+    "bytes": 273416,
+    "sha256": "954f66e7b4b74e6ca85e27139b43a3ee907e6d36ca1fd158e4c54fdea1d99a91",
     "term_hits": {
       "Latest Boxscore Lines": false,
       "Game-by-Game": false,

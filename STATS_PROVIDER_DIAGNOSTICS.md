@@ -31,3 +31,18 @@ A successful alternate route would still remain diagnostic. The probe always
 sets `predictive_evidence_eligible=false` and
 `production_provider_authorized=false`; provider promotion would require a
 separate frozen adapter, parity review and fresh prospective validation.
+
+
+## Hosted runner matrix
+
+`nba.stats_runner_matrix` compares the exact same official route probe across
+`ubuntu-latest`, `windows-latest` and `macos-latest`.
+
+The matrix is transport evidence only. A working hosted runner is reported in
+`working_runners`, but the workflow never changes `NBA_DATA_RUNNER` and the
+health report exposes `runner_auto_switch_allowed=false`.
+
+If one hosted runner can reach the canonical `stats.nba.com` LeagueDash
+payload while another cannot, that is useful evidence of an egress/network
+difference. A runner change would still require an explicit repository setting
+change and a fresh provider smoke before any live research path could use it.

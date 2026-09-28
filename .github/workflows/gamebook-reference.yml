@@ -32,6 +32,9 @@ jobs:
       - name: Increment official gamebook reference cache
         run: |
           python -m nba.gamebook_stats             --max-network-games 60             --output runtime/gamebook_reference/stat_pack.json
+      - name: Refresh health snapshot
+        if: always()
+        run: python -m nba.health_report --output runtime/health.json || true
       - name: Upload reference artifacts
         if: always()
         uses: actions/upload-artifact@v4

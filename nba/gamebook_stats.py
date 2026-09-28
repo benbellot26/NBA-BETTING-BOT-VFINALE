@@ -62,14 +62,36 @@ def _cache_path(root: str | Path, reference_id: str) -> Path:
     return Path(root) / "gamebooks" / f"{clean}.json"
 
 
-def _validate_cached(payload: dict[str, Any]) -> dict[str, Any]:
+def _validate_cached(
+    payload: dict[str, Any],
+    game: ReferenceScheduleGame | None = None,
+) -> dict[str, Any]:
     if payload.get("schema") != "pulsar-nba-gamebook-cache-v1":
         raise ValueError("unsupported gamebook cache schema")
     if payload.get("source") != SOURCE:
         raise ValueError("gamebook cache source mismatch")
+    digest = str(payload.get("pdf_sha256") or "")
+    if len(digest) != 64 or any(ch not in "0123456789abcdef" for ch in digest.lower()):
+        raise ValueError("gamebook cache PDF digest invalid")
     parsed = payload.get("parsed")
     if not isinstance(parsed, dict) or parsed.get("source") != SOURCE:
         raise ValueError("gamebook cache parsed payload invalid")
+    away = str(payload.get("away") or "")
+    home = str(payload.get("home") or "")
+    if not away or not home:
+        raise ValueError("gamebook cache team identity missing")
+    parsed_away = str((parsed.get("away") or {}).get("expected_name") or "")
+    parsed_home = str((parsed.get("home") or {}).get("expected_name") or "")
+    if parsed_away != away or parsed_home != home:
+        raise ValueError("gamebook cache parsed team identity mismatch")
+    if game is not None:
+        if payload.get("reference_id") != game.reference_id:
+            raise ValueError("gamebook cache reference mismatch")
+        if payload.get("game_date") != game.game_date:
+            raise ValueError("gamebook cache date mismatch")
+        expected = {game.team1, game.team2}
+        if {away, home} != expected:
+            raise ValueError("gamebook cache schedule participants mismatch")
     return payload
 
 
@@ -90,7 +112,9 @@ def fetch_gamebook(
 ) -> dict[str, Any]:
     path = _cache_path(cache_root, game.reference_id)
     if path.exists():
-        return _validate_cached(json.loads(path.read_text(encoding="utf-8")))
+        return _validate_cached(
+            json.loads(path.read_text(encoding="utf-8")), game
+        )
 
     errors: list[str] = []
     for away, home in _candidate_orders(game):
@@ -116,6 +140,7 @@ def fetch_gamebook(
                 "pdf_sha256": hashlib.sha256(data).hexdigest(),
                 "parsed": parsed,
             }
+            _validate_cached(payload, game)
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(
                 json.dumps(payload, sort_keys=True, separators=(",", ":")),
@@ -270,6 +295,7 @@ def _player_rows(
         team_summary = _aggregate_team(team, selected)
         assert team_summary is not None
         team_fga = team_fta = team_tov = 0.0
+        team_floor_minutes = 0.0
         appearances: dict[str, dict[str, Any]] = {}
         for game in selected:
             own = game["team"]
@@ -277,6 +303,7 @@ def _player_rows(
             team_fga += float(totals["FGA"])
             team_fta += float(totals["FTA"])
             team_tov += float(totals["TOV"])
+            team_floor_minutes += float(own["minutes_seconds"]) / 5.0 / 60.0
             for player in own.get("players") or []:
                 name = str(player["name"])
                 key = normalized_player_name(name)
@@ -299,7 +326,7 @@ def _player_rows(
                 float(bucket["FGA"]) + 0.44 * float(bucket["FTA"]) + float(bucket["TOV"])
             )
             usage = _safe_div(
-                player_actions * (len(selected) * 48.0),
+                player_actions * team_floor_minutes,
                 minutes * team_usage_den,
                 0.0,
             )

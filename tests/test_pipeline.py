@@ -16,6 +16,29 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(out["role"],"RESEARCH")
         self.assertIn("probability_intervals",out)
 
+    def test_consensus_benchmark_never_substitutes_for_pinnacle(self):
+        quote="2026-10-20T19:59:00Z"
+        books={"ML":[
+            {"bookmaker":"a","last_update":quote,"selections":[
+                {"selection":"HOME","price":1.90},{"selection":"AWAY","price":2.00}]},
+            {"bookmaker":"b","last_update":quote,"selections":[
+                {"selection":"HOME","price":1.95},{"selection":"AWAY","price":1.95}]},
+            {"bookmaker":"c","last_update":quote,"selections":[
+                {"selection":"HOME","price":2.00},{"selection":"AWAY","price":1.90}]},
+        ]}
+        out=analyze_game(
+            home=TeamMetrics("BOS",120,111,99),away=TeamMetrics("NYK",117,113,98),
+            context=GameContext("1","2026-10-20","2026-10-20T20:00:00Z","BOS","NYK"),
+            spread_line=-3.5,total_line=228.5,books_by_market=books,
+        )
+        bench=out["market_benchmark"]["markets"]["ML"]
+        self.assertEqual(bench["book_count"],3)
+        self.assertFalse(out["market_benchmark"]["used_for_decision"])
+        candidates=[x for x in out["decision"]["candidates"] if x["market"]=="ML"]
+        self.assertTrue(candidates)
+        self.assertTrue(all(x["sharp_probability"] is None for x in candidates))
+        self.assertTrue(all("pinnacle_no_vig_missing" in x["failures"] for x in candidates))
+
     def test_market_candidate_generated(self):
         books={"ML":[{"bookmaker":"pinnacle","selections":[{"selection":"HOME","price":2.00},{"selection":"AWAY","price":1.90}]}]}
         out=analyze_game(

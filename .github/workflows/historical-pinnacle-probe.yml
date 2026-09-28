@@ -1,0 +1,49 @@
+name: Pulsar NBA Historical Pinnacle Probe
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'ops/historical-pinnacle-probe-2026-09-28.flag'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - run: python -m pip install .
+      - name: Hydrate runtime state
+        run: .github/scripts/hydrate-runtime-data.sh
+      - name: Probe historical Pinnacle availability
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: |
+          if [ -z "$ODDS_API_KEY" ]; then
+            echo "ODDS_API_KEY missing; probe skipped."
+            exit 0
+          fi
+          python -m nba.historical_pinnacle_probe
+      - name: Refresh health report
+        if: always()
+        run: python -m nba.health_report --output runtime/health.json || true
+      - name: Upload probe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pulsar-nba-historical-pinnacle-probe-${{ github.run_id }}
+          path: |
+            runtime/historical_pinnacle_probe.json
+            runtime/odds_budget.json
+            runtime/health.json
+          if-no-files-found: ignore
+          retention-days: 30
+      - name: Persist runtime state
+        if: always()
+        run: .github/scripts/persist-runtime-data.sh

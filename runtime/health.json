@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-health-v1",
-  "generated_at": "2026-09-28T09:46:45.161996+00:00",
+  "generated_at": "2026-09-28T09:52:20.532840+00:00",
   "state": "PROVIDER_DEGRADED",
   "live_operational": false,
   "real_betting_authorized": false,
@@ -11,9 +11,9 @@
   "provider_ok": false,
   "provider_state": "BLOCKED",
   "diagnostics": {
-    "provider_age_hours": 0.6465176744444444,
+    "provider_age_hours": 0.7396762422222222,
     "provider_fresh": true,
-    "market_age_hours": 98.68246105972221,
+    "market_age_hours": 98.77561962749999,
     "market_fresh": false
   },
   "provider_details": {
@@ -258,6 +258,19 @@
         "basketball_field_signal": false
       }
     }
+  },
+  "canonical_stats_reference": {
+    "checked_at": "2026-09-28T09:50:48.668807+00:00",
+    "state": "TIMEOUT",
+    "season": "2026-27",
+    "date_to": null,
+    "canonical_pack_available": false,
+    "team_rows": 0,
+    "player_rows": 0,
+    "parity_attempted": false,
+    "parity_state": null,
+    "parity_review_ready": false,
+    "production_provider_authorized": false
   },
   "gamebook_reference": {
     "role": "ALTERNATE_REFERENCE_ONLY",

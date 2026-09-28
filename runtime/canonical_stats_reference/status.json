@@ -1,0 +1,17 @@
+{
+  "betting_certified": false,
+  "canonical_pack_available": false,
+  "checked_at": "2026-09-28T09:50:48.668807+00:00",
+  "error": "GET https://stats.nba.com/stats/leaguedashteamstats failed: TimeoutError",
+  "error_type": "ProviderError",
+  "odds_api_requests": 0,
+  "parity_attempted": false,
+  "parity_review_ready": false,
+  "predictive_authority": false,
+  "production_provider_authorized": false,
+  "role": "CANONICAL_PARITY_REFERENCE_ONLY",
+  "schema": "pulsar-nba-canonical-stats-reference-status-v1",
+  "season": "2026-27",
+  "state": "TIMEOUT",
+  "target_date": "2026-09-28"
+}

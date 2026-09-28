@@ -99,6 +99,42 @@ class V2ProspectiveTests(unittest.TestCase):
             self.assertFalse(report["promoted"])
             self.assertFalse(report["auto_betting_certification"])
 
+    def test_official_gamebook_outcome_is_accepted(self):
+        training = [row(i) for i in range(100)]
+        source, game = self._live_game(160)
+        live = {"operating_mode": "regular", "games": [game]}
+        tip = dt.datetime.fromisoformat(source["tipoff_at"])
+        outcome = {
+            "game_id": source["game_id"],
+            "home_score": 120,
+            "away_score": 110,
+            "outcome_at": (tip + dt.timedelta(hours=3)).isoformat(),
+            "source": "official_nba_gamebook",
+        }
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            live_path = root / "live.json"
+            shadow_path = root / "shadow.jsonl"
+            status_path = root / "status.json"
+            outcomes_path = root / "outcomes.jsonl"
+            report_path = root / "report.json"
+            live_path.write_text(json.dumps(live), encoding="utf-8")
+            outcomes_path.write_text(json.dumps(outcome) + "\n", encoding="utf-8")
+            shadow_run(
+                live_run_path=str(live_path),
+                output_path=str(shadow_path),
+                status_path=str(status_path),
+                minimum_train=60,
+                training_rows=training,
+            )
+            report = evaluate(
+                forecasts_path=str(shadow_path),
+                outcomes_path=str(outcomes_path),
+                output_path=str(report_path),
+            )
+        self.assertEqual(report["status"], "PROSPECTIVE_EVIDENCE")
+        self.assertEqual(report["holdout_shadow"]["n"], 1)
+
     def test_inference_does_not_need_outcome_label(self):
         training = [row(i) for i in range(100)]
         source, game = self._live_game(160)

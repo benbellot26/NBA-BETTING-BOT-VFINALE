@@ -36,6 +36,22 @@ class OperationsTests(unittest.TestCase):
         self.assertEqual(result["evidence"]["forecasts"],0)
         self.assertEqual(result["runner_probe"]["reachable_routes"],[])
 
+    def test_health_surfaces_gamebook_reference_progress(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d)
+            (root/"gamebook_reference").mkdir()
+            (root/"gamebook_reference"/"stat_pack.json").write_text(
+                '{"role":"ALTERNATE_REFERENCE_ONLY","season":"2026-27",'
+                '"date_to":"10/25/2026","gamebooks":42,"expected_gamebooks":43,'
+                '"missing_gamebooks":[{"reference_id":"x"}],'
+                '"gamebook_completeness":0.9767,"collection_complete":false,'
+                '"teams_with_games":30,"production_provider_authorized":false}'
+            )
+            result=build(root)
+        self.assertEqual(result["gamebook_reference"]["gamebooks"],42)
+        self.assertEqual(result["gamebook_reference"]["missing_gamebooks"],1)
+        self.assertFalse(result["gamebook_reference"]["production_provider_authorized"])
+
     def test_outcomes_are_behind_provider_adapter(self):
         games=[ScheduleGame("g","2026-10-20","2026-10-20T23:00:00Z","Boston Celtics","New York Knicks",3,"Final",120,110)]
         finals=OfficialOutcomeProvider(fetcher=lambda: games).finals()

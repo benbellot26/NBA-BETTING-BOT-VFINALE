@@ -3,6 +3,10 @@ concurrency:
   group: nba-runtime-data
   cancel-in-progress: false
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'ops/pinnacle-preseason-probe-2026-09-28.flag'
   workflow_dispatch:
     inputs:
       sport_key:
@@ -32,7 +36,7 @@ jobs:
       - name: Compare targeted Pinnacle with EU region
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
-          SPORT_KEY: ${{ inputs.sport_key }}
+          SPORT_KEY: ${{ inputs.sport_key || 'basketball_nba_preseason' }}
         run: |
           python -m nba.pinnacle_transport_probe \
             --sport-key "$SPORT_KEY" \

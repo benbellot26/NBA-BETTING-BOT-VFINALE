@@ -67,6 +67,38 @@ class GamebookParserTests(unittest.TestCase):
         self.assertEqual(result["away"]["players"][0]["name"], "Gui Santos")
         self.assertEqual(result["home"]["players"][4]["stats"]["AST"], 8)
 
+    def test_overtime_team_minutes_are_supported(self):
+        overtime = """
+FINAL BOX
+VISITOR: Boston Celtics (1-0)
+POS MIN FG FGA 3P 3PA FT FTA OR DR TOT A PF ST TO BS +/- PTS
+1 Alpha One G 53:00 1 2 0 0 0 0 0 1 1 0 0 0 0 0 0 2
+2 Beta Two G 53:00 1 2 0 0 0 0 0 1 1 0 0 0 0 0 0 2
+3 Gamma Three F 53:00 1 2 0 0 0 0 0 1 1 0 0 0 0 0 0 2
+4 Delta Four F 53:00 1 2 0 0 0 0 0 1 1 0 0 0 0 0 0 2
+5 Epsilon Five C 53:00 1 2 0 0 0 0 0 1 1 0 0 0 0 0 0 2
+265:00 5 10 0 0 0 0 0 5 5 0 0 0 0 0 0 10
+HOME: New York Knicks (0-1)
+POS MIN FG FGA 3P 3PA FT FTA OR DR TOT A PF ST TO BS +/- PTS
+6 Zeta Six G 53:00 1 2 1 1 0 0 0 1 1 0 0 0 0 0 0 3
+7 Eta Seven G 53:00 1 2 1 1 0 0 0 1 1 0 0 0 0 0 0 3
+8 Theta Eight F 53:00 1 2 1 1 0 0 0 1 1 0 0 0 0 0 0 3
+9 Iota Nine F 53:00 1 2 1 1 0 0 0 1 1 0 0 0 0 0 0 3
+10 Kappa Ten C 53:00 1 2 1 1 0 0 0 1 1 0 0 0 0 0 0 3
+265:00 5 10 5 5 0 0 0 5 5 0 0 0 0 0 0 15
+SCORE BY PERIOD 1 2 3 4 OT FINAL
+Celtics 2 2 2 2 2 10
+KNICKS 3 3 3 3 3 15
+"""
+        result = parse_final_box_text(
+            overtime,
+            expected_away="Boston Celtics",
+            expected_home="New York Knicks",
+        )
+        self.assertEqual(result["away"]["minutes_seconds"], 265 * 60)
+        self.assertEqual(result["home"]["minutes_seconds"], 265 * 60)
+        self.assertEqual(result["home_score"], 15)
+
     def test_wrong_schedule_identity_is_rejected(self):
         with self.assertRaisesRegex(ValueError, "team mismatch"):
             parse_final_box_text(

@@ -66,6 +66,17 @@ jobs:
               print("SEARCH", query, json.dumps(safe, indent=2))
             except Exception as exc:
               print("SEARCH", query, "ERROR", exc)
+          import re
+          known_html = get_text(
+            "https://official.nba.com/nba-injury-report-2025-26-season/",
+            headers={"Accept":"text/html,*/*"}, timeout=8.0, retries=0,
+          )
+          hrefs = re.findall(r'href=["\\\']([^"\\\']+)["\\\']', known_html, flags=re.I)
+          safe_hrefs = [
+            href for href in hrefs
+            if "injury" in href.lower() or ".pdf" in href.lower()
+          ]
+          print("INJURY_HREFS", json.dumps(safe_hrefs[-40:], indent=2))
           from nba.injury_pdf import fetch_latest_report
           historical = fetch_latest_report(season="2025-26")
           print("HISTORICAL_REPORT", json.dumps({

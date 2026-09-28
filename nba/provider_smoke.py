@@ -20,7 +20,10 @@ def _previous(season: str) -> str:
 
 def _classify_failure(exc: Exception, *, source: str = "generic") -> str:
     message = str(exc).lower()
-    if source == "injuries" and "http 404" in message:
+    if source == "injuries" and (
+        "http 404" in message
+        or "not published for season" in message
+    ):
         return "NOT_PUBLISHED"
     if "http 401" in message or "http 403" in message:
         return "ACCESS_BLOCKED"

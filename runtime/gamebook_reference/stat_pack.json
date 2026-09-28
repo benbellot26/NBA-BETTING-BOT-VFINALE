@@ -1,0 +1,25 @@
+{
+  "advanced_windows": {
+    "0": [],
+    "5": [],
+    "10": [],
+    "15": [],
+    "30": []
+  },
+  "base_season": [],
+  "date_to": "09/27/2026",
+  "gamebook_completeness": 0.0,
+  "gamebooks": 0,
+  "missing_gamebooks": [],
+  "observed_at": "2026-09-28T09:07:25.002473+00:00",
+  "player_advanced": [],
+  "player_rating_method": "team_efficiency_neutral_baseline",
+  "player_recent": [],
+  "player_season": [],
+  "production_provider_authorized": false,
+  "role": "ALTERNATE_REFERENCE_ONLY",
+  "schema": "pulsar-nba-gamebook-stat-pack-v1",
+  "season": "2026-27",
+  "source": "NBA_OFFICIAL_SCORERS_REPORT",
+  "teams_with_games": 0
+}

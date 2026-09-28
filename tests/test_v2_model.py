@@ -4,7 +4,7 @@ import unittest
 
 from nba import MODEL_GENERATION
 from nba.v2_dataset import feature_vector
-from nba.v2_features import FEATURE_NAMES, FEATURE_SCHEMA
+from nba.v2_features import FEATURE_NAMES, bind_feature_payload
 from nba.v2_model import fit_learned_v2
 
 
@@ -30,10 +30,11 @@ def row(index: int) -> dict:
     actual_total = 18.0 + 0.92 * baseline_total + 0.10 * (features["home_pace"] + features["away_pace"])
     home_score = (actual_total + actual_margin) / 2.0
     away_score = (actual_total - actual_margin) / 2.0
+    source_sha = f"{index:064x}"[-64:]
     return {
         "game_id": f"g{index}",
         "model_generation": MODEL_GENERATION,
-        "source_snapshot_sha256": f"{index:064x}"[-64:],
+        "source_snapshot_sha256": source_sha,
         "source_snapshot_at": (tip - dt.timedelta(hours=2)).isoformat(),
         "forecast_at": (tip - dt.timedelta(minutes=20)).isoformat(),
         "tipoff_at": tip.isoformat(),
@@ -44,7 +45,9 @@ def row(index: int) -> dict:
         "baseline_total_sd": 17.0,
         "home_score": home_score,
         "away_score": away_score,
-        "v2_features": {"schema": FEATURE_SCHEMA, "features": features},
+        "v2_features": bind_feature_payload(
+            features, source_manifest_sha256=source_sha
+        ),
         "evaluation_only": {
             "spread_line": -3.5,
             "total_line": 226.5,

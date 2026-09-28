@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-health-v1",
-  "generated_at": "2026-09-28T12:40:29.760685+00:00",
+  "generated_at": "2026-09-28T12:44:00.811745+00:00",
   "state": "PROVIDER_DEGRADED",
   "live_operational": false,
   "real_betting_authorized": false,
@@ -11,9 +11,9 @@
   "provider_ok": false,
   "provider_state": "BLOCKED",
   "diagnostics": {
-    "provider_age_hours": 0.5481309163888889,
+    "provider_age_hours": 0.6067562108333333,
     "provider_fresh": true,
-    "market_age_hours": 0.14829618972222222,
+    "market_age_hours": 0.20692148416666667,
     "market_fresh": true
   },
   "provider_details": {
@@ -491,12 +491,12 @@
     }
   },
   "odds_budget": {
-    "used": 3,
+    "used": 4,
     "limit": 48,
-    "remaining": 45,
+    "remaining": 44,
     "purposes": {
       "bookmaker_discovery": 1,
-      "historical_pinnacle_probe": 1,
+      "historical_pinnacle_probe": 2,
       "market_smoke": 1
     }
   },

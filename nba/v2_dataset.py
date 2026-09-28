@@ -86,11 +86,19 @@ def targets(row: dict[str, Any]) -> tuple[float, float]:
 
 
 def load_training_jsonl(path: str | Path) -> list[dict[str, Any]]:
-    rows = [
-        validate_training_row(json.loads(line))
+    raw = [
+        json.loads(line)
         for line in Path(path).read_text(encoding="utf-8").splitlines()
         if line.strip()
     ]
+    # Forecasts captured before the learned-feature contract was introduced
+    # remain valid legacy V1 evidence, but cannot be reconstructed into V2
+    # training rows after the fact. Exclude them explicitly rather than
+    # fabricating historical features.
+    eligible = [row for row in raw if row.get("v2_features") is not None]
+    if not eligible:
+        raise ValueError("no forecasts contain the learned V2 feature contract")
+    rows = [validate_training_row(row) for row in eligible]
     if len({str(row["game_id"]) for row in rows}) != len(rows):
         raise ValueError("duplicate game IDs in learned V2 dataset")
     return sorted(rows, key=lambda row: (_dt(row["forecast_at"]), str(row["game_id"])))

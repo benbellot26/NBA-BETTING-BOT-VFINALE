@@ -53,24 +53,40 @@ def run() -> dict[str, Any]:
         if len(games) < 1000:
             raise RuntimeError(f"unexpected schedule size {len(games)}")
         providers["schedule"] = _provider_row(
-            state="OK", operational_ready=True, reachable=True, games=len(games))
+            state="OK", operational_ready=True, reachable=True, games=len(games),
+            authority="NBA_CDN_SCHEDULE_AND_OUTCOMES")
     except Exception as exc:
-        state = _classify_failure(exc)
-        row = _provider_row(
-            state=state, operational_ready=False,
-            reachable=False if state in HARD_FAILURE_STATES else None,
-            error=str(exc))
+        primary_state = _classify_failure(exc)
         try:
             reference = fetch_reference_schedule(season=season)
-            row["communications_reference"] = {
-                "state": "REFERENCE_ONLY", "games": len(reference),
-                "production_schedule_authority": False,
-            }
+            if len(reference) < 1000:
+                raise RuntimeError(
+                    f"NBA Communications schedule too small: {len(reference)}"
+                )
+            neutral = sum(row.neutral_site for row in reference)
+            providers["schedule"] = _provider_row(
+                state="OFFICIAL_PREGAME_FALLBACK",
+                operational_ready=True,
+                reachable=True,
+                games=len(reference),
+                neutral_site_games=neutral,
+                authority="NBA_COMMUNICATIONS_PREGAME_ONLY",
+                outcome_authority=False,
+                primary_state=primary_state,
+                primary_error=str(exc),
+            )
         except Exception as ref_exc:
-            row["communications_reference"] = {
-                "state": "UNAVAILABLE", "error_type": type(ref_exc).__name__,
-            }
-        providers["schedule"] = row
+            providers["schedule"] = _provider_row(
+                state=primary_state, operational_ready=False,
+                reachable=False if primary_state in HARD_FAILURE_STATES else None,
+                error=str(exc),
+                communications_reference={
+                    "state": "UNAVAILABLE",
+                    "error_type": type(ref_exc).__name__,
+                    "error": str(ref_exc),
+                    "production_schedule_authority": False,
+                },
+            )
 
     stats_season = season
     try:

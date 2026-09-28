@@ -1,12 +1,12 @@
 {
   "schema": "pulsar-nba-health-v1",
-  "generated_at": "2026-09-28T20:33:32.413617+00:00",
+  "generated_at": "2026-09-28T20:37:18.620800+00:00",
   "state": "PROVIDER_DEGRADED",
   "live_operational": false,
   "real_betting_authorized": false,
   "research_readiness": {
     "schema": "pulsar-nba-research-readiness-v1",
-    "generated_at": "2026-09-28T20:33:32.415852+00:00",
+    "generated_at": "2026-09-28T20:37:18.621865+00:00",
     "role": "RESEARCH_STATUS_ONLY",
     "live_betting_authorized": false,
     "betting_certified": false,
@@ -30,8 +30,8 @@
         "next_action": "capture prospective Pinnacle entry/close evidence",
         "targeted_events": 41,
         "pinnacle_events": 3,
-        "regional_pinnacle_present": false,
-        "complete_consensus_events": 20,
+        "regional_pinnacle_present": true,
+        "complete_consensus_events": 19,
         "replacement_allowed": false
       },
       "historical_pinnacle_research": {
@@ -73,9 +73,9 @@
   "provider_ok": false,
   "provider_state": "BLOCKED",
   "diagnostics": {
-    "provider_age_hours": 0.4510928502777778,
+    "provider_age_hours": 0.5139281788888889,
     "provider_fresh": true,
-    "market_age_hours": 5.626722222222222e-05,
+    "market_age_hours": 0.06289159583333333,
     "market_fresh": true
   },
   "provider_details": {
@@ -199,9 +199,9 @@
     }
   },
   "bookmaker_discovery": {
-    "checked_at": "2026-09-28T12:30:48.515458+00:00",
-    "pinnacle_present": false,
-    "pinnacle_state": "ABSENT_FROM_CURRENT_SNAPSHOT",
+    "checked_at": "2026-09-28T20:37:18.561455+00:00",
+    "pinnacle_present": true,
+    "pinnacle_state": "PRESENT_IN_DISCOVERY",
     "complete_featured_market_events": {
       "draftkings": 41,
       "onexbet": 39,
@@ -213,14 +213,15 @@
       "bovada": 17,
       "fanduel": 10,
       "betsson": 5,
-      "nordicbet": 4
+      "nordicbet": 5,
+      "pinnacle": 3
     },
     "consensus_market_events": {
       "ML": 21,
       "SPREAD": 20,
-      "TOTAL": 21
+      "TOTAL": 20
     },
-    "complete_consensus_events": 20,
+    "complete_consensus_events": 19,
     "consensus_replaces_pinnacle": false
   },
   "www_stats_probe": {
@@ -698,11 +699,11 @@
     }
   },
   "odds_budget": {
-    "used": 7,
+    "used": 8,
     "limit": 48,
-    "remaining": 41,
+    "remaining": 40,
     "purposes": {
-      "bookmaker_discovery": 1,
+      "bookmaker_discovery": 2,
       "historical_pinnacle_probe": 2,
       "market_smoke": 2,
       "pinnacle_eu_probe:basketball_nba_preseason": 1,

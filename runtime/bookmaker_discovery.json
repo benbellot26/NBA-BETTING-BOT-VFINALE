@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-bookmaker-discovery-v1",
-  "checked_at": "2026-09-28T12:30:48.515458+00:00",
+  "checked_at": "2026-09-28T20:37:18.561455+00:00",
   "role": "MARKET_DIAGNOSTIC_ONLY",
   "request_count": 1,
   "events": 41,
@@ -27,7 +27,8 @@
     "tipico_de": 12,
     "fanduel": 10,
     "marathonbet": 5,
-    "betanysports": 3
+    "betanysports": 3,
+    "pinnacle": 3
   },
   "complete_featured_market_events": {
     "draftkings": 41,
@@ -40,7 +41,8 @@
     "bovada": 17,
     "fanduel": 10,
     "betsson": 5,
-    "nordicbet": 4
+    "nordicbet": 5,
+    "pinnacle": 3
   },
   "market_event_counts": {
     "h2h": {
@@ -52,6 +54,7 @@
       "winamax_de": 21,
       "sport888": 20,
       "betsson": 20,
+      "nordicbet": 20,
       "betrivers": 19,
       "unibet_se": 19,
       "pmu_fr": 19,
@@ -59,11 +62,11 @@
       "unibet_nl": 19,
       "betmgm": 19,
       "gtbets": 19,
-      "nordicbet": 19,
       "bovada": 17,
       "tipico_de": 12,
       "fanduel": 10,
-      "marathonbet": 5
+      "marathonbet": 5,
+      "pinnacle": 3
     },
     "spreads": {
       "draftkings": 41,
@@ -81,7 +84,8 @@
       "fanduel": 10,
       "betsson": 5,
       "nordicbet": 5,
-      "betanysports": 3
+      "betanysports": 3,
+      "pinnacle": 3
     },
     "totals": {
       "draftkings": 41,
@@ -98,24 +102,25 @@
       "gtbets": 19,
       "bovada": 17,
       "fanduel": 10,
-      "betanysports": 3
+      "betanysports": 3,
+      "pinnacle": 3
     }
   },
-  "pinnacle_present": false,
-  "pinnacle_state": "ABSENT_FROM_CURRENT_SNAPSHOT",
+  "pinnacle_present": true,
+  "pinnacle_state": "PRESENT_IN_DISCOVERY",
   "consensus_market_events": {
     "ML": 21,
     "SPREAD": 20,
-    "TOTAL": 21
+    "TOTAL": 20
   },
-  "complete_consensus_events": 20,
+  "complete_consensus_events": 19,
   "consensus_role": "EVALUATION_ONLY",
   "consensus_replaces_pinnacle": false,
   "benchmark_changed": false,
   "betting_certified": false,
   "quota": {
-    "remaining": 482,
-    "used": 18,
+    "remaining": 470,
+    "used": 30,
     "last_cost": 6
   }
 }

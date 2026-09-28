@@ -46,3 +46,19 @@ point-in-time: a training label must be known before the next test forecast.
 V1, V2 and captured Pinnacle no-vig probabilities are compared on paired
 holdout games. V2 cannot write paper entries, alter the champion manifest,
 change certification, or promote itself. See `V2_RESEARCH.md`.
+
+
+## Official gamebook alternate-source boundary
+
+NBA Official Scorer's Report gamebooks are an independent official fallback
+surface when the JSON stats API is unreachable. They are parsed and aggregated
+only into an `ALTERNATE_REFERENCE_ONLY` stat pack. This pack can reproduce
+team-level efficiency, pace, style and rotation-minute inputs from completed
+games, but it cannot reproduce canonical player on/off OFF_RATING/DEF_RATING
+without inventing information.
+
+For that reason, gamebook-derived stats do not automatically satisfy the
+production provider contract. They must first pass the explicit
+`nba.gamebook_parity` comparison on a matching season/cutoff, then receive
+human review and fresh prospective validation under a separately frozen
+provider generation. The parity gate never changes betting certification.

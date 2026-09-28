@@ -15,6 +15,7 @@ from .performance import brier, calibration_ece, logloss
 from .providers import OfficialOutcomeProvider
 from .schedule import fetch_schedule
 from .settlement import settle_candidate
+from .teams import canonical_team
 from .tracking import append_jsonl
 
 
@@ -85,6 +86,39 @@ def full_game_cohorts(
     }
 
 
+def _final_for_record(
+    record: dict[str, Any], finals: dict[str, Any],
+):
+    """Resolve an official final without inventing a missing NBA GameID.
+
+    Exact GameID is always preferred. The date/team fallback is permitted only
+    for explicit nba-pr-* identities created from the official Communications
+    pregame PDF, and only when it resolves to exactly one official final.
+    """
+    game_id = str(record.get("game_id") or "")
+    exact = finals.get(game_id)
+    if exact is not None:
+        return exact
+    if not game_id.startswith("nba-pr-"):
+        return None
+    home = str(record.get("home") or "")
+    away = str(record.get("away") or "")
+    game_date = str(record.get("game_date") or "")
+    if not home or not away or not game_date:
+        return None
+    matching = [
+        game for game in finals.values()
+        if game.game_date == game_date
+        and canonical_team(game.home) == canonical_team(home)
+        and canonical_team(game.away) == canonical_team(away)
+    ]
+    if len(matching) > 1:
+        raise ValueError(
+            f"ambiguous official final for Communications identity {game_id}"
+        )
+    return matching[0] if matching else None
+
+
 def _merge_close(row: dict[str, Any], close: dict[str, Any] | None) -> dict[str, Any]:
     """Late historical closes update a derived view, not the settled JSONL."""
     result = dict(row)
@@ -117,11 +151,15 @@ def refresh(
     finals = (outcome_provider or OfficialOutcomeProvider(fetcher=fetch_schedule)).finals()
     for forecast in forecasts:
         game_id = str(forecast.get("game_id") or "")
-        if game_id in known or game_id not in finals:
+        if game_id in known:
             continue
-        game = finals[game_id]
+        game = _final_for_record(forecast, finals)
+        if game is None:
+            continue
         observed = {
-            "game_id": game_id, "home_score": game.home_score,
+            "game_id": game_id,
+            "official_game_id": game.game_id,
+            "home_score": game.home_score,
             "away_score": game.away_score,
             "outcome_at": datetime.now(timezone.utc).isoformat(),
             "source": "official_nba_schedule",
@@ -131,9 +169,11 @@ def refresh(
         known.add(game_id)
     for entry in paper:
         key = str(entry["entry_key"])
-        if key in settled or str(entry["game_id"]) not in finals:
+        if key in settled:
             continue
-        game = finals[str(entry["game_id"])]
+        game = _final_for_record(entry, finals)
+        if game is None:
+            continue
         settled_row = settle_candidate(
             entry, home_score=game.home_score, away_score=game.away_score)
         settled_row["entry_key"] = key

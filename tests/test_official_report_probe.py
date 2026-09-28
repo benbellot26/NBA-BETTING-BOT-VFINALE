@@ -23,8 +23,20 @@ PISTONS 21 36 30 28 115
         page.extract_text.return_value = text
         reader = MagicMock()
         reader.pages = [page, page]
-        with patch("pypdf.PdfReader", return_value=reader):
-            result = _gamebook_probe(b"%PDF-fake")
+        expected = {
+            "away": "Golden State Warriors", "home": "Detroit Pistons",
+            "away_score": 101, "home_score": 115,
+            "away_fga": 76, "home_fga": 86,
+        }
+        parsed = {
+            "away_score": 101, "home_score": 115,
+            "away": {"totals": {"FGA": 76}, "players": [{}] * 11},
+            "home": {"totals": {"FGA": 86}, "players": [{}] * 11},
+        }
+        with patch("pypdf.PdfReader", return_value=reader), patch(
+            "nba.official_report_probe.parse_gamebook_pdf", return_value=parsed
+        ):
+            result = _gamebook_probe(b"%PDF-fake", expected)
         self.assertTrue(result["ok"])
         self.assertGreaterEqual(result["team_total_line_count"], 2)
         self.assertFalse(result["raw_text_persisted"])

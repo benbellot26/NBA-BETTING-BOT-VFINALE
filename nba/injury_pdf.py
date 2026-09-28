@@ -5,11 +5,11 @@ from datetime import datetime, timezone
 from io import BytesIO
 import re
 from typing import Any
-from urllib.parse import urljoin
+from urllib.parse import quote, urljoin, urlsplit
 from zoneinfo import ZoneInfo
 
 from .injury_report import InjuryRecord
-from .provider_http import get_bytes, get_text
+from .provider_http import get_bytes, get_json, get_text
 from .teams import TEAMS, canonical_team
 
 PDF_LINK_RE = re.compile(r'href=["\']([^"\']*Injury-Report_[^"\']+\.pdf)["\']', re.I)
@@ -32,6 +32,64 @@ def discover_report_links(html: str, base_url: str) -> list[str]:
     return list(dict.fromkeys(urljoin(base_url, link) for link in PDF_LINK_RE.findall(html)))
 
 
+def injury_search_url(season: str) -> str:
+    query = quote(f"{season} NBA Injury Report")
+    return (
+        "https://official.nba.com/wp-json/wp/v2/search"
+        f"?search={query}&per_page=20"
+    )
+
+
+def _valid_official_page(url: str) -> bool:
+    parsed = urlsplit(str(url))
+    host = (parsed.hostname or "").lower()
+    return parsed.scheme == "https" and host == "official.nba.com"
+
+
+def discover_injury_page_url(*, season: str) -> str:
+    """Discover the exact official injury page without cross-season fallback.
+
+    The canonical slug is tried first. If that route changes or is transiently
+    unavailable, WordPress search is an official discovery surface. Only an
+    exact season title is accepted; older seasons can never satisfy a current
+    season request.
+    """
+    canonical = injury_page_url(season)
+    try:
+        get_text(
+            canonical,
+            headers={"Accept": "text/html,*/*"},
+            timeout=12.0,
+            retries=0,
+        )
+        return canonical
+    except Exception:
+        pass
+
+    rows = get_json(injury_search_url(season), timeout=12.0, retries=0)
+    if not isinstance(rows, list):
+        raise RuntimeError("official NBA injury search returned invalid payload")
+    expected_title = f"NBA Injury Report: {season} Season".casefold()
+    matches = []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        title = " ".join(str(row.get("title") or "").split()).casefold()
+        url = str(row.get("url") or "")
+        if title == expected_title and _valid_official_page(url):
+            matches.append(url)
+    matches = list(dict.fromkeys(matches))
+    if not matches:
+        raise RuntimeError(
+            f"official NBA injury report is not published for season {season}"
+        )
+    if len(matches) != 1:
+        raise RuntimeError(
+            f"official NBA injury search is ambiguous for season {season}"
+        )
+    return matches[0]
+
+
 def _report_dt(url: str) -> datetime:
     match = REPORT_TS_RE.search(url)
     if match is None:
@@ -42,11 +100,21 @@ def _report_dt(url: str) -> datetime:
 
 
 def latest_report_url(*, season: str, page_url: str | None = None) -> str:
-    page = page_url or injury_page_url(season)
-    links = discover_report_links(get_text(page, headers={"Accept": "text/html,*/*"}), page)
-    valid = [(link, _report_dt(link)) for link in links if REPORT_TS_RE.search(link)]
+    page = page_url or discover_injury_page_url(season=season)
+    if not _valid_official_page(page):
+        raise ValueError("injury report page must be hosted on official.nba.com")
+    links = discover_report_links(
+        get_text(page, headers={"Accept": "text/html,*/*"}), page
+    )
+    valid = [
+        (link, _report_dt(link))
+        for link in links
+        if REPORT_TS_RE.search(link)
+    ]
     if not valid:
-        raise RuntimeError("official NBA injury page exposed no timestamped PDF report")
+        raise RuntimeError(
+            "official NBA injury page exposed no timestamped PDF report"
+        )
     return max(valid, key=lambda item: item[1])[0]
 
 

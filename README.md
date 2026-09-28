@@ -531,3 +531,14 @@ prospective current-market evidence. Requests are budgeted and the scheduled
 workflow is gated behind `NBA_HISTORICAL_PINNACLE_ENABLED`.
 
 See `HISTORICAL_PINNACLE_RESEARCH.md`.
+
+
+## Unified research readiness
+
+`python -m nba.research_readiness` now summarizes the canonical provider,
+current Pinnacle, historical Pinnacle access, official-gamebook provider shadow
+and learned V2 in one fail-closed matrix. Historical recovery automatically
+skips before reserving an API request when the persisted probe says the current
+The Odds API plan has no historical access.
+
+See `RESEARCH_READINESS.md`.

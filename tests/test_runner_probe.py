@@ -18,6 +18,8 @@ class RunnerProbeTests(unittest.TestCase):
         self.assertEqual(len(report["reachable_routes"]),9)
         self.assertTrue(report["probes"]["historical_injury_page"]["ok"])
         self.assertTrue(report["probes"]["known_official_injury_pdf"]["ok"])
+        self.assertTrue(report["injury_transport"]["static_pdf_reachable"])
+        self.assertTrue(report["injury_transport"]["page_route_reachable"])
 
     def test_runner_probe_records_failure_without_raising(self):
         with patch("nba.runner_probe.get_json",side_effect=RuntimeError("HTTP 403")), patch(

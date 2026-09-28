@@ -24,6 +24,8 @@ class MarketSmokeTests(unittest.TestCase):
                    return_value={"events":[raw],"usage":{}}):
             with tempfile.TemporaryDirectory() as folder:
                 result=run(budget_path=str(Path(folder)/"budget.json"))
-        self.assertEqual(result["availability_state"],"PINNACLE_ABSENT")
+        self.assertEqual(result["availability_state"],"PINNACLE_TARGET_EMPTY")
+        self.assertEqual(result["raw_events_with_any_bookmaker"],0)
+        self.assertEqual(result["raw_empty_bookmaker_events"],1)
         self.assertFalse(result["coverage_ready"])
 if __name__=="__main__":unittest.main()

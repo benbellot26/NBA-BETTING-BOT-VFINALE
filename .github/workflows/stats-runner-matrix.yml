@@ -1,0 +1,86 @@
+name: Pulsar NBA Stats Hosted Runner Matrix
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'ops/stats-runner-matrix-2026-09-28.flag'
+permissions:
+  contents: write
+jobs:
+  probe:
+    strategy:
+      fail-fast: false
+      matrix:
+        runner:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - run: python -m pip install .
+      - name: Probe official NBA stats routes
+        shell: bash
+        run: |
+          mkdir -p runner-probe
+          python -m nba.stats_route_transport_probe \
+            --output "runner-probe/${{ matrix.runner }}.json"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("runner-probe/${{ matrix.runner }}.json")
+          x=json.loads(p.read_text())
+          x["runner"]="${{ matrix.runner }}"
+          p.write_text(json.dumps(x,indent=2,sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: stats-route-${{ matrix.runner }}
+          path: runner-probe/*.json
+          if-no-files-found: error
+          retention-days: 7
+
+  aggregate:
+    needs: probe
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - run: python -m pip install .
+      - name: Download runner probes
+        uses: actions/download-artifact@v4
+        with:
+          pattern: stats-route-*
+          path: /tmp/stats-runner-probes
+          merge-multiple: true
+      - name: Merge runner diagnostics
+        run: python -m nba.stats_runner_matrix --input-dir /tmp/stats-runner-probes --output /tmp/stats_runner_matrix.json
+      - name: Hydrate runtime state
+        run: .github/scripts/hydrate-runtime-data.sh
+      - name: Persist merged matrix
+        run: cp /tmp/stats_runner_matrix.json runtime/stats_runner_matrix.json
+      - name: Refresh health
+        run: python -m nba.health_report --output runtime/health.json || true
+      - name: Upload merged diagnostic
+        uses: actions/upload-artifact@v4
+        with:
+          name: pulsar-nba-stats-runner-matrix-${{ github.run_id }}
+          path: |
+            runtime/stats_runner_matrix.json
+            runtime/health.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Persist runtime state
+        run: .github/scripts/persist-runtime-data.sh

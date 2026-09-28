@@ -96,3 +96,30 @@ from ML evidence alone. A passing gate means the challenger is eligible for
 human code/model review. Promotion would require a
 new explicitly frozen generation followed by fresh prospective validation; it
 does not inherit V1 evidence or betting certification.
+
+
+## Prospective shadow runtime
+
+Once at least 400 enriched PIT training games are available, every eligible
+regular-season FINAL live run can append one immutable learned-V2 shadow
+forecast per game:
+
+    python -m nba.v2_runtime
+
+The runtime trains only on outcomes that were already known before the earliest
+forecast in the current run. It then predicts the future game from the frozen
+`v2_features` payload without requiring or reading the future result. It writes
+only `SHADOW_PIT_FORECAST` records, with `promoted=false`,
+`betting_certified=false`, no stake and no BET decision.
+
+The regular live workflow captures the V1 Pinnacle close before invoking V2, so
+a V2 research failure cannot prevent V1 close/CLV evidence from being recorded.
+
+After official outcomes are refreshed, the daily evidence workflow runs:
+
+    python -m nba.v2_prospective
+
+That report compares the exact pre-tip V2 forecast, the exact paired V1
+forecast and captured Pinnacle entry no-vig probabilities. This is separate
+from retrospective walk-forward research and prevents later code/training
+changes from rewriting what V2 actually predicted prospectively.

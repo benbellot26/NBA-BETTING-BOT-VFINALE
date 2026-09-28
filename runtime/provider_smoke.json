@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-provider-smoke-v2",
-  "checked_at": "2026-09-27T17:42:20.585877+00:00",
+  "checked_at": "2026-09-28T07:48:04.264976+00:00",
   "season": "2026-27",
   "state": "BLOCKED",
   "transport_ok": false,
@@ -8,15 +8,15 @@
   "ok": false,
   "providers": {
     "schedule": {
-      "state": "ACCESS_BLOCKED",
-      "operational_ready": false,
-      "reachable": false,
-      "error": "GET https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_1.json failed: HTTP 403",
-      "communications_reference": {
-        "state": "REFERENCE_ONLY",
-        "games": 1200,
-        "production_schedule_authority": false
-      }
+      "state": "OFFICIAL_PREGAME_FALLBACK",
+      "operational_ready": true,
+      "reachable": true,
+      "games": 1200,
+      "neutral_site_games": 3,
+      "authority": "NBA_COMMUNICATIONS_PREGAME_ONLY",
+      "outcome_authority": false,
+      "primary_state": "ACCESS_BLOCKED",
+      "primary_error": "GET https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_1.json failed: HTTP 403"
     },
     "stats": {
       "state": "TIMEOUT",

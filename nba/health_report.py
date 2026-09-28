@@ -43,6 +43,7 @@ def build(root: str | Path = "runtime", *, at: str | None = None) -> dict[str, A
     historical_pinnacle_rows=_jsonl(root/"research"/"pinnacle_historical_entry.jsonl")
     www_stats_probe=_json(root/"www_stats_probe.json") or {}
     stats_backend_probe=_json(root/"stats_backend_probe.json") or {}
+    stats_route_transport_probe=_json(root/"stats_route_transport_probe.json") or {}
     official_report_probe=_json(root/"official_report_probe.json") or {}
     gamebook_reference=_json(root/"gamebook_reference"/"stat_pack.json") or {}
     canonical_stats_reference=_json(root/"canonical_stats_reference"/"status.json") or {}
@@ -113,6 +114,24 @@ def build(root: str | Path = "runtime", *, at: str | None = None) -> dict[str, A
             "backend_hints":stats_backend_probe.get("backend_hints") or [],
             "endpoint_hints":stats_backend_probe.get("endpoint_hints") or [],
             "aggregate_marker_counts":stats_backend_probe.get("aggregate_marker_counts") or {},
+            "production_provider_authorized":False,
+        },
+        "stats_route_transport_probe":{
+            "checked_at":stats_route_transport_probe.get("checked_at"),
+            "season":stats_route_transport_probe.get("season"),
+            "valid_stats_routes":stats_route_transport_probe.get("valid_stats_routes") or [],
+            "alternate_official_route_found":bool(stats_route_transport_probe.get("alternate_official_route_found")),
+            "routes":[
+                {
+                    "name":row.get("name"),
+                    "endpoint":row.get("endpoint"),
+                    "state":row.get("state"),
+                    "elapsed_ms":row.get("elapsed_ms"),
+                    "rows":row.get("rows"),
+                }
+                for row in (stats_route_transport_probe.get("routes") or [])
+            ],
+            "predictive_evidence_eligible":False,
             "production_provider_authorized":False,
         },
         "canonical_stats_reference":{

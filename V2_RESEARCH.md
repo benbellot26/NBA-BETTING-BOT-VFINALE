@@ -11,7 +11,8 @@ Every eligible live FINAL forecast captured after this release stores:
 
 - the immutable V1 baseline margin/total and standard deviations;
 - a versioned `v2_features` payload built only from pre-tip basketball,
-  schedule/context and projected-rotation state;
+  schedule/context and projected-rotation state, checksummed and bound to the
+  exact predictive input-manifest SHA-256;
 - `evaluation_only` metadata containing the captured spread/total lines and
   available Pinnacle no-vig HOME/OVER probabilities.
 
@@ -88,7 +89,10 @@ A V2 report is always emitted with:
 - `promoted=false`;
 - `auto_betting_certification=false`.
 
-The V2 gate can only return `MANUAL_REVIEW_ONLY`. A passing gate means the
-challenger is eligible for human code/model review. Promotion would require a
+The V2 gate can only return `MANUAL_REVIEW_ONLY`. For the learned walk-forward
+report it also requires at least 90% of the requested holdout size to have
+resolved paired Spread and Total observations, so a model cannot pass review
+from ML evidence alone. A passing gate means the challenger is eligible for
+human code/model review. Promotion would require a
 new explicitly frozen generation followed by fresh prospective validation; it
 does not inherit V1 evidence or betting certification.

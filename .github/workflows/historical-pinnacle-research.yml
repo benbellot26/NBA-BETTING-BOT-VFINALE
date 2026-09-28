@@ -38,6 +38,7 @@ jobs:
             exit 0
           fi
           LIMIT="${MAX_SNAPSHOTS:-4}"
+          mkdir -p runtime/research
           python -m nba.historical_pinnacle_recovery --max-snapshots "$LIMIT"             | tee runtime/research/pinnacle_historical_recovery_status.json
       - name: Score recovered historical Pinnacle
         if: always()

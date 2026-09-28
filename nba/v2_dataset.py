@@ -76,10 +76,21 @@ def validate_training_row(row: dict[str, Any]) -> dict[str, Any]:
     return clean
 
 
+def inference_feature_vector(row: dict[str, Any]) -> list[float]:
+    """Validate predictive lineage without requiring a postgame outcome label."""
+    features = validate_feature_payload(
+        row.get("v2_features") or {}, require_bound=True
+    )
+    expected = str(row.get("source_snapshot_sha256") or "").lower()
+    if expected and features["source_manifest_sha256"] != expected:
+        raise ValueError("V2 feature lineage does not match predictive snapshot")
+    values = features["features"]
+    return [float(values[name]) for name in FEATURE_NAMES]
+
+
 def feature_vector(row: dict[str, Any]) -> list[float]:
     clean = validate_training_row(row)
-    values = clean["v2_features"]["features"]
-    return [float(values[name]) for name in FEATURE_NAMES]
+    return inference_feature_vector(clean)
 
 
 def targets(row: dict[str, Any]) -> tuple[float, float]:

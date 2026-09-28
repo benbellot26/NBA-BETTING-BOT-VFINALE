@@ -38,12 +38,22 @@ def _player_id(team: str, name: str) -> int:
     return value or 1
 
 
-def _poss(totals: dict[str, Any]) -> float:
-    return (
-        float(totals["FGA"])
-        + 0.44 * float(totals["FTA"])
-        - float(totals["OREB"])
-        + float(totals["TOV"])
+def _poss_side(totals: dict[str, Any], opponent: dict[str, Any]) -> float:
+    """Estimate possessions from a final box using the standard team formula."""
+    fga = float(totals["FGA"])
+    fgm = float(totals["FG"])
+    fta = float(totals["FTA"])
+    oreb = float(totals["OREB"])
+    tov = float(totals["TOV"])
+    opp_dreb = float(opponent["DREB"])
+    rebound_den = oreb + opp_dreb
+    orb_share = oreb / rebound_den if rebound_den > 0 else 0.0
+    return fga + 0.4 * fta - 1.07 * orb_share * (fga - fgm) + tov
+
+
+def _game_possessions(team: dict[str, Any], opponent: dict[str, Any]) -> float:
+    return 0.5 * (
+        _poss_side(team, opponent) + _poss_side(opponent, team)
     )
 
 
@@ -188,7 +198,7 @@ def _team_games(gamebooks: list[dict[str, Any]]) -> dict[str, list[dict[str, Any
 def _aggregate_team(team: str, games: list[dict[str, Any]]) -> dict[str, Any] | None:
     if not games:
         return None
-    team_pts = opp_pts = own_poss = opp_poss = 0.0
+    team_pts = opp_pts = possessions = 0.0
     pace_sum = 0.0
     fgm = fga = fg3m = fg3a = ftm = fta = oreb = dreb = tov = 0.0
     opp_oreb = opp_dreb = 0.0
@@ -197,14 +207,12 @@ def _aggregate_team(team: str, games: list[dict[str, Any]]) -> dict[str, Any] | 
         opp = game["opponent"]
         ot = own["totals"]
         pt = opp["totals"]
-        p_own = _poss(ot)
-        p_opp = _poss(pt)
-        own_poss += p_own
-        opp_poss += p_opp
+        game_possessions = _game_possessions(ot, pt)
+        possessions += game_possessions
         team_pts += float(ot["PTS"])
         opp_pts += float(pt["PTS"])
         game_minutes = float(own["minutes_seconds"]) / 5.0 / 60.0
-        pace_sum += ((p_own + p_opp) / 2.0) * 48.0 / max(1.0, game_minutes)
+        pace_sum += game_possessions * 48.0 / max(1.0, game_minutes)
         fgm += float(ot["FG"])
         fga += float(ot["FGA"])
         fg3m += float(ot["FG3M"])
@@ -221,8 +229,8 @@ def _aggregate_team(team: str, games: list[dict[str, Any]]) -> dict[str, Any] | 
         "TEAM_ID": team_info(team).team_id,
         "TEAM_NAME": team,
         "GP": gp,
-        "OFF_RATING": 100.0 * _safe_div(team_pts, own_poss, 1.0),
-        "DEF_RATING": 100.0 * _safe_div(opp_pts, opp_poss, 1.0),
+        "OFF_RATING": 100.0 * _safe_div(team_pts, possessions, 1.0),
+        "DEF_RATING": 100.0 * _safe_div(opp_pts, possessions, 1.0),
         "PACE": pace_sum / gp,
         "EFG_PCT": _safe_div(fgm + 0.5 * fg3m, fga, 0.55),
         "TM_TOV_PCT": 100.0 * _safe_div(tov, fga + 0.44 * fta + tov, 0.13),
@@ -290,7 +298,7 @@ def _player_rows(
             player_actions = (
                 float(bucket["FGA"]) + 0.44 * float(bucket["FTA"]) + float(bucket["TOV"])
             )
-            usage = 100.0 * _safe_div(
+            usage = _safe_div(
                 player_actions * (len(selected) * 48.0),
                 minutes * team_usage_den,
                 0.0,
@@ -348,6 +356,12 @@ def build_reference_stat_pack(
         "gamebook_completeness": completeness,
         "teams_with_games": teams_with_games,
         "player_rating_method": "team_efficiency_neutral_baseline",
+        "usage_scale": "fraction_0_to_1",
+        "possession_method": "symmetric_boxscore_estimate",
+        "limitations": {
+            "player_off_def_ratings": "team_neutral_baseline",
+            "production_requires_parity_gate": True,
+        },
     }
 
 

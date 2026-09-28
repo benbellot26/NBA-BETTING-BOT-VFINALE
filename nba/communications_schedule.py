@@ -14,6 +14,7 @@ from pathlib import Path
 from urllib.parse import urljoin
 from zoneinfo import ZoneInfo
 from .provider_http import get_bytes, get_text
+from .schedule import ScheduleGame
 
 PDF_RE=re.compile(r'href=["\']([^"\']*NBA[^"\']*Schedule[^"\']*By-Date[^"\']*\.pdf)["\']',re.I)
 ROW_RE=re.compile(
@@ -98,6 +99,50 @@ def fetch_reference_schedule(*,season:str)->list[ReferenceScheduleGame]:
     pdf=discover_pdf_url(html,release)
     data=get_bytes(pdf,headers={"Accept":"application/pdf"},timeout=20.0,retries=1)
     return parse_schedule_text(extract_pdf_text(data),season=season)
+
+
+def as_pregame_schedule(
+    games:list[ReferenceScheduleGame], *, target_date:str|None=None
+)->list[ScheduleGame]:
+    """Convert official Communications rows into pregame-only schedule rows.
+
+    The PDF has no official NBA GameID and neutral-site "vs" rows do not
+    identify a designated home team. We therefore create explicit nba-pr- IDs
+    only for ordinary "away at home" rows and fail closed if the requested
+    target date contains an unresolved neutral-site game.
+    """
+    target_rows=[g for g in games if target_date is None or g.game_date==target_date]
+    unresolved=[g for g in target_rows if g.neutral_site or not g.home or not g.away]
+    if unresolved and target_date is not None:
+        labels=", ".join(f"{g.team1} vs {g.team2}" for g in unresolved)
+        raise RuntimeError(
+            "NBA Communications target-date schedule has neutral-site game(s) "
+            f"without designated home/away: {labels}"
+        )
+    converted=[]
+    for game in games:
+        if game.neutral_site or not game.home or not game.away:
+            continue
+        converted.append(ScheduleGame(
+            game.reference_id, game.game_date, game.commence_time,
+            game.home, game.away, 1, "Scheduled - NBA Communications",
+        ))
+    return converted
+
+
+def fetch_pregame_schedule(*,season:str,target_date:str)->list[ScheduleGame]:
+    rows=fetch_reference_schedule(season=season)
+    converted=as_pregame_schedule(rows,target_date=target_date)
+    # If the official PDF has target-date rows, all non-neutral rows must have
+    # survived conversion. No target rows simply means no scheduled game.
+    expected=sum(g.game_date==target_date for g in rows)
+    actual=sum(g.game_date==target_date for g in converted)
+    if expected and actual != expected:
+        raise RuntimeError(
+            f"NBA Communications target-date conversion incomplete: {actual}/{expected}"
+        )
+    return converted
+
 
 def main()->None:
     p=argparse.ArgumentParser();p.add_argument("--season",required=True);p.add_argument("--date");p.add_argument("--output")

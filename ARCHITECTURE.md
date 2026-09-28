@@ -73,3 +73,12 @@ contains a manifest fingerprint. Parity validates the actual downstream input
 contract (all temporal team windows, base FT/3PA rates, season/recent minutes
 and advanced usage) before manual review. A passing parity report still cannot
 authorize the provider automatically.
+
+
+### Canonical parity reference capture
+
+Canonical team/player stats used for alternate-source parity are collected by a
+separate non-predictive workflow. This decouples parity evidence from injuries,
+market data and live-runtime readiness. Failure to reach `stats.nba.com` is
+persisted as provider diagnostic state rather than silently selecting the
+gamebook source. Exact season/cutoff equality is required before parity runs.

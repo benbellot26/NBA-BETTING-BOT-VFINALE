@@ -504,3 +504,16 @@ forecast GameID matching remains preferred; otherwise a gamebook may resolve a
 forecast only when date + home + away identifies exactly one official final.
 The gamebook reference workflow runs before the daily evidence workflow so
 cached finals are available without making settlement depend on the blocked CDN.
+
+
+## Pinnacle availability diagnostics
+
+Pinnacle remains the unique sharp benchmark. Daily diagnostics now distinguish
+a targeted Pinnacle response containing NBA events but zero bookmaker payloads
+from ordinary absence, partial paired-market coverage and ready coverage.
+Availability is persisted over time in
+`runtime/market_availability.jsonl`; no consensus bookmaker is allowed to
+replace Pinnacle. Close-capture failures also expose structured diagnostic
+codes without weakening CLV evidence rules.
+
+See `MARKET_DIAGNOSTICS.md`.

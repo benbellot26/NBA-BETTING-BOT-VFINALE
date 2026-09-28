@@ -399,3 +399,11 @@ reconstructed after the fact. Pinnacle information is benchmark-only and can
 never enter the V2 feature matrix.
 
 See `V2_RESEARCH.md` for the full data, evaluation and promotion contract.
+
+
+The learned V2 also has a prospective shadow path. When at least 400 enriched
+training games exist, `python -m nba.v2_runtime` freezes one label-free
+pre-tip V2 prediction beside V1 without generating a bet. Daily evidence then
+runs `python -m nba.v2_prospective` to score those immutable predictions
+against official results, paired V1 and Pinnacle. V1 close capture runs first,
+so V2 research cannot interrupt V1 CLV evidence.

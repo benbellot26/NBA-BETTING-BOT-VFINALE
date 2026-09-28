@@ -46,3 +46,19 @@ existing human-readable failure strings. Codes include:
 
 These codes help separate provider availability problems from line-contract or
 timing problems. They do not relax any close-evidence requirement.
+
+
+## Consensus quality diagnostics
+
+The evaluation-only consensus benchmark now reports descriptive quality context
+alongside Brier/LogLoss/ECE:
+
+- mean / median / min / max contributing bookmaker count;
+- mean / median / p90 / max no-vig probability dispersion;
+- mean signed model-minus-consensus probability gap;
+- mean absolute model-consensus probability gap;
+- direction-disagreement rate around the 50% decision boundary.
+
+These fields are descriptive only. No dispersion threshold, bookmaker-count
+threshold beyond the existing minimum of three, or consensus result can alter
+betting certification. Pinnacle remains the unique sharp benchmark.

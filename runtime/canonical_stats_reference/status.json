@@ -1,7 +1,7 @@
 {
   "betting_certified": false,
   "canonical_pack_available": false,
-  "checked_at": "2026-09-28T09:50:48.668807+00:00",
+  "checked_at": "2026-09-28T20:09:24.927160+00:00",
   "error": "GET https://stats.nba.com/stats/leaguedashteamstats failed: TimeoutError",
   "error_type": "ProviderError",
   "odds_api_requests": 0,

@@ -1,10 +1,21 @@
 import unittest
 from unittest.mock import patch
 
-from nba.stats_backend_probe import _scan_text, run
+from nba.stats_backend_probe import _backend_urls, _route_candidates, _scan_text, run
 
 
 class StatsBackendProbeTests(unittest.TestCase):
+    def test_sanitized_backend_hints_strip_query_and_source(self):
+        text=(
+            'fetch("https:\\/\\/api-hub.nba.com\\/stats\\/leagueDashTeamStats?token=secret");'
+            'const x="/api/v1/public/teams";'
+        )
+        self.assertEqual(
+            _backend_urls(text),
+            ["https://api-hub.nba.com/stats/leagueDashTeamStats"],
+        )
+        self.assertIn("/api/v1/public/teams", _route_candidates(text))
+
     def test_scan_counts_only_whitelisted_markers(self):
         value=_scan_text(
             "https://stats.nba.com/stats/leaguedashteamstats "
@@ -33,6 +44,14 @@ class StatsBackendProbeTests(unittest.TestCase):
         self.assertIn("api-hub.nba.com",result["backend_hints"])
         self.assertIn("league_dash_team",result["endpoint_hints"])
         self.assertIn("cume_stats_team",result["endpoint_hints"])
+        self.assertIn(
+            "https://api-hub.nba.com/stats/leaguedashteamstats",
+            result["backend_urls"],
+        )
+        self.assertIn(
+            "/stats/leaguedashteamstats",
+            result["route_candidates"],
+        )
         self.assertNotIn("source",result["scripts"][0])
 
 

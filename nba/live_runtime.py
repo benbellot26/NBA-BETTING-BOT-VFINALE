@@ -321,6 +321,7 @@ def run(
                     home=home, away=away, context=context,
                     home_rotation=hr, away_rotation=ar,
                     score_projection=analysis["score_projection"],
+                    advanced_windows=stats["advanced_windows"],
                 )
                 analysis["commence_time"] = game.commence_time
                 # Execution lineage only; never included in predictive inputs.

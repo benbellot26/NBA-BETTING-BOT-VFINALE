@@ -72,10 +72,31 @@ def record_final_forecasts(live_run: dict[str, Any], path: str | Path) -> dict[s
             "TOTAL": _sharp_probability(game, "over"),
         }
         sharp = {key: value for key, value in sharp.items() if value is not None}
+        consensus_markets = (
+            (game.get("market_benchmark") or {}).get("markets") or {}
+        )
+        consensus = {}
+        consensus_metadata = {}
+        for market_name, selection_name in (
+            ("ML", "HOME"), ("SPREAD", "HOME"), ("TOTAL", "OVER")
+        ):
+            row = consensus_markets.get(market_name) or {}
+            if row.get(selection_name) is None:
+                continue
+            consensus[market_name] = float(row[selection_name])
+            consensus_metadata[market_name] = {
+                "book_count": int(row.get("book_count") or 0),
+                "dispersion_pp": row.get("dispersion_pp"),
+                "point": row.get("point"),
+                "pinnacle_included": row.get("pinnacle_included") is True,
+                "role": row.get("role"),
+            }
         evaluation_only = {
             "spread_line": probabilities.get("spread_line"),
             "total_line": probabilities.get("total_line"),
             "pinnacle_entry_probability": sharp,
+            "consensus_entry_probability": consensus,
+            "consensus_metadata": consensus_metadata,
         }
         record = {
             "entry_key": key, "game_id": game["game_id"],

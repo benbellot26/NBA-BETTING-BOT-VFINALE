@@ -12,7 +12,8 @@ import json
 from pathlib import Path
 from typing import Any
 
-from .acquisition import fetch_historical_nba_odds
+from .acquisition import fetch_historical_nba_odds_diagnostic
+from .provider_http import ProviderDiagnosticError
 from .market import paired_price_rows
 from .odds_budget import reserve as reserve_odds_request
 from .odds_normalizer import normalize_game
@@ -44,8 +45,30 @@ def run(
         raise ValueError("requested_at must be on game_date")
 
     reserve_odds_request(path=budget_path,purpose="historical_pinnacle_probe")
-    payload=fetch_historical_nba_odds(
-        date_iso=requested.isoformat(),bookmakers="pinnacle")
+    try:
+        payload=fetch_historical_nba_odds_diagnostic(
+            date_iso=requested.isoformat(),bookmakers="pinnacle")
+    except ProviderDiagnosticError as exc:
+        result={
+            "schema":SCHEMA,
+            "role":"MARKET_DIAGNOSTIC_ONLY",
+            "season":season,
+            "game_date":game_date,
+            "away":away,
+            "home":home,
+            "requested_at":requested.isoformat(),
+            "state":"HISTORICAL_PROVIDER_ERROR",
+            "historical_pinnacle_available":False,
+            "provider_http_status":exc.status,
+            "provider_error_code":exc.provider_code,
+            "request_count":1,
+            "used_for_certification":False,
+            "pinnacle_replacement":False,
+            "betting_certified":False,
+        }
+        target=Path(output);target.parent.mkdir(parents=True,exist_ok=True)
+        target.write_text(json.dumps(result,indent=2,sort_keys=True),encoding="utf-8")
+        return result
     events=[normalize_game(row) for row in payload["data"]]
     matches=[
         event for event in events

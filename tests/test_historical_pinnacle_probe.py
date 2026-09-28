@@ -4,6 +4,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from nba.historical_pinnacle_probe import run
+from nba.provider_http import ProviderDiagnosticError
 
 
 def payload():
@@ -37,7 +38,7 @@ def payload():
 class HistoricalPinnacleProbeTests(unittest.TestCase):
     def test_ready_historical_pinnacle_probe(self):
         with tempfile.TemporaryDirectory() as d, patch(
-            "nba.historical_pinnacle_probe.fetch_historical_nba_odds",
+            "nba.historical_pinnacle_probe.fetch_historical_nba_odds_diagnostic",
             return_value=payload(),
         ):
             result=run(
@@ -50,11 +51,33 @@ class HistoricalPinnacleProbeTests(unittest.TestCase):
         self.assertFalse(result["used_for_certification"])
         self.assertFalse(result["betting_certified"])
 
+    def test_provider_error_is_persisted_without_secret_or_crash(self):
+        error=ProviderDiagnosticError(
+            "https://api.the-odds-api.com/v4/historical/sports/basketball_nba/odds",
+            422,
+            "HISTORICAL_UNAVAILABLE_ON_FREE_USAGE_PLAN",
+        )
+        with tempfile.TemporaryDirectory() as d, patch(
+            "nba.historical_pinnacle_probe.fetch_historical_nba_odds_diagnostic",
+            side_effect=error,
+        ):
+            result=run(
+                output=str(Path(d)/"probe.json"),
+                budget_path=str(Path(d)/"budget.json"),
+            )
+        self.assertEqual(result["state"],"HISTORICAL_PROVIDER_ERROR")
+        self.assertEqual(result["provider_http_status"],422)
+        self.assertEqual(
+            result["provider_error_code"],
+            "HISTORICAL_UNAVAILABLE_ON_FREE_USAGE_PLAN",
+        )
+        self.assertNotIn("apiKey",str(result))
+
     def test_absent_historical_pinnacle_is_explicit(self):
         value=payload()
         value["data"][0]["bookmakers"]=[]
         with tempfile.TemporaryDirectory() as d, patch(
-            "nba.historical_pinnacle_probe.fetch_historical_nba_odds",
+            "nba.historical_pinnacle_probe.fetch_historical_nba_odds_diagnostic",
             return_value=value,
         ):
             result=run(

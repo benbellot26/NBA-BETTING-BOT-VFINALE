@@ -22,3 +22,9 @@ The result is diagnostic only:
 The one-shot workflow is triggered by
 `ops/historical-pinnacle-probe-2026-09-28.flag` and intentionally consumes one
 historical Odds API request.
+
+
+If the historical endpoint rejects the request, the probe records a scrubbed
+provider error state instead of failing the workflow. Only the HTTP status and
+whitelisted `error_code` are persisted; the API key, request query and provider
+error message are never exposed.

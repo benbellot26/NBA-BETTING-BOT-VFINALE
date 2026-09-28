@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import time
 from typing import Any
+from urllib.error import HTTPError
 from urllib.parse import urlsplit
 from urllib.request import Request, urlopen
 
@@ -36,6 +37,19 @@ def _default_headers(url: str) -> dict[str, str]:
 
 class ProviderError(RuntimeError):
     pass
+
+
+class ProviderDiagnosticError(ProviderError):
+    """Provider failure with a whitelisted error code and no request query."""
+
+    def __init__(self, endpoint: str, status: int | None, provider_code: str | None = None):
+        self.endpoint = endpoint
+        self.status = status
+        self.provider_code = provider_code
+        detail = f"HTTP {status}" if isinstance(status, int) else "HTTP_ERROR"
+        if provider_code:
+            detail += f" provider_code={provider_code}"
+        super().__init__(f"GET {endpoint} failed: {detail}")
 
 
 def _safe_endpoint(url: str) -> str:
@@ -97,3 +111,53 @@ def get_json_with_headers(url: str, *, headers: dict[str, str] | None = None,
     code = getattr(error, "code", None)
     detail = f"HTTP {code}" if isinstance(code, int) else type(error).__name__
     raise ProviderError(f"GET {_safe_endpoint(url)} failed: {detail}") from None
+
+
+
+def get_json_with_error_code(
+    url: str,
+    *,
+    headers: dict[str, str] | None = None,
+    timeout: float = 20.0,
+    retries: int = 0,
+) -> tuple[Any, dict[str, str]]:
+    """JSON + headers while exposing only a whitelisted provider error code.
+
+    The request URL query is never included in exceptions, so API keys remain
+    scrubbed. Response error messages are deliberately ignored.
+    """
+    merged = _default_headers(url)
+    if headers:
+        merged.update(headers)
+    endpoint = _safe_endpoint(url)
+    error: Exception | None = None
+    for attempt in range(retries + 1):
+        try:
+            request = Request(url, headers=merged)
+            with urlopen(request, timeout=timeout) as response:  # nosec B310
+                body = response.read().decode("utf-8", errors="replace")
+                return json.loads(body), {
+                    str(k).lower(): str(v) for k, v in response.headers.items()
+                }
+        except HTTPError as exc:
+            error = exc
+            provider_code = None
+            try:
+                payload = json.loads(exc.read().decode("utf-8", errors="replace"))
+                candidate = payload.get("error_code") if isinstance(payload, dict) else None
+                if isinstance(candidate, str) and candidate.replace("_", "").isalnum():
+                    provider_code = candidate
+            except Exception:
+                provider_code = None
+            if attempt < retries:
+                time.sleep(0.5 * (2 ** attempt))
+                continue
+            raise ProviderDiagnosticError(endpoint, exc.code, provider_code) from None
+        except json.JSONDecodeError:
+            raise ProviderError(f"invalid JSON from {endpoint}") from None
+        except Exception as exc:
+            error = exc
+            if attempt < retries:
+                time.sleep(0.5 * (2 ** attempt))
+    code = getattr(error, "code", None)
+    raise ProviderDiagnosticError(endpoint, code if isinstance(code, int) else None) from None

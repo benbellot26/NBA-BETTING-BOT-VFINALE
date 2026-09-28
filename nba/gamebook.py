@@ -26,6 +26,14 @@ HEADER_RE = {
 }
 TEAM_MINUTES_RE = re.compile(r"^\d{3}:\d{2}$")
 INTEGER_RE = re.compile(r"^-?\d+$")
+PLAYER_STREAM_RE = re.compile(
+    r"(?<!\\S)(?P<jersey>\\d{1,2})\\s+"
+    r"(?P<name>.+?)\\s+"
+    r"(?:(?P<position>F-C|C-F|G-F|F-G|G-C|C-G|F|G|C)\\s+)?"
+    r"(?P<minutes>\\d{2}:\\d{2})\\s+"
+    r"(?P<stats>-?\\d+(?:\\s+-?\\d+){15})(?=\\s|$)",
+    re.S,
+)
 
 
 @dataclass(frozen=True)
@@ -140,10 +148,38 @@ def _parse_team_segment(
     if team_minutes < regulation or (team_minutes - regulation) % overtime_increment:
         raise ValueError(f"invalid {side} team minute total in gamebook")
     totals = _stats(team_stat_tokens)
-    players = tuple(
+    # PDF text extractors do not agree on row line breaks. Parse normal
+    # line-oriented rows first, then fall back to a whitespace-stream parser
+    # that recognizes jersey/name/(position)/minutes + the exact 16 stat cells.
+    line_players = [
         player for line in text.splitlines()
         if (player := _player_line(line)) is not None
-    )
+    ]
+    stream_players: list[PlayerBox] = []
+    for match in PLAYER_STREAM_RE.finditer(" ".join(text.split())):
+        values = match.group("stats").split()
+        try:
+            stats = _stats(values)
+        except ValueError:
+            continue
+        stream_players.append(PlayerBox(
+            jersey=match.group("jersey"),
+            name=" ".join(match.group("name").split()).strip(),
+            minutes_seconds=_minutes(match.group("minutes")),
+            stats=stats,
+        ))
+    # Prefer the representation with greater validated coverage. Deduplicate
+    # exact jersey/name pairs in case both extraction modes happen to match.
+    candidates = stream_players if len(stream_players) > len(line_players) else line_players
+    deduped: list[PlayerBox] = []
+    seen_players: set[tuple[str, str]] = set()
+    for player in candidates:
+        key = (player.jersey, player.name.casefold())
+        if key in seen_players:
+            continue
+        seen_players.add(key)
+        deduped.append(player)
+    players = tuple(deduped)
     if len(players) < 5:
         raise ValueError(f"too few active {side} players in gamebook")
     if sum(player.stats["PTS"] for player in players) != totals["PTS"]:
@@ -207,7 +243,13 @@ def extract_first_page(data: bytes) -> str:
     reader = PdfReader(BytesIO(data))
     if not reader.pages:
         raise ValueError("gamebook PDF has no pages")
-    return reader.pages[0].extract_text() or ""
+    page = reader.pages[0]
+    try:
+        # Layout mode is materially more stable for official scorer tables.
+        text = page.extract_text(extraction_mode="layout") or ""
+    except (TypeError, ValueError, NotImplementedError):
+        text = page.extract_text() or ""
+    return text
 
 
 def parse_gamebook_pdf(

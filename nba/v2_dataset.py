@@ -60,7 +60,11 @@ def validate_evaluation_only(value: Any) -> dict[str, Any]:
 def validate_training_row(row: dict[str, Any]) -> dict[str, Any]:
     """Validate labels, PIT ordering and the strict training/evaluation boundary."""
     clean = validate_legacy_row(row)
-    features = validate_feature_payload(row.get("v2_features") or {})
+    features = validate_feature_payload(
+        row.get("v2_features") or {}, require_bound=True
+    )
+    if features["source_manifest_sha256"] != str(clean["source_snapshot_sha256"]).lower():
+        raise ValueError("V2 feature lineage does not match predictive snapshot")
     clean["v2_features"] = features
     clean["evaluation_only"] = validate_evaluation_only(row.get("evaluation_only"))
     clean["dataset_schema"] = DATASET_SCHEMA
@@ -113,6 +117,7 @@ def dataset_fingerprint(rows: Iterable[dict[str, Any]]) -> str:
             "snapshot": clean["source_snapshot_sha256"],
             "forecast_at": clean["forecast_at"],
             "outcome_at": clean["outcome_at"],
+            "feature_payload_sha256": clean["v2_features"]["sha256"],
             "features": clean["v2_features"]["features"],
             "home_score": clean["home_score"],
             "away_score": clean["away_score"],

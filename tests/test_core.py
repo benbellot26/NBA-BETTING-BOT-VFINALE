@@ -3,7 +3,7 @@ import unittest
 from nba.certification import certify
 from nba.decision import evaluate_candidate
 from nba.distribution import probability_surface
-from nba.market import no_vig_pair
+from nba.market import consensus_no_vig, no_vig_pair, representative_point
 from nba.model import GameContext, ScoreProjection, TeamMetrics
 from nba.performance import brier, calibration_ece, logloss, mae
 from nba.rotations import RotationPlayer, redistribute_out_minutes, validate_rotation
@@ -24,6 +24,43 @@ class CoreTests(unittest.TestCase):
     def test_no_vig(self):
         a,b=no_vig_pair(1.91,1.91)
         self.assertAlmostEqual(a,.5); self.assertAlmostEqual(b,.5)
+
+    def test_market_consensus_is_paired_median_and_excludes_pinnacle(self):
+        books=[
+            {"bookmaker":"pinnacle","last_update":"2026-10-20T19:59:00Z",
+             "selections":[{"selection":"HOME","price":9.0},{"selection":"AWAY","price":1.01}]},
+            {"bookmaker":"a","last_update":"2026-10-20T19:59:00Z",
+             "selections":[{"selection":"HOME","price":1.90},{"selection":"AWAY","price":2.00}]},
+            {"bookmaker":"b","last_update":"2026-10-20T19:58:00Z",
+             "selections":[{"selection":"HOME","price":1.95},{"selection":"AWAY","price":1.95}]},
+            {"bookmaker":"c","last_update":"2026-10-20T19:57:00Z",
+             "selections":[{"selection":"HOME","price":2.00},{"selection":"AWAY","price":1.90}]},
+        ]
+        value=consensus_no_vig(
+            books,"HOME","AWAY",analyzed_at="2026-10-20T20:00:00Z"
+        )
+        self.assertIsNotNone(value)
+        self.assertEqual(value["book_count"],3)
+        self.assertFalse(value["pinnacle_included"])
+        self.assertAlmostEqual(value["HOME"],.5,places=6)
+
+    def test_representative_point_prefers_pinnacle_then_market_mode(self):
+        books=[
+            {"bookmaker":"a","selections":[
+                {"selection":"HOME","price":1.9,"point":-3.5},
+                {"selection":"AWAY","price":1.9,"point":3.5}]},
+            {"bookmaker":"b","selections":[
+                {"selection":"HOME","price":1.9,"point":-3.5},
+                {"selection":"AWAY","price":1.9,"point":3.5}]},
+            {"bookmaker":"c","selections":[
+                {"selection":"HOME","price":1.9,"point":-4.0},
+                {"selection":"AWAY","price":1.9,"point":4.0}]},
+        ]
+        self.assertEqual(representative_point(books,"HOME","AWAY"),-3.5)
+        books.append({"bookmaker":"pinnacle","selections":[
+            {"selection":"HOME","price":1.9,"point":-4.5},
+            {"selection":"AWAY","price":1.9,"point":4.5}]})
+        self.assertEqual(representative_point(books,"HOME","AWAY"),-4.5)
 
     def test_rotation_redistribution(self):
         rows=[RotationPlayer(str(i),str(i),30 if i<8 else 0,status="AVAILABLE") for i in range(8)]

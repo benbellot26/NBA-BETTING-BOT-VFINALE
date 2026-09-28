@@ -20,6 +20,23 @@ PAIR = {
 }
 
 
+def _failure_code(message: str) -> str:
+    text = str(message).lower()
+    if "pinnacle close missing" in text:
+        return "PINNACLE_ABSENT"
+    if "stale or missing" in text or "outside the entry-to-pre-tip close window" in text:
+        return "PINNACLE_STALE"
+    if "paired pinnacle close" in text or "same contract" in text:
+        return "CONTRACT_MISSING"
+    if "event not found" in text:
+        return "EVENT_NOT_FOUND"
+    if "arrived at or after tip" in text or "historical close was not before tip" in text:
+        return "TIMING_INVALID"
+    if text.startswith("live_odds:"):
+        return "ODDS_PROVIDER_ERROR"
+    return "OTHER"
+
+
 def _read(path: str | Path) -> list[dict[str, Any]]:
     target = Path(path)
     return [json.loads(row) for row in target.read_text(encoding="utf-8").splitlines() if row.strip()] if target.exists() else []
@@ -136,8 +153,10 @@ def capture(*, paper_path: str, close_path: str, mode: str = "live",
             # Never backdate receipt to the start of a slow HTTP request.
             received_at = datetime.now(timezone.utc)
         except Exception as exc:
+            failure = f"live_odds:{exc}"
             return {"added": 0, "pending": all_pending_count,
-                    "failures": [f"live_odds:{exc}"],
+                    "failures": [failure],
+                    "failure_codes": {_failure_code(failure): 1},
                     "odds_api_requests": attempted_requests}
     for entry in pending:
         try:
@@ -186,8 +205,13 @@ def capture(*, paper_path: str, close_path: str, mode: str = "live",
             added += 1
         except Exception as exc:
             failures.append(f"{entry.get('entry_key')}:{exc}")
+    codes: dict[str, int] = {}
+    for failure in failures:
+        code = _failure_code(failure)
+        codes[code] = codes.get(code, 0) + 1
     return {"added": added, "pending": all_pending_count - added,
-            "failures": failures, "odds_api_requests": attempted_requests}
+            "failures": failures, "failure_codes": codes,
+            "odds_api_requests": attempted_requests}
 
 
 def main() -> None:

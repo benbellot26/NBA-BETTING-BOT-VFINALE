@@ -1,7 +1,8 @@
 import unittest
 
+from nba.communications_schedule import ReferenceScheduleGame
 from nba.gamebook import parse_final_box_text
-from nba.gamebook_stats import build_reference_stat_pack
+from nba.gamebook_stats import _validate_cached, build_reference_stat_pack
 from nba.rotation_projection import project_rotation
 from nba.teams import team_info
 from test_gamebook import FINAL_BOX
@@ -58,6 +59,31 @@ class GamebookStatPackTests(unittest.TestCase):
         self.assertTrue(all(0.0 <= value <= 1.0 for value in usage))
         self.assertEqual(pack["usage_scale"], "fraction_0_to_1")
         self.assertEqual(pack["possession_method"], "symmetric_boxscore_estimate")
+
+    def test_cached_gamebook_is_bound_to_schedule_identity(self):
+        record = self._record()
+        game = ReferenceScheduleGame(
+            reference_id="g1",
+            schedule_number=1,
+            game_date="2026-03-20",
+            commence_time="2026-03-20T23:00:00+00:00",
+            team1="Golden State Warriors",
+            team2="Detroit Pistons",
+            relation="at",
+            away="Golden State Warriors",
+            home="Detroit Pistons",
+            neutral_site=False,
+        )
+        _validate_cached(record, game)
+        record["game_date"] = "2026-03-19"
+        with self.assertRaisesRegex(ValueError, "date mismatch"):
+            _validate_cached(record, game)
+
+    def test_cached_gamebook_rejects_invalid_pdf_digest(self):
+        record = self._record()
+        record["pdf_sha256"] = "not-a-sha"
+        with self.assertRaisesRegex(ValueError, "digest"):
+            _validate_cached(record)
 
     def test_derived_player_rows_are_rotation_compatible(self):
         pack = build_reference_stat_pack(

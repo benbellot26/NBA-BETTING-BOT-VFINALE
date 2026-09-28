@@ -27,6 +27,7 @@ from .schedule_context import build_game_context
 from .snapshot_store import persist_snapshot
 from .teams import canonical_team
 from .timing import is_final_window
+from .v2_features import build_feature_snapshot
 
 
 def _phase(minutes: float) -> str:
@@ -313,6 +314,13 @@ def run(
                     certification=cert, home_rotation=hr, away_rotation=ar,
                     market_fresh=True, betting_window_ok=final,
                     lineup_uncertain=key_lineup_unresolved,
+                )
+                # Learned-V2 inputs are frozen from basketball/context state only.
+                # Market lines/prices remain outside this feature payload.
+                analysis["v2_features"] = build_feature_snapshot(
+                    home=home, away=away, context=context,
+                    home_rotation=hr, away_rotation=ar,
+                    score_projection=analysis["score_projection"],
                 )
                 analysis["commence_time"] = game.commence_time
                 # Execution lineage only; never included in predictive inputs.

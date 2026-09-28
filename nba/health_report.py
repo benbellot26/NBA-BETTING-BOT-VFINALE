@@ -42,6 +42,7 @@ def build(root: str | Path = "runtime", *, at: str | None = None) -> dict[str, A
     historical_pinnacle_probe=_json(root/"historical_pinnacle_probe.json") or {}
     historical_pinnacle_rows=_jsonl(root/"research"/"pinnacle_historical_entry.jsonl")
     www_stats_probe=_json(root/"www_stats_probe.json") or {}
+    stats_backend_probe=_json(root/"stats_backend_probe.json") or {}
     official_report_probe=_json(root/"official_report_probe.json") or {}
     gamebook_reference=_json(root/"gamebook_reference"/"stat_pack.json") or {}
     canonical_stats_reference=_json(root/"canonical_stats_reference"/"status.json") or {}
@@ -102,6 +103,16 @@ def build(root: str | Path = "runtime", *, at: str | None = None) -> dict[str, A
             "consensus_replaces_pinnacle":False,
         },
         "www_stats_probe":{"checked_at":www_stats_probe.get("checked_at"),"season":www_stats_probe.get("season"),"all_pages_reachable":www_stats_probe.get("all_pages_reachable"),"structured_candidate_for_reference_parser":www_stats_probe.get("structured_candidate_for_reference_parser"),"pages":www_stats_probe.get("pages") or {}},
+        "stats_backend_probe":{
+            "checked_at":stats_backend_probe.get("checked_at"),
+            "season":stats_backend_probe.get("season"),
+            "scripts_requested":int(stats_backend_probe.get("scripts_requested") or 0),
+            "scripts_reachable":int(stats_backend_probe.get("scripts_reachable") or 0),
+            "backend_hints":stats_backend_probe.get("backend_hints") or [],
+            "endpoint_hints":stats_backend_probe.get("endpoint_hints") or [],
+            "aggregate_marker_counts":stats_backend_probe.get("aggregate_marker_counts") or {},
+            "production_provider_authorized":False,
+        },
         "canonical_stats_reference":{
             "checked_at":canonical_stats_reference.get("checked_at"),
             "state":canonical_stats_reference.get("state"),

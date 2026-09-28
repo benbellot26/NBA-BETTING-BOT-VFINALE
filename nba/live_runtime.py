@@ -315,19 +315,6 @@ def run(
                     market_fresh=True, betting_window_ok=final,
                     lineup_uncertain=key_lineup_unresolved,
                 )
-                # Learned-V2 inputs are frozen from basketball/context state only.
-                # Market lines/prices remain outside this feature payload.
-                analysis["v2_features"] = build_feature_snapshot(
-                    home=home, away=away, context=context,
-                    home_rotation=hr, away_rotation=ar,
-                    score_projection=analysis["score_projection"],
-                    advanced_windows=stats["advanced_windows"],
-                )
-                analysis["commence_time"] = game.commence_time
-                # Execution lineage only; never included in predictive inputs.
-                analysis["odds_event_id"] = odds_event_id
-                analysis["injury_report_at"] = injuries["reported_at"]
-                analysis["input_quality"] = freshness
                 input_manifest = build_input_manifest(
                     context=context, home=home, away=away,
                     home_rotation=hr, away_rotation=ar,
@@ -339,6 +326,21 @@ def run(
                 analysis["input_manifest"] = input_manifest
                 analysis["source_snapshot_sha256"] = input_manifest["sha256"]
                 analysis["source_snapshot_at"] = input_manifest["source_snapshot_at"]
+                # Learned-V2 inputs are frozen from basketball/context state only,
+                # checksummed and bound to the exact predictive input manifest.
+                # Market lines/prices remain outside this feature payload.
+                analysis["v2_features"] = build_feature_snapshot(
+                    home=home, away=away, context=context,
+                    home_rotation=hr, away_rotation=ar,
+                    score_projection=analysis["score_projection"],
+                    advanced_windows=stats["advanced_windows"],
+                    source_manifest_sha256=input_manifest["sha256"],
+                )
+                analysis["commence_time"] = game.commence_time
+                # Execution lineage only; never included in predictive inputs.
+                analysis["odds_event_id"] = odds_event_id
+                analysis["injury_report_at"] = injuries["reported_at"]
+                analysis["input_quality"] = freshness
                 analysis["rotation_home"] = [asdict(row) for row in hr]
                 analysis["rotation_away"] = [asdict(row) for row in ar]
                 out["games"].append(analysis)

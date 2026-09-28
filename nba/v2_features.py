@@ -6,7 +6,10 @@ explicitly forbidden from the training feature payload.
 from __future__ import annotations
 
 from dataclasses import asdict
+import hashlib
+import json
 import math
+import re
 from typing import Any, Iterable
 
 from .model import GameContext, ScoreProjection, TeamMetrics
@@ -14,6 +17,7 @@ from .rotations import RotationPlayer
 from .teams import canonical_team
 
 FEATURE_SCHEMA = "pulsar-nba-v2-features-v1"
+_SHA256 = re.compile(r"[a-fA-F0-9]{64}\\Z")
 FORBIDDEN_FEATURE_TOKENS = (
     "odds", "market", "price", "book", "pinnacle", "sharp",
     "breakeven", "spread_line", "total_line",
@@ -151,10 +155,7 @@ def _temporal_features(
     return out
 
 
-def validate_feature_payload(payload: dict[str, Any]) -> dict[str, Any]:
-    if payload.get("schema") != FEATURE_SCHEMA:
-        raise ValueError("unrecognized V2 feature schema")
-    features = payload.get("features")
+def _normalize_features(features: Any) -> dict[str, float]:
     if not isinstance(features, dict):
         raise ValueError("V2 features must be an object")
     keys = tuple(features.keys())
@@ -162,14 +163,66 @@ def validate_feature_payload(payload: dict[str, Any]) -> dict[str, Any]:
         missing = sorted(set(FEATURE_NAMES) - set(keys))
         extra = sorted(set(keys) - set(FEATURE_NAMES))
         raise ValueError(f"V2 feature contract mismatch missing={missing} extra={extra}")
+    normalized: dict[str, float] = {}
     for key in keys:
         lowered = key.lower()
         if any(token in lowered for token in FORBIDDEN_FEATURE_TOKENS):
             raise ValueError(f"market-derived V2 feature forbidden: {key}")
-        _finite(features[key], key)
+        normalized[key] = _finite(features[key], key)
+    return {name: normalized[name] for name in FEATURE_NAMES}
+
+
+def _payload_digest(source_manifest_sha256: str, features: dict[str, float]) -> str:
+    canonical = {
+        "schema": FEATURE_SCHEMA,
+        "source_manifest_sha256": source_manifest_sha256.lower(),
+        "features": features,
+    }
+    encoded = json.dumps(
+        canonical, sort_keys=True, separators=(",", ":"), allow_nan=False
+    ).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def bind_feature_payload(
+    features: dict[str, Any], *, source_manifest_sha256: str,
+) -> dict[str, Any]:
+    source = str(source_manifest_sha256 or "")
+    if not _SHA256.fullmatch(source):
+        raise ValueError("V2 features require a 64-character source manifest SHA-256")
+    normalized = _normalize_features(features)
+    digest = _payload_digest(source, normalized)
     return {
         "schema": FEATURE_SCHEMA,
-        "features": {name: float(features[name]) for name in FEATURE_NAMES},
+        "source_manifest_sha256": source.lower(),
+        "sha256": digest,
+        "features": normalized,
+    }
+
+
+def validate_feature_payload(
+    payload: dict[str, Any], *, require_bound: bool = False,
+) -> dict[str, Any]:
+    if payload.get("schema") != FEATURE_SCHEMA:
+        raise ValueError("unrecognized V2 feature schema")
+    normalized = _normalize_features(payload.get("features"))
+    source = str(payload.get("source_manifest_sha256") or "")
+    digest = str(payload.get("sha256") or "")
+    if source:
+        if not _SHA256.fullmatch(source):
+            raise ValueError("invalid V2 source manifest SHA-256")
+        expected = _payload_digest(source, normalized)
+        if digest != expected:
+            raise ValueError("V2 feature payload checksum mismatch")
+    elif require_bound:
+        raise ValueError("V2 feature payload is not bound to predictive lineage")
+    if require_bound and not _SHA256.fullmatch(digest):
+        raise ValueError("V2 feature payload checksum missing")
+    return {
+        "schema": FEATURE_SCHEMA,
+        "source_manifest_sha256": source.lower() if source else None,
+        "sha256": digest if digest else None,
+        "features": normalized,
     }
 
 
@@ -182,6 +235,7 @@ def build_feature_snapshot(
     away_rotation: Iterable[RotationPlayer],
     score_projection: ScoreProjection | dict[str, Any],
     advanced_windows: dict[Any, list[dict[str, Any]]] | None = None,
+    source_manifest_sha256: str,
 ) -> dict[str, Any]:
     """Build the exact pre-market training vector used by future V2 research."""
     home = home.validated()
@@ -238,4 +292,6 @@ def build_feature_snapshot(
     }
     features.update(_temporal_features("home", home, advanced_windows))
     features.update(_temporal_features("away", away, advanced_windows))
-    return validate_feature_payload({"schema": FEATURE_SCHEMA, "features": features})
+    return bind_feature_payload(
+        features, source_manifest_sha256=source_manifest_sha256
+    )

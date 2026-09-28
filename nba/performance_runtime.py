@@ -12,7 +12,8 @@ from .certification import certify
 from .evidence_audit import audit_records
 from .model import ProbabilitySurface
 from .performance import brier, calibration_ece, logloss
-from .providers import OfficialOutcomeProvider
+from .gamebook_outcomes import SOURCE as GAMEBOOK_OUTCOME_SOURCE, is_gamebook_final
+from .providers import OfficialGamebookOutcomeProvider, OfficialOutcomeProvider
 from .schedule import fetch_schedule
 from .settlement import settle_candidate
 from .teams import canonical_team
@@ -193,8 +194,6 @@ def _final_for_record(
     exact = finals.get(game_id)
     if exact is not None:
         return exact
-    if not game_id.startswith("nba-pr-"):
-        return None
     home = str(record.get("home") or "")
     away = str(record.get("away") or "")
     game_date = str(record.get("game_date") or "")
@@ -205,6 +204,10 @@ def _final_for_record(
         if game.game_date == game_date
         and canonical_team(game.home) == canonical_team(home)
         and canonical_team(game.away) == canonical_team(away)
+        and (
+            game_id.startswith("nba-pr-")
+            or is_gamebook_final(game)
+        )
     ]
     if len(matching) > 1:
         raise ValueError(
@@ -242,7 +245,13 @@ def refresh(
     forecasts = _read(forecasts_path)
     outcomes = _read(outcomes_path)
     known = {str(row.get("game_id")) for row in outcomes}
-    finals = (outcome_provider or OfficialOutcomeProvider(fetcher=fetch_schedule)).finals()
+    finals = (
+        outcome_provider
+        or OfficialOutcomeProvider(
+            fetcher=fetch_schedule,
+            fallback=OfficialGamebookOutcomeProvider(),
+        )
+    ).finals()
     for forecast in forecasts:
         game_id = str(forecast.get("game_id") or "")
         if game_id in known:
@@ -250,13 +259,21 @@ def refresh(
         game = _final_for_record(forecast, finals)
         if game is None:
             continue
+        source = (
+            GAMEBOOK_OUTCOME_SOURCE if is_gamebook_final(game)
+            else "official_nba_schedule"
+        )
         observed = {
             "game_id": game_id,
             "official_game_id": game.game_id,
             "home_score": game.home_score,
             "away_score": game.away_score,
             "outcome_at": datetime.now(timezone.utc).isoformat(),
-            "source": "official_nba_schedule",
+            "source": source,
+            "identity_resolution": (
+                "exact_game_id" if str(game.game_id) == game_id
+                else "unique_date_home_away"
+            ),
         }
         append_jsonl(outcomes_path, observed)
         outcomes.append(observed)

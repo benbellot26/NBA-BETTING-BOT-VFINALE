@@ -18,6 +18,7 @@ WORKFLOWS = (
 DATA_RUNNER_WORKFLOWS = WORKFLOWS + (
     ".github/workflows/provider-smoke.yml",
     ".github/workflows/gamebook-reference.yml",
+    ".github/workflows/canonical-stats-reference.yml",
 )
 
 MARKETS = ("ML", "SPREAD", "TOTAL")

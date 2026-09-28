@@ -64,6 +64,12 @@ class V2ModelTests(unittest.TestCase):
         b["evaluation_only"]["spread_line"] = 20.5
         self.assertEqual(feature_vector(a), feature_vector(b))
 
+    def test_feature_payload_must_match_predictive_snapshot(self):
+        data = row(2)
+        data["source_snapshot_sha256"] = "f" * 64
+        with self.assertRaisesRegex(ValueError, "lineage"):
+            feature_vector(data)
+
     def test_learned_model_fits_multifeature_signal(self):
         rows = [row(i) for i in range(100)]
         model = fit_learned_v2(rows, minimum_train=60)

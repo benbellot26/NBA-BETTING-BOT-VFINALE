@@ -47,4 +47,23 @@ jobs:
             except Exception as exc:
               out[name] = {"ok": False, "error": str(exc)}
           print(json.dumps(out, indent=2))
+          for query in ("2026-27 NBA Injury Report", "2025-26 NBA Injury Report", "NBA Injury Report"):
+            try:
+              rows = get_json(
+                "https://official.nba.com/wp-json/wp/v2/search?search="
+                + query.replace(" ", "%20") + "&per_page=20",
+                timeout=8.0, retries=0,
+              )
+              safe = [
+                {
+                  "id": row.get("id"),
+                  "title": row.get("title"),
+                  "url": row.get("url"),
+                  "subtype": row.get("subtype"),
+                }
+                for row in rows
+              ]
+              print("SEARCH", query, json.dumps(safe, indent=2))
+            except Exception as exc:
+              print("SEARCH", query, "ERROR", exc)
           PY

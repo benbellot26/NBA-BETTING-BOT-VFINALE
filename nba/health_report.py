@@ -37,6 +37,7 @@ def build(root: str | Path = "runtime", *, at: str | None = None) -> dict[str, A
     bookmaker_discovery=_json(root/"bookmaker_discovery.json") or {}
     www_stats_probe=_json(root/"www_stats_probe.json") or {}
     official_report_probe=_json(root/"official_report_probe.json") or {}
+    gamebook_reference=_json(root/"gamebook_reference"/"stat_pack.json") or {}
     audit=_json(ev/"audit.json") or {}
     forecasts=_jsonl(ev/"final_forecasts.jsonl")
     paper=_jsonl(ev/"paper_entries.jsonl")
@@ -78,6 +79,18 @@ def build(root: str | Path = "runtime", *, at: str | None = None) -> dict[str, A
         "runner_probe":{"checked_at":runner_probe.get("checked_at"),"reachable_routes":runner_probe.get("reachable_routes") or [],"probes":runner_probe.get("probes") or {}},
         "bookmaker_discovery":{"checked_at":bookmaker_discovery.get("checked_at"),"pinnacle_present":bookmaker_discovery.get("pinnacle_present"),"complete_featured_market_events":bookmaker_discovery.get("complete_featured_market_events") or {}},
         "www_stats_probe":{"checked_at":www_stats_probe.get("checked_at"),"season":www_stats_probe.get("season"),"all_pages_reachable":www_stats_probe.get("all_pages_reachable"),"structured_candidate_for_reference_parser":www_stats_probe.get("structured_candidate_for_reference_parser"),"pages":www_stats_probe.get("pages") or {}},
+        "gamebook_reference":{
+            "role":gamebook_reference.get("role"),
+            "season":gamebook_reference.get("season"),
+            "date_to":gamebook_reference.get("date_to"),
+            "gamebooks":int(gamebook_reference.get("gamebooks") or 0),
+            "expected_gamebooks":int(gamebook_reference.get("expected_gamebooks") or 0),
+            "missing_gamebooks":len(gamebook_reference.get("missing_gamebooks") or []),
+            "gamebook_completeness":gamebook_reference.get("gamebook_completeness"),
+            "collection_complete":gamebook_reference.get("collection_complete"),
+            "teams_with_games":int(gamebook_reference.get("teams_with_games") or 0),
+            "production_provider_authorized":gamebook_reference.get("production_provider_authorized"),
+        },
         "official_report_probe":{
             "checked_at":official_report_probe.get("checked_at"),
             "official_gamebook_candidate":official_report_probe.get("official_gamebook_candidate"),

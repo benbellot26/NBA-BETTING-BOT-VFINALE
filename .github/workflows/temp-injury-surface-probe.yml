@@ -77,20 +77,67 @@ jobs:
             if "injury" in href.lower() or ".pdf" in href.lower()
           ]
           print("INJURY_HREFS", json.dumps(safe_hrefs[-40:], indent=2))
-          from nba.injury_pdf import fetch_latest_report
-          historical = fetch_latest_report(season="2025-26")
-          print("HISTORICAL_REPORT", json.dumps({
-            "reported_at": historical["reported_at"],
-            "record_count": historical["record_count"],
-            "teams": len(historical["team_status"]),
-            "source_url": historical["source_url"],
-          }, indent=2))
-          assert historical["team_status"], historical
+          post_urls = {
+            "post_by_id": "https://official.nba.com/wp-json/wp/v2/posts/16977",
+            "post_by_slug": "https://official.nba.com/wp-json/wp/v2/posts?slug=nba-injury-report-2025-26-season",
+          }
+          for label, url in post_urls.items():
+            try:
+              payload = get_json(url, timeout=8.0, retries=0)
+              raw = json.dumps(payload)
+              print("POST", label, json.dumps({
+                "ok": True,
+                "size": len(raw),
+                "injury": "injury" in raw.lower(),
+                "pdf": ".pdf" in raw.lower(),
+                "iframe": "iframe" in raw.lower(),
+                "api": "api" in raw.lower(),
+                "ajax": "ajax" in raw.lower(),
+              }, indent=2))
+              if isinstance(payload, dict):
+                rendered = str((payload.get("content") or {}).get("rendered") or "")
+              elif isinstance(payload, list) and payload:
+                rendered = str((payload[0].get("content") or {}).get("rendered") or "")
+              else:
+                rendered = ""
+              needles = ("injury", "iframe", "script", "api", "ajax", "report")
+              compact = " ".join(rendered.split())
+              contexts = []
+              lower = compact.lower()
+              for needle in needles:
+                pos = 0
+                while True:
+                  hit = lower.find(needle, pos)
+                  if hit < 0:
+                    break
+                  snippet = compact[max(0, hit-180):hit+400]
+                  if snippet not in contexts:
+                    contexts.append(snippet)
+                  pos = hit + len(needle)
+              print("POST_CONTEXTS", label, json.dumps(contexts[:20], indent=2))
+            except Exception as exc:
+              print("POST", label, "ERROR", exc)
+
+          # Inspect same-origin script sources and HTML attributes mentioning
+          # injury/report/API without persisting the full page.
+          scripts = re.findall(r'<script[^>]+src=["\\\']([^"\\\']+)["\\\']', known_html, flags=re.I)
+          print("SCRIPT_SRCS", json.dumps(scripts[-40:], indent=2))
+          compact_html = " ".join(known_html.split())
+          lower_html = compact_html.lower()
+          contexts = []
+          pos = 0
+          while True:
+            hit = lower_html.find("injury", pos)
+            if hit < 0:
+              break
+            contexts.append(compact_html[max(0, hit-220):hit+520])
+            pos = hit + 6
+          print("HTML_INJURY_CONTEXTS", json.dumps(contexts[:25], indent=2))
+
+          from nba.injury_pdf import discover_injury_page_url
+          print("DISCOVER_2025", discover_injury_page_url(season="2025-26"))
           try:
-            fetch_latest_report(season="2026-27")
+            print("DISCOVER_2026", discover_injury_page_url(season="2026-27"))
           except Exception as exc:
             print("CURRENT_EXPECTED", type(exc).__name__, str(exc))
-            assert "not published for season 2026-27" in str(exc) or "no timestamped PDF report" in str(exc)
-          else:
-            print("CURRENT_REPORT_PUBLISHED")
           PY

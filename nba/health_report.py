@@ -35,6 +35,7 @@ def build(root: str | Path = "runtime", *, at: str | None = None) -> dict[str, A
     readiness=_json(root/"readiness_gate.json") or {}
     runner_probe=_json(root/"runner_probe.json") or {}
     bookmaker_discovery=_json(root/"bookmaker_discovery.json") or {}
+    market_availability=_json(root/"market_availability_summary.json") or {}
     www_stats_probe=_json(root/"www_stats_probe.json") or {}
     official_report_probe=_json(root/"official_report_probe.json") or {}
     gamebook_reference=_json(root/"gamebook_reference"/"stat_pack.json") or {}

@@ -81,6 +81,16 @@ def run() -> dict[str, Any]:
                 timeout=10.0, retries=0)),
     }
     reachable = [name for name, row in probes.items() if row["ok"]]
+    injury_transport = {
+        "current_page_state": probes["official_injury_page"]["state"],
+        "historical_page_state": probes["historical_injury_page"]["state"],
+        "known_static_pdf_state": probes["known_official_injury_pdf"]["state"],
+        "static_pdf_reachable": bool(probes["known_official_injury_pdf"]["ok"]),
+        "page_route_reachable": bool(
+            probes["official_injury_page"]["ok"]
+            or probes["historical_injury_page"]["ok"]
+        ),
+    }
     return {
         "schema": "pulsar-nba-runner-network-probe-v1",
         "checked_at": now.isoformat(),
@@ -90,6 +100,7 @@ def run() -> dict[str, Any]:
         "predictive_evidence_eligible": False,
         "odds_api_requests": 0,
         "reachable_routes": reachable,
+        "injury_transport": injury_transport,
         "probes": probes,
     }
 

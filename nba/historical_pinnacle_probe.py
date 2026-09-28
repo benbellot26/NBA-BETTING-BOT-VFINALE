@@ -7,13 +7,12 @@ or certification authority.
 from __future__ import annotations
 
 import argparse
-from datetime import timedelta
+from datetime import datetime, timezone
 import json
 from pathlib import Path
 from typing import Any
 
 from .acquisition import fetch_historical_nba_odds
-from .communications_schedule import fetch_reference_schedule
 from .market import paired_price_rows
 from .odds_budget import reserve as reserve_odds_request
 from .odds_normalizer import normalize_game
@@ -23,24 +22,11 @@ from .teams import canonical_team
 SCHEMA="pulsar-nba-historical-pinnacle-probe-v1"
 
 
-def _dt(value: str):
-    from datetime import datetime, timezone
+def _dt(value: str) -> datetime:
     parsed=datetime.fromisoformat(str(value).replace("Z","+00:00"))
     if parsed.tzinfo is None:
         raise ValueError("probe timestamp requires timezone")
     return parsed.astimezone(timezone.utc)
-
-
-def _find_reference(*, game_date:str, away:str, home:str, schedule:list[Any]):
-    matches=[
-        row for row in schedule
-        if row.game_date==game_date
-        and canonical_team(row.away or "")==canonical_team(away)
-        and canonical_team(row.home or "")==canonical_team(home)
-    ]
-    if len(matches)!=1:
-        raise ValueError(f"expected one reference game, found {len(matches)}")
-    return matches[0]
 
 
 def run(
@@ -48,28 +34,24 @@ def run(
     game_date:str="2026-03-20",
     away:str="Golden State Warriors",
     home:str="Detroit Pistons",
-    minutes_before:int=30,
+    requested_at:str="2026-03-20T20:00:00+00:00",
     output:str="runtime/historical_pinnacle_probe.json",
     budget_path:str="runtime/odds_budget.json",
-    reference_schedule:list[Any]|None=None,
 )->dict[str,Any]:
-    if minutes_before<5 or minutes_before>180:
-        raise ValueError("minutes_before must be between 5 and 180")
     season=season_for_date(game_date)
-    schedule=list(reference_schedule) if reference_schedule is not None else fetch_reference_schedule(season=season)
-    reference=_find_reference(
-        game_date=game_date,away=away,home=home,schedule=schedule)
-    requested_at=_dt(reference.commence_time)-timedelta(minutes=minutes_before)
+    requested=_dt(requested_at)
+    if requested.date().isoformat()!=game_date:
+        raise ValueError("requested_at must be on game_date")
 
     reserve_odds_request(path=budget_path,purpose="historical_pinnacle_probe")
     payload=fetch_historical_nba_odds(
-        date_iso=requested_at.isoformat(),bookmakers="pinnacle")
+        date_iso=requested.isoformat(),bookmakers="pinnacle")
     events=[normalize_game(row) for row in payload["data"]]
     matches=[
         event for event in events
         if canonical_team(event["away"])==canonical_team(away)
         and canonical_team(event["home"])==canonical_team(home)
-        and abs((_dt(event["commence_time"])-_dt(reference.commence_time)).total_seconds())<=300
+        and _dt(event["commence_time"])>requested
     ]
     if len(matches)>1:
         raise ValueError("ambiguous historical odds event")
@@ -103,7 +85,7 @@ def run(
     snapshot_at=str(payload.get("timestamp") or "")
     snapshot_age_minutes=None
     if snapshot_at:
-        snapshot_age_minutes=(requested_at-_dt(snapshot_at)).total_seconds()/60.0
+        snapshot_age_minutes=(requested-_dt(snapshot_at)).total_seconds()/60.0
 
     if event is None:
         state="EVENT_NOT_FOUND"
@@ -121,9 +103,8 @@ def run(
         "game_date":game_date,
         "away":away,
         "home":home,
-        "reference_id":reference.reference_id,
-        "tipoff_at":reference.commence_time,
-        "requested_at":requested_at.isoformat(),
+        "requested_at":requested.isoformat(),
+        "matched_tipoff_at":event.get("commence_time") if event is not None else None,
         "provider_snapshot_at":snapshot_at or None,
         "snapshot_age_minutes":snapshot_age_minutes,
         "events":len(events),
@@ -151,13 +132,13 @@ def main()->None:
     p.add_argument("--date",default="2026-03-20")
     p.add_argument("--away",default="Golden State Warriors")
     p.add_argument("--home",default="Detroit Pistons")
-    p.add_argument("--minutes-before",type=int,default=30)
+    p.add_argument("--requested-at",default="2026-03-20T20:00:00+00:00")
     p.add_argument("--output",default="runtime/historical_pinnacle_probe.json")
     p.add_argument("--budget",default="runtime/odds_budget.json")
     a=p.parse_args()
     print(json.dumps(run(
         game_date=a.date,away=a.away,home=a.home,
-        minutes_before=a.minutes_before,output=a.output,
+        requested_at=a.requested_at,output=a.output,
         budget_path=a.budget),indent=2))
 
 

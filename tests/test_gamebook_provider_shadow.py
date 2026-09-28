@@ -3,6 +3,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from nba.communications_schedule import ReferenceScheduleGame
 from nba.fixture_provider import DeterministicFixtureProvider
@@ -96,6 +97,28 @@ class GamebookProviderShadowTests(unittest.TestCase):
             )
             self.assertEqual(result["status"], "INCOMPLETE_GAMEBOOK_HISTORY")
             self.assertEqual(result["added"], 0)
+
+    def test_outside_final_window_defers_heavy_sources(self):
+        _, _, schedule = self._inputs()
+        with tempfile.TemporaryDirectory() as d, patch(
+            "nba.gamebook_shadow_runtime.build_gamebook_pack"
+        ) as build_pack, patch(
+            "nba.gamebook_shadow_runtime.fetch_latest_report"
+        ) as fetch_injuries:
+            result = run(
+                target_date="2026-11-15",
+                output=str(Path(d) / "forecasts.jsonl"),
+                status_output=str(Path(d) / "status.json"),
+                snapshot_root=str(Path(d) / "snapshots"),
+                now=dt.datetime(
+                    2026, 11, 15, 20, 0, tzinfo=dt.timezone.utc
+                ),
+                reference_schedule=schedule,
+            )
+            self.assertEqual(result["status"], "NO_ELIGIBLE_FINAL_WINDOW")
+            self.assertTrue(result["source_fetch_deferred"])
+            build_pack.assert_not_called()
+            fetch_injuries.assert_not_called()
 
     def test_only_final_window_is_recorded(self):
         stats, injuries, schedule = self._inputs()

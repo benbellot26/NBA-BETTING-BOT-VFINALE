@@ -56,8 +56,13 @@ automatic provider-promotion gate in this generation.
 ## Workflow
 
 The **Pulsar NBA Gamebook Provider Shadow** workflow can always be launched
-manually. Scheduled runs execute only when the repository variable
-`NBA_PROVIDER_SHADOW_ENABLED=true`.
+manually and now runs automatically every 20 minutes during NBA-season months
+(October through June), covering the principal UTC game window.
+
+The runtime first checks the official schedule and returns immediately unless a
+game is 5–30 minutes from tipoff. The full Communications schedule is cached
+for 24 hours, so most runs use only persisted state. Gamebook aggregation and
+injury acquisition occur only inside the FINAL forecast window.
 
 It makes no Odds API request and is independent of `NBA_LIVE_ENABLED`.
 

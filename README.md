@@ -485,8 +485,10 @@ official gamebooks, requires complete history + submitted injury reports, and
 records market-free structural forecasts 5–30 minutes before tipoff.
 
 It does **not** replace `OfficialNBAProvider`, has no predictive/production
-authority and cannot bet. Scheduled runs require
-`NBA_PROVIDER_SHADOW_ENABLED=true`; manual dispatch remains available.
+authority and cannot bet. Scheduled runs are autonomous during NBA-season months. A 24-hour official
+schedule cache and a pre-check of the 5–30 minute FINAL window prevent heavy
+gamebook/injury acquisition outside the only period where a forecast can be
+recorded. Manual dispatch remains available.
 
 See `PROVIDER_SHADOW.md`.
 

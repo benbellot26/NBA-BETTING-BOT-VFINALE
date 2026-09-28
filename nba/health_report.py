@@ -79,10 +79,20 @@ def build(root: str | Path = "runtime", *, at: str | None = None) -> dict[str, A
         "diagnostics":{"provider_age_hours":provider_age,"provider_fresh":provider_fresh,"market_age_hours":market_age,"market_fresh":market_fresh},
         "provider_details":provider.get("providers") or {},
         "market_coverage_ready":market.get("coverage_ready"),
+        "market_availability_state":market.get("availability_state"),
+        "market_benchmark_bookmaker":market.get("benchmark_bookmaker"),
         "ready_for_real_rehearsal":readiness.get("ready_for_real_rehearsal"),
         "readiness_failures":readiness.get("failures") or [],
         "runner_probe":{"checked_at":runner_probe.get("checked_at"),"reachable_routes":runner_probe.get("reachable_routes") or [],"probes":runner_probe.get("probes") or {}},
-        "bookmaker_discovery":{"checked_at":bookmaker_discovery.get("checked_at"),"pinnacle_present":bookmaker_discovery.get("pinnacle_present"),"complete_featured_market_events":bookmaker_discovery.get("complete_featured_market_events") or {}},
+        "bookmaker_discovery":{
+            "checked_at":bookmaker_discovery.get("checked_at"),
+            "pinnacle_present":bookmaker_discovery.get("pinnacle_present"),
+            "pinnacle_state":bookmaker_discovery.get("pinnacle_state"),
+            "complete_featured_market_events":bookmaker_discovery.get("complete_featured_market_events") or {},
+            "consensus_market_events":bookmaker_discovery.get("consensus_market_events") or {},
+            "complete_consensus_events":int(bookmaker_discovery.get("complete_consensus_events") or 0),
+            "consensus_replaces_pinnacle":False,
+        },
         "www_stats_probe":{"checked_at":www_stats_probe.get("checked_at"),"season":www_stats_probe.get("season"),"all_pages_reachable":www_stats_probe.get("all_pages_reachable"),"structured_candidate_for_reference_parser":www_stats_probe.get("structured_candidate_for_reference_parser"),"pages":www_stats_probe.get("pages") or {}},
         "canonical_stats_reference":{
             "checked_at":canonical_stats_reference.get("checked_at"),
@@ -143,6 +153,9 @@ def build(root: str | Path = "runtime", *, at: str | None = None) -> dict[str, A
             "media_central":official_report_probe.get("media_central") or {},
         },
         "odds_budget":{"used":int(budget.get("used") or 0),"limit":budget.get("limit"),"remaining":budget.get("remaining"),"purposes":budget.get("purposes") or {}},
+        "market_consensus_evidence":(
+            ((performance.get("market_benchmarks") or {}).get("consensus") or {})
+        ),
         "evidence":{
             "forecasts":len(forecasts),"paper_entries":len(paper),
             "closes":len(closes),"settled":len(settled),

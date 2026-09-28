@@ -14,6 +14,7 @@ import re
 from pathlib import Path
 from typing import Any
 
+from .gamebook import parse_gamebook_pdf
 from .provider_http import get_bytes, get_text
 
 # Verified NBA Official Scorer's Report from the 2025-26 regular season.
@@ -58,7 +59,10 @@ def _gamebook_probe(data: bytes) -> dict[str, Any]:
     # First page contains final box/team totals. Parse two pages as a small
     # structural check without persisting document text.
     text = "\n".join((page.extract_text() or "") for page in reader.pages[:2])
-    marker_hits = {marker: marker in text for marker in GAMEBOOK_MARKERS}
+    marker_hits = {
+        marker: marker.casefold() in text.casefold()
+        for marker in GAMEBOOK_MARKERS
+    }
     stat_header = all(token in text for token in (
         "MIN", "FG", "FGA", "3P", "3PA", "FT", "FTA", "OR", "DR", "TOT", "TO", "PTS"
     ))
@@ -66,14 +70,39 @@ def _gamebook_probe(data: bytes) -> dict[str, Any]:
         r"240:00\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+",
         text,
     ))
+    parsed = parse_gamebook_pdf(
+        data,
+        expected_away="Golden State Warriors",
+        expected_home="Detroit Pistons",
+    )
+    exact_known_final = (
+        parsed["away_score"] == 101
+        and parsed["home_score"] == 115
+        and parsed["away"]["totals"]["FGA"] == 76
+        and parsed["home"]["totals"]["FGA"] == 86
+    )
     return {
-        "ok": all(marker_hits.values()) and stat_header and team_total_lines >= 2,
+        "ok": (
+            all(marker_hits.values())
+            and stat_header
+            and team_total_lines >= 2
+            and exact_known_final
+        ),
         "bytes": len(data),
         "sha256": hashlib.sha256(data).hexdigest(),
         "pages": len(reader.pages),
         "marker_hits": marker_hits,
         "stat_header_signal": stat_header,
         "team_total_line_count": team_total_lines,
+        "exact_known_final": exact_known_final,
+        "parsed_scores": {
+            "away": parsed["away_score"],
+            "home": parsed["home_score"],
+        },
+        "parsed_player_counts": {
+            "away": len(parsed["away"]["players"]),
+            "home": len(parsed["home"]["players"]),
+        },
         "raw_text_persisted": False,
     }
 

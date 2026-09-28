@@ -9,7 +9,7 @@ from nba.certification import certify
 from nba.distribution import probability_surface
 from nba.lineage import build_input_manifest
 from nba.model import GameContext, ScoreProjection, TeamMetrics
-from nba.performance_runtime import refresh
+from nba.performance_runtime import _final_for_record, refresh
 from nba.rotations import RotationPlayer
 from nba.schedule import ScheduleGame
 from nba.tracking import append_jsonl
@@ -124,6 +124,30 @@ class FullCohortTests(unittest.TestCase):
             original = Path(args["settled_path"]).read_text().splitlines()
             self.assertEqual(len(original), 1)
             self.assertNotIn("clv_pp", json.loads(original[0]))
+
+    def test_communications_identity_reconciles_only_unique_official_final(self):
+        official = ScheduleGame(
+            "0022600123", "2026-11-15", "2026-11-15T22:20:00Z",
+            "Boston Celtics", "New York Knicks", 3, "Final", 118, 112,
+        )
+        record = {
+            "game_id": "nba-pr-2026-27-2026-11-15-123",
+            "game_date": "2026-11-15",
+            "home": "Boston Celtics",
+            "away": "New York Knicks",
+        }
+        resolved = _final_for_record(record, {official.game_id: official})
+        self.assertEqual(resolved.game_id, official.game_id)
+        ordinary = dict(record, game_id="unknown")
+        self.assertIsNone(_final_for_record(ordinary, {official.game_id: official}))
+        with self.assertRaisesRegex(ValueError, "ambiguous"):
+            _final_for_record(record, {
+                "a": official,
+                "b": ScheduleGame(
+                    "0022600999", official.game_date, official.commence_time,
+                    official.home, official.away, 3, "Final", 118, 112,
+                ),
+            })
 
     def test_candidate_rejects_missing_clv_rate_and_accepts_zero_ece(self):
         market = {

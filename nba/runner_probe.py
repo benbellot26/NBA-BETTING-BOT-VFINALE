@@ -11,6 +11,7 @@ from pathlib import Path
 from time import monotonic
 from typing import Any, Callable
 
+from .communications_schedule import fetch_reference_schedule
 from .injury_pdf import injury_page_url
 from .nba_stats_api import team_stats
 from .provider_http import get_json, get_text
@@ -50,6 +51,9 @@ def run() -> dict[str, Any]:
             lambda: get_text(
                 f"https://pr.nba.com/{season}-nba-regular-season-schedule",
                 timeout=10.0, retries=0)),
+        "nba_pr_schedule_pdf": _timed(
+            "nba_pr_schedule_pdf", "schedule",
+            lambda: fetch_reference_schedule(season=season)),
         "www_nba_stats_page": _timed(
             "www_nba_stats_page", "stats",
             lambda: get_text(f"https://www.nba.com/stats/teams/advanced?Season={previous}",

@@ -62,6 +62,26 @@ class ReadinessGateTests(unittest.TestCase):
         self.assertFalse(result["ready_for_real_rehearsal"])
         self.assertTrue(any("market_smoke_stale" in x for x in result["failures"]))
 
+    def test_provider_smoke_accepts_official_pregame_schedule_fallback(self):
+        reference = [
+            type("G", (), {"neutral_site": False})()
+            for _ in range(1200)
+        ]
+        with patch("nba.provider_smoke.fetch_schedule",side_effect=RuntimeError("HTTP 403")), patch(
+            "nba.provider_smoke.fetch_reference_schedule",return_value=reference
+        ), patch(
+            "nba.provider_smoke.team_stats",return_value=[{"TEAM_NAME":"x"}]*30
+        ), patch(
+            "nba.provider_smoke.fetch_latest_report",
+            return_value={"team_status":{"x":"SUBMITTED"},"record_count":0,
+                          "reported_at":"2026-09-24T05:00:00Z"}
+        ):
+            result=provider_run()
+        schedule=result["providers"]["schedule"]
+        self.assertEqual(schedule["state"],"OFFICIAL_PREGAME_FALLBACK")
+        self.assertTrue(schedule["operational_ready"])
+        self.assertFalse(schedule["outcome_authority"])
+
     def test_provider_smoke_marks_sparse_current_stats_historical_only(self):
         with patch("nba.provider_smoke.fetch_schedule",return_value=[object()]*1000), patch(
             "nba.provider_smoke.team_stats",

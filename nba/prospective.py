@@ -79,7 +79,9 @@ def record_final_forecasts(live_run: dict[str, Any], path: str | Path) -> dict[s
         }
         record = {
             "entry_key": key, "game_id": game["game_id"],
-            "game_date": game["game_date"], "model_generation": identity,
+            "game_date": game["game_date"],
+            "home": game.get("home"), "away": game.get("away"),
+            "model_generation": identity,
             "source_snapshot_sha256": snapshot,
             "source_snapshot_at": game["source_snapshot_at"],
             "forecast_at": game["analyzed_at"],

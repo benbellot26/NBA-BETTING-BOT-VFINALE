@@ -26,14 +26,6 @@ HEADER_RE = {
 }
 TEAM_MINUTES_RE = re.compile(r"^\d{3}:\d{2}$")
 INTEGER_RE = re.compile(r"^-?\d+$")
-PLAYER_STREAM_RE = re.compile(
-    r"(?<!\\S)(?P<jersey>\\d{1,2})\\s+"
-    r"(?P<name>.+?)\\s+"
-    r"(?:(?P<position>F-C|C-F|G-F|F-G|G-C|C-G|F|G|C)\\s+)?"
-    r"(?P<minutes>\\d{2}:\\d{2})\\s+"
-    r"(?P<stats>-?\\d+(?:\\s+-?\\d+){15})(?=\\s|$)",
-    re.S,
-)
 
 
 @dataclass(frozen=True)
@@ -116,6 +108,49 @@ def _player_line(line: str) -> PlayerBox | None:
     )
 
 
+def _stream_players(text: str) -> list[PlayerBox]:
+    """Parse player rows from whitespace tokens, independent of PDF line breaks."""
+    tokens = text.split()
+    players: list[PlayerBox] = []
+    index = 0
+    while index < len(tokens):
+        jersey = tokens[index]
+        if not (jersey.isdigit() and 1 <= len(jersey) <= 2):
+            index += 1
+            continue
+        # A real player row reaches its MM:SS minutes token within a short
+        # name/position span. Stat cells from the preceding row do not.
+        limit = min(len(tokens), index + 10)
+        time_index = next(
+            (j for j in range(index + 2, limit) if TIME_RE.fullmatch(tokens[j])),
+            None,
+        )
+        if time_index is None:
+            index += 1
+            continue
+        stat_tokens = tokens[time_index + 1:time_index + 1 + len(STAT_KEYS)]
+        if len(stat_tokens) != len(STAT_KEYS) or not all(
+            INTEGER_RE.fullmatch(value) for value in stat_tokens
+        ):
+            index += 1
+            continue
+        name_tokens = tokens[index + 1:time_index]
+        if name_tokens and name_tokens[-1].upper() in POSITION_CODES:
+            name_tokens = name_tokens[:-1]
+        name = " ".join(name_tokens).strip()
+        if not name:
+            index += 1
+            continue
+        players.append(PlayerBox(
+            jersey=jersey,
+            name=name,
+            minutes_seconds=_minutes(tokens[time_index]),
+            stats=_stats(stat_tokens),
+        ))
+        index = time_index + 1 + len(STAT_KEYS)
+    return players
+
+
 def _parse_team_segment(
     *, text: str, side: str, expected_name: str,
 ) -> TeamBox:
@@ -155,19 +190,7 @@ def _parse_team_segment(
         player for line in text.splitlines()
         if (player := _player_line(line)) is not None
     ]
-    stream_players: list[PlayerBox] = []
-    for match in PLAYER_STREAM_RE.finditer(" ".join(text.split())):
-        values = match.group("stats").split()
-        try:
-            stats = _stats(values)
-        except ValueError:
-            continue
-        stream_players.append(PlayerBox(
-            jersey=match.group("jersey"),
-            name=" ".join(match.group("name").split()).strip(),
-            minutes_seconds=_minutes(match.group("minutes")),
-            stats=stats,
-        ))
+    stream_players = _stream_players(text)
     # Prefer the representation with greater validated coverage. Deduplicate
     # exact jersey/name pairs in case both extraction modes happen to match.
     candidates = stream_players if len(stream_players) > len(line_players) else line_players

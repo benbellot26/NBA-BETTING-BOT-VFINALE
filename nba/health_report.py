@@ -83,7 +83,7 @@ def build(root: str | Path = "runtime", *, at: str | None = None) -> dict[str, A
         "market_benchmark_bookmaker":market.get("benchmark_bookmaker"),
         "ready_for_real_rehearsal":readiness.get("ready_for_real_rehearsal"),
         "readiness_failures":readiness.get("failures") or [],
-        "runner_probe":{"checked_at":runner_probe.get("checked_at"),"reachable_routes":runner_probe.get("reachable_routes") or [],"probes":runner_probe.get("probes") or {}},
+        "runner_probe":{"checked_at":runner_probe.get("checked_at"),"reachable_routes":runner_probe.get("reachable_routes") or [],"injury_transport":runner_probe.get("injury_transport") or {},"probes":runner_probe.get("probes") or {}},
         "bookmaker_discovery":{
             "checked_at":bookmaker_discovery.get("checked_at"),
             "pinnacle_present":bookmaker_discovery.get("pinnacle_present"),

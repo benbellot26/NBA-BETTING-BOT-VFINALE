@@ -78,7 +78,7 @@ def fetch_historical_nba_odds_diagnostic(
         "markets": markets,
         "oddsFormat": "decimal",
         "dateFormat": "iso",
-        "date": date_iso,
+        "date": _historical_timestamp(date_iso),
     }
     if bookmakers:
         params["bookmakers"] = bookmakers

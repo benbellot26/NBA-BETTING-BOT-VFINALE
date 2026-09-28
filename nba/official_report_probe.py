@@ -47,11 +47,7 @@ MEDIA_CENTRAL_URL = "https://www.nba.com/stats/tools/media-central-game-stats"
 GAMEBOOK_MARKERS = (
     "NATIONAL BASKETBALL ASSOCIATION OFFICIAL SCORER'S",
     "FINAL BOX",
-    "VISITOR: Golden State Warriors",
-    "HOME: DETROIT PISTONS",
     "SCORE BY",
-    "Warriors",
-    "PISTONS",
 )
 REPORT_TERMS = (
     "Latest Boxscore Lines",
@@ -100,6 +96,9 @@ def _gamebook_probe(data: bytes, expected: dict[str, Any]) -> dict[str, Any]:
         and parsed["home"]["totals"]["FGA"] == int(expected["home_fga"])
     )
     return {
+        # Team identity is validated by parse_gamebook_pdf against the expected
+        # schedule names. Do not depend on PDF text capitalization/spacing for
+        # that same assertion: pypdf layout extraction legitimately varies.
         "ok": (
             all(marker_hits.values())
             and stat_header

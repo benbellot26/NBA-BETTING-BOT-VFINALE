@@ -1,0 +1,45 @@
+name: Pulsar NBA Gamebook Reference
+concurrency:
+  group: nba-runtime-data
+  cancel-in-progress: false
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'nba/gamebook.py'
+      - 'nba/gamebook_stats.py'
+      - 'nba/communications_schedule.py'
+      - '.github/workflows/gamebook-reference.yml'
+  schedule:
+    - cron: '45 13 * * *'
+permissions:
+  contents: write
+jobs:
+  reference:
+    runs-on: ${{ vars.NBA_DATA_RUNNER || 'ubuntu-latest' }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - run: python -m pip install .
+      - name: Hydrate runtime cache
+        run: .github/scripts/hydrate-runtime-data.sh
+      - name: Increment official gamebook reference cache
+        run: |
+          python -m nba.gamebook_stats             --max-network-games 60             --output runtime/gamebook_reference/stat_pack.json
+      - name: Upload reference artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pulsar-nba-gamebook-reference-${{ github.run_id }}
+          path: runtime/gamebook_reference/
+          if-no-files-found: ignore
+          retention-days: 30
+      - name: Persist runtime-data branch
+        if: always()
+        run: .github/scripts/persist-runtime-data.sh

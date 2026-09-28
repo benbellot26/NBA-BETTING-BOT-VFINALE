@@ -57,7 +57,10 @@ def assess(report: dict[str, Any], *, minimum_holdout: int = MIN_HOLDOUT) -> dic
     if challenger_n < minimum_holdout:
         failures.append(f"holdout_n<{minimum_holdout}")
     market_minimum_holdout = max(1, int(minimum_holdout * 0.90))
-    if report.get("schema") == "pulsar-nba-v2-walk-forward-v1":
+    if report.get("schema") in {
+        "pulsar-nba-v2-walk-forward-v1",
+        "pulsar-nba-v2-prospective-v1",
+    }:
         for market in ("spread", "total"):
             champion_market_n = int(champion.get(f"{market}_n") or 0)
             challenger_market_n = int(challenger.get(f"{market}_n") or 0)

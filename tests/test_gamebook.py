@@ -67,6 +67,19 @@ class GamebookParserTests(unittest.TestCase):
         self.assertEqual(result["away"]["players"][0]["name"], "Gui Santos")
         self.assertEqual(result["home"]["players"][4]["stats"]["AST"], 8)
 
+    def test_wrapped_team_total_line_is_supported(self):
+        wrapped = FINAL_BOX.replace(
+            "240:00 35 76 12 33 19 26 10 28 38 23 17 6 25 6 -14 101",
+            "240:00 35 76 12 33 19 26\n10 28 38 23 17 6 25 6 -14 101",
+        )
+        result = parse_final_box_text(
+            wrapped,
+            expected_away="Golden State Warriors",
+            expected_home="Detroit Pistons",
+        )
+        self.assertEqual(result["away"]["totals"]["FGA"], 76)
+        self.assertEqual(result["away_score"], 101)
+
     def test_overtime_team_minutes_are_supported(self):
         overtime = """
 FINAL BOX

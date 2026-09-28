@@ -38,6 +38,12 @@ jobs:
       - name: Refresh resolved shadow performance
         if: always()
         run: python -m nba.gamebook_shadow_performance || true
+      - name: Assess manual provider-review readiness
+        if: always()
+        run: |
+          if [ -f runtime/provider_shadow/performance.json ]; then
+            python -m nba.gamebook_shadow_gate
+          fi
       - name: Refresh health report
         if: always()
         run: python -m nba.health_report --output runtime/health.json || true

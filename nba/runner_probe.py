@@ -12,7 +12,7 @@ from time import monotonic
 from typing import Any, Callable
 
 from .communications_schedule import fetch_reference_schedule
-from .injury_pdf import injury_page_url
+from .injury_pdf import discover_injury_page_url, injury_page_url
 from .nba_stats_api import team_stats
 from .provider_http import get_json, get_text
 from .provider_smoke import _classify_failure, _previous
@@ -62,6 +62,9 @@ def run() -> dict[str, Any]:
             "official_injury_page", "injuries",
             lambda: get_text(injury_page_url(season),
                              timeout=10.0, retries=0)),
+        "historical_injury_discovery": _timed(
+            "historical_injury_discovery", "injuries",
+            lambda: discover_injury_page_url(season=previous)),
         "historical_stats_api": _timed(
             "historical_stats_api", "stats",
             lambda: team_stats(

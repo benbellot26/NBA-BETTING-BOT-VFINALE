@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-health-v1",
-  "generated_at": "2026-09-28T08:03:55.722126+00:00",
+  "generated_at": "2026-09-28T08:06:58.281707+00:00",
   "state": "PROVIDER_DEGRADED",
   "live_operational": false,
   "real_betting_authorized": false,
@@ -11,9 +11,9 @@
   "provider_ok": false,
   "provider_state": "BLOCKED",
   "diagnostics": {
-    "provider_age_hours": 0.004744707222222222,
+    "provider_age_hours": 0.004850604722222223,
     "provider_fresh": true,
-    "market_age_hours": 96.9687277625,
+    "market_age_hours": 97.01943875722222,
     "market_fresh": false
   },
   "provider_details": {
@@ -56,7 +56,7 @@
     "no_complete_pinnacle_event"
   ],
   "runner_probe": {
-    "checked_at": "2026-09-28T08:03:22.174972+00:00",
+    "checked_at": "2026-09-28T08:06:23.016512+00:00",
     "reachable_routes": [
       "nba_pr_schedule_release",
       "nba_pr_schedule_pdf",
@@ -67,49 +67,49 @@
         "name": "cdn_schedule_json",
         "ok": false,
         "state": "ACCESS_BLOCKED",
-        "elapsed_ms": 59.1,
+        "elapsed_ms": 116.0,
         "error": "GET https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_1.json failed: HTTP 403"
       },
       "api_hub_schedule_page": {
         "name": "api_hub_schedule_page",
         "ok": false,
         "state": "UNAVAILABLE",
-        "elapsed_ms": 139.4,
+        "elapsed_ms": 411.7,
         "error": "GET https://api-hub.nba.com/schedule failed: HTTP 461"
       },
       "nba_pr_schedule_release": {
         "name": "nba_pr_schedule_release",
         "ok": true,
         "state": "REACHABLE",
-        "elapsed_ms": 212.2,
-        "size": 128077
+        "elapsed_ms": 434.9,
+        "size": 128078
       },
       "nba_pr_schedule_pdf": {
         "name": "nba_pr_schedule_pdf",
         "ok": true,
         "state": "REACHABLE",
-        "elapsed_ms": 1840.9,
+        "elapsed_ms": 1494.4,
         "size": 1200
       },
       "www_nba_stats_page": {
         "name": "www_nba_stats_page",
         "ok": true,
         "state": "REACHABLE",
-        "elapsed_ms": 296.6,
-        "size": 325807
+        "elapsed_ms": 336.1,
+        "size": 325904
       },
       "official_injury_page": {
         "name": "official_injury_page",
         "ok": false,
         "state": "NOT_PUBLISHED",
-        "elapsed_ms": 92.6,
+        "elapsed_ms": 212.5,
         "error": "GET https://official.nba.com/nba-injury-report-2026-27-season/ failed: HTTP 404"
       },
       "historical_stats_api": {
         "name": "historical_stats_api",
         "ok": false,
         "state": "TIMEOUT",
-        "elapsed_ms": 10040.4,
+        "elapsed_ms": 10090.9,
         "error": "GET https://stats.nba.com/stats/leaguedashteamstats failed: TimeoutError"
       }
     }
@@ -132,15 +132,15 @@
     }
   },
   "www_stats_probe": {
-    "checked_at": "2026-09-28T08:03:34.983557+00:00",
+    "checked_at": "2026-09-28T08:06:36.201512+00:00",
     "season": "2025-26",
-    "all_pages_reachable": false,
-    "structured_candidate_for_reference_parser": false,
+    "all_pages_reachable": true,
+    "structured_candidate_for_reference_parser": true,
     "pages": {
       "teams_advanced": {
         "ok": true,
-        "bytes": 325996,
-        "sha256": "7c773ca4473c6e7ce156096043792fa56f8f8f9da1061122c7222e1444e2b9a7",
+        "bytes": 326093,
+        "sha256": "f33c16183919b718bf92c46b4b68f08cd3e4f33bbd0ac5ed758177b426044a41",
         "marker_counts": {
           "OFF_RATING": 0,
           "DEF_RATING": 0,
@@ -169,8 +169,8 @@
       },
       "teams_traditional": {
         "ok": true,
-        "bytes": 326026,
-        "sha256": "b851d6ef32cb0c301392d1b460d3a0686ad5530ba00743031d39e9fa119b036c",
+        "bytes": 326123,
+        "sha256": "d8496c571d75521dcd958ecca9542f558052afff930e8ab0274ad6ae7b333ece",
         "marker_counts": {
           "OFF_RATING": 0,
           "DEF_RATING": 0,
@@ -198,14 +198,39 @@
         "basketball_field_signal": false
       },
       "players_advanced": {
-        "ok": false,
-        "error_type": "ProviderError",
-        "error": "GET https://www.nba.com/stats/players/advanced failed: HTTP 502"
+        "ok": true,
+        "bytes": 403756,
+        "sha256": "6b52ccea62178b5912c689d1e018475407ba9bc04510a747d8bfa6af874a1f11",
+        "marker_counts": {
+          "OFF_RATING": 0,
+          "DEF_RATING": 0,
+          "PACE": 0,
+          "GP": 0,
+          "TEAM_NAME": 0,
+          "PLAYER_NAME": 0,
+          "rowSet": 0,
+          "resultSet": 0,
+          "resultSets": 0,
+          "__NEXT_DATA__": 1,
+          "self.__next_f.push": 0
+        },
+        "script_ids": [
+          "__NEXT_DATA__",
+          "gam-src",
+          "tealium-override",
+          "tealium-script",
+          "theme-loader",
+          "user-consent"
+        ],
+        "json_script_tags": 2,
+        "next_stream_chunks": 0,
+        "structured_payload_signal": true,
+        "basketball_field_signal": false
       },
       "players_traditional": {
         "ok": true,
-        "bytes": 403689,
-        "sha256": "346215fd431e247add09c566f48ebbeb5d9c75885532cf740bd0420eda55e6a0",
+        "bytes": 403786,
+        "sha256": "3bca229ba45ba0b64109360fe48be2a821aa6741d936f1ccf71edc88fd7f08fd",
         "marker_counts": {
           "OFF_RATING": 0,
           "DEF_RATING": 0,
@@ -235,7 +260,7 @@
     }
   },
   "official_report_probe": {
-    "checked_at": "2026-09-28T08:03:36.664494+00:00",
+    "checked_at": "2026-09-28T08:06:38.523313+00:00",
     "official_gamebook_candidate": false,
     "media_central_reachable": true,
     "production_provider_authorized": false,
@@ -245,23 +270,23 @@
       "2025_finals_ind_okc": {
         "ok": false,
         "error_type": "ValueError",
-        "error": "missing away team total row in gamebook"
+        "error": "too few active away players in gamebook"
       },
       "2026_regular_gsw_det": {
         "ok": false,
         "error_type": "ValueError",
-        "error": "missing away team total row in gamebook"
+        "error": "too few active away players in gamebook"
       },
       "2026_regular_lal_orl": {
         "ok": false,
         "error_type": "ValueError",
-        "error": "missing away team total row in gamebook"
+        "error": "too few active away players in gamebook"
       }
     },
     "media_central": {
       "ok": true,
-      "bytes": 273419,
-      "sha256": "52b221bd0f7f1794a6a76ef54c01dd4dbfa286333b2b84fd11c4939621e72919",
+      "bytes": 273534,
+      "sha256": "39888a49ee2e52c6ec19b0d510ad86bb3436cf79d21bec267d73b8386544a203",
       "term_hits": {
         "Latest Boxscore Lines": false,
         "Game-by-Game": false,

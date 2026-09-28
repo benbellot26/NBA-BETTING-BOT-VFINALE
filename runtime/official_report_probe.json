@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-official-report-probe-v1",
-  "checked_at": "2026-09-28T08:03:36.664494+00:00",
+  "checked_at": "2026-09-28T08:06:38.523313+00:00",
   "role": "NETWORK_DIAGNOSTIC_ONLY",
   "predictive_evidence_eligible": false,
   "production_provider_authorized": false,
@@ -11,25 +11,25 @@
     "2025_finals_ind_okc": {
       "ok": false,
       "error_type": "ValueError",
-      "error": "missing away team total row in gamebook"
+      "error": "too few active away players in gamebook"
     },
     "2026_regular_gsw_det": {
       "ok": false,
       "error_type": "ValueError",
-      "error": "missing away team total row in gamebook"
+      "error": "too few active away players in gamebook"
     },
     "2026_regular_lal_orl": {
       "ok": false,
       "error_type": "ValueError",
-      "error": "missing away team total row in gamebook"
+      "error": "too few active away players in gamebook"
     }
   },
   "gamebook_samples_ok": 0,
   "gamebook_samples_total": 3,
   "media_central": {
     "ok": true,
-    "bytes": 273419,
-    "sha256": "52b221bd0f7f1794a6a76ef54c01dd4dbfa286333b2b84fd11c4939621e72919",
+    "bytes": 273534,
+    "sha256": "39888a49ee2e52c6ec19b0d510ad86bb3436cf79d21bec267d73b8386544a203",
     "term_hits": {
       "Latest Boxscore Lines": false,
       "Game-by-Game": false,

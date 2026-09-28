@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-health-v1",
-  "generated_at": "2026-09-28T12:07:53.810462+00:00",
+  "generated_at": "2026-09-28T12:30:48.598624+00:00",
   "state": "PROVIDER_DEGRADED",
   "live_operational": false,
   "real_betting_authorized": false,
@@ -11,9 +11,9 @@
   "provider_ok": false,
   "provider_state": "BLOCKED",
   "diagnostics": {
-    "provider_age_hours": 0.00481141,
+    "provider_age_hours": 0.38669701055555555,
     "provider_fresh": true,
-    "market_age_hours": 101.0348634113889,
+    "market_age_hours": 101.41674901194445,
     "market_fresh": false
   },
   "provider_details": {
@@ -140,24 +140,28 @@
     }
   },
   "bookmaker_discovery": {
-    "checked_at": "2026-09-24T07:16:06.567907+00:00",
+    "checked_at": "2026-09-28T12:30:48.515458+00:00",
     "pinnacle_present": false,
-    "pinnacle_state": null,
+    "pinnacle_state": "ABSENT_FROM_CURRENT_SNAPSHOT",
     "complete_featured_market_events": {
       "draftkings": 41,
       "onexbet": 39,
       "sport888": 20,
+      "betrivers": 19,
+      "unibet_nl": 19,
       "betmgm": 19,
       "gtbets": 19,
       "bovada": 17,
       "fanduel": 10,
-      "betrivers": 8,
-      "unibet_nl": 8,
       "betsson": 5,
-      "nordicbet": 5
+      "nordicbet": 4
     },
-    "consensus_market_events": {},
-    "complete_consensus_events": 0,
+    "consensus_market_events": {
+      "ML": 21,
+      "SPREAD": 20,
+      "TOTAL": 21
+    },
+    "complete_consensus_events": 20,
     "consensus_replaces_pinnacle": false
   },
   "www_stats_probe": {
@@ -488,12 +492,11 @@
     }
   },
   "odds_budget": {
-    "used": 2,
+    "used": 1,
     "limit": 48,
-    "remaining": 46,
+    "remaining": 47,
     "purposes": {
-      "bookmaker_discovery": 1,
-      "market_smoke": 1
+      "bookmaker_discovery": 1
     }
   },
   "market_consensus_evidence": {},

@@ -517,3 +517,17 @@ replace Pinnacle. Close-capture failures also expose structured diagnostic
 codes without weakening CLV evidence rules.
 
 See `MARKET_DIAGNOSTICS.md`.
+
+
+## Historical Pinnacle research
+
+If the current Odds API snapshot omits Pinnacle, a separate research-only path
+can query the historical Pinnacle snapshot at the exact original FINAL
+forecast timestamp. It writes a derived ledger without modifying the
+prospective forecast and scores model vs Pinnacle on paired contracts.
+
+Historical recovery is never used for certification or as a substitute for
+prospective current-market evidence. Requests are budgeted and the scheduled
+workflow is gated behind `NBA_HISTORICAL_PINNACLE_ENABLED`.
+
+See `HISTORICAL_PINNACLE_RESEARCH.md`.

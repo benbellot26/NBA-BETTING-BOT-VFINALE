@@ -1,0 +1,48 @@
+name: Pulsar NBA V2 Shadow Research
+on:
+  workflow_dispatch:
+    inputs:
+      minimum_train:
+        description: Minimum enriched PIT games used before first test fold
+        required: false
+        default: '400'
+      minimum_holdout:
+        description: Minimum paired out-of-sample games
+        required: false
+        default: '100'
+      step:
+        description: Expanding walk-forward test block size
+        required: false
+        default: '50'
+jobs:
+  shadow:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - run: python -m pip install .
+      - name: Hydrate immutable prospective evidence
+        run: .github/scripts/hydrate-runtime-data.sh
+      - name: Run learned V2 walk-forward
+        run: |
+          python -m nba.v2_research             --minimum-train "${{ inputs.minimum_train }}"             --minimum-holdout "${{ inputs.minimum_holdout }}"             --step "${{ inputs.step }}"
+      - name: Upload shadow research
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pulsar-nba-v2-shadow-${{ github.run_id }}
+          path: |
+            runtime/research/pit_dataset.jsonl
+            runtime/research/pit_dataset.manifest.json
+            runtime/research/pit_dataset.v2-manifest.json
+            runtime/research/v2_learned_shadow.json
+            runtime/research/v2_learned_gate.json
+          if-no-files-found: ignore
+          retention-days: 90

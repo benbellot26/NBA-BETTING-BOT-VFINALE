@@ -4,7 +4,7 @@ Pulsar NBA is a standalone NBA probability, market, research and decision engine
 
 ## Current status
 
-**V1.7.1 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
+**V1.8.0 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
 
 ## End-to-end chain
 
@@ -376,3 +376,26 @@ basketball rows are not persisted. A page is only marked as a reference-data
 candidate when both basketball field names and sufficiently large
 team/player/stat arrays are present. Even then it remains REFERENCE_ONLY and
 cannot replace the official stats API without separate parity and PIT review.
+
+
+## V1.8.0 — learned PIT V2 shadow
+
+V1.8.0 keeps the V1 structural basketball generation frozen and adds a
+market-isolated learned challenger. New eligible FINAL forecasts archive a
+versioned 48-feature basketball/context payload plus separate
+`evaluation_only` lines and Pinnacle no-vig probabilities. The learned model
+uses standard-library Ridge regressions for margin/total and conditional
+residual scale, then evaluates V1 vs V2 on expanding point-in-time holdouts.
+
+Run:
+
+    python -m nba.v2_research
+
+The default research chain requires 400 enriched PIT training games and at
+least 100 subsequent OOS predictions. The manual-review gate defaults to 250
+paired holdout games. Old forecasts without the V2 feature contract remain V1
+evidence but are deliberately excluded from learned training rather than being
+reconstructed after the fact. Pinnacle information is benchmark-only and can
+never enter the V2 feature matrix.
+
+See `V2_RESEARCH.md` for the full data, evaluation and promotion contract.

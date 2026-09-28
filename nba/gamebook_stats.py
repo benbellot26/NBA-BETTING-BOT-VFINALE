@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 from dataclasses import asdict
 from datetime import date, datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 import hashlib
 import json
 import math
@@ -19,6 +20,7 @@ from .communications_schedule import ReferenceScheduleGame, fetch_reference_sche
 from .gamebook import gamebook_url, parse_gamebook_pdf
 from .provider_http import get_bytes
 from .rotation_projection import normalized_player_name
+from .schedule import season_for_date
 from .teams import TEAMS, team_info
 
 WINDOWS = (0, 30, 15, 10, 5)
@@ -375,14 +377,15 @@ def run(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Build reference stats from official NBA gamebooks")
-    parser.add_argument("--season", required=True)
-    parser.add_argument("--date", required=True)
+    eastern_today = datetime.now(ZoneInfo("America/New_York")).date().isoformat()
+    parser.add_argument("--season")
+    parser.add_argument("--date", default=eastern_today)
     parser.add_argument("--cache-root", default="runtime/gamebook_reference")
     parser.add_argument("--output", default="runtime/gamebook_reference/stat_pack.json")
     parser.add_argument("--max-network-games", type=int)
     args = parser.parse_args()
     result = run(
-        season=args.season,
+        season=args.season or season_for_date(args.date),
         target_date=args.date,
         cache_root=args.cache_root,
         output=args.output,

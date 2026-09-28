@@ -23,9 +23,15 @@ TEAM_THRESHOLDS = {
     "OREB_PCT": 0.020,
 }
 PLAYER_MINUTES_MAE_MAX = 2.5
-PLAYER_USAGE_MAE_MAX = 3.0
+PLAYER_RECENT_MINUTES_MAE_MAX = 3.0
+PLAYER_USAGE_MAE_MAX = 0.03
 MIN_TEAM_COVERAGE = 25
 MIN_PLAYER_OVERLAP = 100
+MIN_GAMEBOOK_COMPLETENESS = 0.995
+STYLE_THRESHOLDS = {
+    "FT_RATE": 0.015,
+    "THREE_PA_RATE": 0.015,
+}
 
 
 def _finite(value: Any, name: str) -> float:
@@ -57,6 +63,22 @@ def _player_map(rows: list[dict[str, Any]]) -> dict[tuple[int, str], dict[str, A
 
 def _mae(values: list[float]) -> float | None:
     return sum(abs(value) for value in values) / len(values) if values else None
+
+
+def _base_style_map(rows: list[dict[str, Any]]) -> dict[str, dict[str, float]]:
+    result: dict[str, dict[str, float]] = {}
+    for row in rows:
+        name = canonical_team(str(row.get("TEAM_NAME") or ""))
+        if not name:
+            continue
+        fga = _finite(row.get("FGA"), f"{name}.FGA")
+        if fga <= 0:
+            continue
+        result[name] = {
+            "FT_RATE": _finite(row.get("FTA"), f"{name}.FTA") / fga,
+            "THREE_PA_RATE": _finite(row.get("FG3A"), f"{name}.FG3A") / fga,
+        }
+    return result
 
 
 def assess(

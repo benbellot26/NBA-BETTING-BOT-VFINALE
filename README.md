@@ -407,3 +407,14 @@ pre-tip V2 prediction beside V1 without generating a bet. Daily evidence then
 runs `python -m nba.v2_prospective` to score those immutable predictions
 against official results, paired V1 and Pinnacle. V1 close capture runs first,
 so V2 research cannot interrupt V1 CLV evidence.
+
+
+## V1.8.1 — official provider resilience
+
+The official acquisition layer now sends the NBA Stats-specific request headers
+used by the stats frontend and can use the accessible NBA Communications
+schedule-by-date PDF as a **pregame-only** schedule fallback when the NBA CDN
+schedule is blocked. Fallback games retain explicit `nba-pr-*` identities;
+neutral-site home/away ambiguity fails closed, and results still require an
+official outcome source. V1 model generation and betting certification are
+unchanged.

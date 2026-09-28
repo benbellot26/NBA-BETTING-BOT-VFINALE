@@ -21,7 +21,7 @@ from .schedule import season_for_date
 
 SCRIPT_RE=re.compile(r"<script[^>]+src=[\"']([^\"']+)[\"']",re.I)
 BACKEND_URL_RE=re.compile(
-    r"https?://(?:stats\\.nba\\.com|api-hub\\.nba\\.com)"
+    r"https?://(?:stats\.nba\.com|api-hub\.nba\.com)"
     r"(?:/[A-Za-z0-9._~!()*+,;=:@%/-]{0,180})?",
     re.I,
 )

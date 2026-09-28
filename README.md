@@ -4,7 +4,7 @@ Pulsar NBA is a standalone NBA probability, market, research and decision engine
 
 ## Current status
 
-**V1.8.3 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
+**V1.8.4 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
 
 ## End-to-end chain
 
@@ -460,3 +460,17 @@ FT/3PA style ratios, requires near-complete gamebook coverage, and binds cached
 parsed boxes to their schedule identity and checksums. Health reports now show
 gamebook accumulation explicitly. None of these changes authorize this source
 for production or alter the frozen V1 champion.
+
+
+## V1.8.4 — independent canonical parity capture
+
+A separate free workflow now attempts to capture the full canonical
+`stats.nba.com` team/player PIT pack without requiring the live schedule,
+injury report or Odds API. Its only purpose is parity research against the
+official-gamebook alternate source.
+
+The capture writes explicit states such as `READY_FOR_PARITY`,
+`WAITING_FOR_SEASON_DATA`, `ACCESS_BLOCKED` or `TIMEOUT`. When canonical
+and gamebook packs share the exact season/cutoff, the job automatically runs
+the manual-only gamebook parity gate. The workflow cannot authorize the
+alternate provider, enable betting or change the frozen V1 model.

@@ -1,0 +1,43 @@
+name: Pulsar NBA Research Readiness
+concurrency:
+  group: nba-runtime-data
+  cancel-in-progress: false
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '50 13 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'ops/research-readiness-refresh.flag'
+permissions:
+  contents: write
+jobs:
+  readiness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - run: python -m pip install .
+      - name: Hydrate runtime state
+        run: .github/scripts/hydrate-runtime-data.sh
+      - name: Build unified research readiness
+        run: python -m nba.research_readiness --output runtime/research_readiness.json
+      - name: Refresh health report
+        run: python -m nba.health_report --output runtime/health.json
+      - name: Upload readiness
+        uses: actions/upload-artifact@v4
+        with:
+          name: pulsar-nba-research-readiness-${{ github.run_id }}
+          path: |
+            runtime/research_readiness.json
+            runtime/health.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Persist runtime state
+        run: .github/scripts/persist-runtime-data.sh

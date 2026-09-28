@@ -12,6 +12,8 @@ from . import MODEL_GENERATION
 from .performance import brier, calibration_ece, logloss, mae
 from .v2_model import LEARNED_GENERATION
 
+TRUSTED_OUTCOME_SOURCES = {"official_nba_schedule", "official_nba_gamebook"}
+
 
 def _dt(value: str) -> datetime:
     parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
@@ -96,8 +98,8 @@ def evaluate(
         outcome = observed.get(game_id)
         if outcome is None:
             continue
-        if outcome.get("source") != "official_nba_schedule":
-            raise ValueError("V2 prospective outcome is not from official NBA schedule")
+        if outcome.get("source") not in TRUSTED_OUTCOME_SOURCES:
+            raise ValueError("V2 prospective outcome is not from a trusted official NBA source")
         forecast_at = _dt(str(forecast["forecast_at"]))
         tipoff_at = _dt(str(forecast["tipoff_at"]))
         outcome_at = _dt(str(outcome["outcome_at"]))

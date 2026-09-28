@@ -93,6 +93,15 @@ class EvidenceAuditTests(unittest.TestCase):
                                closes=[c], settled=[updated])
         self.assertTrue(result["ok"], result["errors"])
 
+    def test_official_gamebook_outcome_source_is_trusted_postgame(self):
+        f, p, o, c, s = corpus()
+        o["source"] = "official_nba_gamebook"
+        o["identity_resolution"] = "unique_date_home_away"
+        result = audit_records(
+            forecasts=[f], paper=[p], outcomes=[o], closes=[c], settled=[s]
+        )
+        self.assertTrue(result["ok"], result["errors"])
+
     def test_future_forecast_rejected(self):
         f, p, o, c, s = corpus()
         f["forecast_at"] = "2026-11-15T22:21:00Z"

@@ -8,6 +8,7 @@ import json
 from typing import Any, Callable
 
 from .communications_schedule import fetch_pregame_schedule
+from .gamebook_outcomes import cached_gamebook_finals
 from .injury_pdf import fetch_latest_report
 from .live_inputs import acquire_stat_pack
 from .provider_contract import DataProvider, ProviderSnapshot, NoGamesOnTargetDate, snapshot_from_parts
@@ -96,13 +97,34 @@ class JsonSnapshotProvider:
 
 
 @dataclass
+class OfficialGamebookOutcomeProvider:
+    """Read-only validated Official Scorer gamebook outcomes.
+
+    This adapter is postgame-only and reads already persisted, checksum-verified
+    gamebooks. It is never used for predictive inputs.
+    """
+    cache_root: str = "runtime/gamebook_reference"
+    provider_id: str = "official-nba-gamebook"
+
+    def finals(self) -> dict[str, ScheduleGame]:
+        return cached_gamebook_finals(self.cache_root)
+
+
+@dataclass
 class OfficialOutcomeProvider:
-    """Read-only official schedule outcomes used by the settlement runtime."""
+    """Official schedule outcomes with an optional official-gamebook fallback."""
     fetcher: Callable[[], list[ScheduleGame]] = fetch_schedule
+    fallback: OfficialGamebookOutcomeProvider | None = None
     provider_id: str = "official-nba-schedule"
 
     def finals(self) -> dict[str, ScheduleGame]:
+        try:
+            games = self.fetcher()
+        except Exception:
+            if self.fallback is None:
+                raise
+            return self.fallback.finals()
         return {
-            game.game_id: game for game in self.fetcher()
+            game.game_id: game for game in games
             if game.final and game.home_score is not None and game.away_score is not None
         }

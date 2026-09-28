@@ -17,6 +17,7 @@ from .model import ProbabilitySurface
 from .settlement import settle_candidate
 
 SCHEMA = "pulsar-nba-evidence-audit-v1"
+TRUSTED_OUTCOME_SOURCES = {"official_nba_schedule", "official_nba_gamebook"}
 
 
 def _dt(value: Any) -> datetime:
@@ -92,7 +93,7 @@ def audit_records(
             errors.append(f"forecast:{key}:{exc}")
     for key, row in o.items():
         try:
-            if row.get("source") != "official_nba_schedule":
+            if row.get("source") not in TRUSTED_OUTCOME_SOURCES:
                 raise ValueError("unverified outcome source")
             if str(row.get("game_id")) != key:
                 raise ValueError("outcome key mismatch")

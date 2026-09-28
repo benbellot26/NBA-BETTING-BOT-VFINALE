@@ -86,6 +86,100 @@ def full_game_cohorts(
     }
 
 
+def consensus_benchmark_cohorts(
+    forecasts: list[dict[str, Any]], outcomes: list[dict[str, Any]]
+) -> dict[str, dict[str, Any]]:
+    """Score market consensus only on games where that benchmark was captured.
+
+    This evidence is research-only and is not consumed by certification.
+    Model and consensus probabilities are paired on the exact same contracts.
+    """
+    observed = {str(row["game_id"]): row for row in outcomes}
+    benchmark_pairs: dict[str, list[tuple[float, int]]] = {
+        "ML": [], "SPREAD": [], "TOTAL": [],
+    }
+    model_pairs: dict[str, list[tuple[float, int]]] = {
+        "ML": [], "SPREAD": [], "TOTAL": [],
+    }
+    book_counts: dict[str, list[int]] = {
+        "ML": [], "SPREAD": [], "TOTAL": [],
+    }
+    dispersions: dict[str, list[float]] = {
+        "ML": [], "SPREAD": [], "TOTAL": [],
+    }
+    for forecast in forecasts:
+        result = observed.get(str(forecast.get("game_id")))
+        probabilities = forecast.get("probabilities")
+        evaluation = forecast.get("evaluation_only") or {}
+        consensus = evaluation.get("consensus_entry_probability") or {}
+        metadata = evaluation.get("consensus_metadata") or {}
+        if result is None or probabilities is None:
+            continue
+        surface = ProbabilitySurface(**probabilities).validated()
+        home = float(result["home_score"])
+        away = float(result["away_score"])
+        labels: dict[str, int | None] = {
+            "ML": int(home > away) if home != away else None,
+            "SPREAD": None,
+            "TOTAL": None,
+        }
+        cover_delta = home - away + surface.spread_line
+        total_delta = home + away - surface.total_line
+        if cover_delta != 0:
+            labels["SPREAD"] = int(cover_delta > 0)
+        if total_delta != 0:
+            labels["TOTAL"] = int(total_delta > 0)
+        model_probability = {
+            "ML": surface.home_ml,
+            "SPREAD": surface.home_spread,
+            "TOTAL": surface.over,
+        }
+        for market in ("ML", "SPREAD", "TOTAL"):
+            if labels[market] is None or consensus.get(market) is None:
+                continue
+            value = float(consensus[market])
+            if not 0.0 <= value <= 1.0:
+                raise ValueError("consensus probability outside [0,1]")
+            meta = metadata.get(market) or {}
+            if meta.get("pinnacle_included") is True:
+                raise ValueError("evaluation consensus unexpectedly includes Pinnacle")
+            count = int(meta.get("book_count") or 0)
+            if count < 3:
+                raise ValueError("evaluation consensus has fewer than three books")
+            benchmark_pairs[market].append((value, int(labels[market])))
+            model_pairs[market].append(
+                (float(model_probability[market]), int(labels[market]))
+            )
+            book_counts[market].append(count)
+            if meta.get("dispersion_pp") is not None:
+                dispersions[market].append(float(meta["dispersion_pp"]))
+
+    result: dict[str, dict[str, Any]] = {}
+    for market in ("ML", "SPREAD", "TOTAL"):
+        benchmark = _proper_scores(benchmark_pairs[market])
+        model = _proper_scores(model_pairs[market])
+        result[market] = {
+            "n": benchmark["n"],
+            "consensus_brier": benchmark["brier"],
+            "consensus_logloss": benchmark["logloss"],
+            "consensus_ece": benchmark["ece"],
+            "model_brier_paired": model["brier"],
+            "model_logloss_paired": model["logloss"],
+            "model_ece_paired": model["ece"],
+            "mean_book_count": (
+                sum(book_counts[market]) / len(book_counts[market])
+                if book_counts[market] else None
+            ),
+            "mean_dispersion_pp": (
+                sum(dispersions[market]) / len(dispersions[market])
+                if dispersions[market] else None
+            ),
+            "role": "EVALUATION_ONLY",
+            "used_for_certification": False,
+        }
+    return result
+
+
 def _final_for_record(
     record: dict[str, Any], finals: dict[str, Any],
 ):
@@ -227,6 +321,19 @@ def refresh(
             "mean_clv_pp": sum(clv) / len(clv) if clv else None,
             "positive_clv_rate": sum(value > 0 for value in clv) / len(clv) if clv else None,
         }
+    consensus_benchmark = (
+        consensus_benchmark_cohorts(forecasts, outcomes)
+        if audit["ok"] else {
+            market: {
+                "n": 0, "consensus_brier": None, "consensus_logloss": None,
+                "consensus_ece": None, "model_brier_paired": None,
+                "model_logloss_paired": None, "model_ece_paired": None,
+                "mean_book_count": None, "mean_dispersion_pp": None,
+                "role": "EVALUATION_ONLY", "used_for_certification": False,
+            }
+            for market in ("ML", "SPREAD", "TOTAL")
+        }
+    )
     completed = {str(row["game_id"]) for row in forecasts} & known
     evidence = {
         "schema": "pulsar-nba-performance-v2", "games": len(completed),
@@ -235,6 +342,14 @@ def refresh(
         "calibration_cohort": "FIRST_FINAL_ALL_ANALYZABLE_GAMES",
         "paper_cohort": "FIRST_QUALIFYING_SELECTION_PER_GAME",
         "markets": markets,
+        "market_benchmarks": {
+            "consensus": {
+                "role": "EVALUATION_ONLY",
+                "used_for_certification": False,
+                "pinnacle_replacement": False,
+                "markets": consensus_benchmark,
+            }
+        },
     }
     candidate = certify(evidence)
     candidate["evidence"] = evidence

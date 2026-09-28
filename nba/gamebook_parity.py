@@ -95,6 +95,12 @@ def assess(
         raise ValueError("parity PIT cutoff mismatch")
 
     failures: list[str] = []
+    completeness = _finite(
+        alternate.get("gamebook_completeness", 0.0),
+        "alternate.gamebook_completeness",
+    )
+    if completeness < MIN_GAMEBOOK_COMPLETENESS:
+        failures.append(f"gamebook_completeness<{MIN_GAMEBOOK_COMPLETENESS}")
     windows: dict[str, Any] = {}
     for window in (0, 30, 15, 10, 5):
         canon_rows = _team_map((canonical.get("advanced_windows") or {}).get(window)
@@ -104,8 +110,8 @@ def assess(
                              or (alternate.get("advanced_windows") or {}).get(str(window))
                              or [])
         overlap = sorted(set(canon_rows) & set(alt_rows))
-        if window == 0 and len(overlap) < MIN_TEAM_COVERAGE:
-            failures.append(f"season_team_overlap<{MIN_TEAM_COVERAGE}")
+        if len(overlap) < MIN_TEAM_COVERAGE:
+            failures.append(f"window_{window}_team_overlap<{MIN_TEAM_COVERAGE}")
         metrics: dict[str, Any] = {}
         for metric, threshold in TEAM_THRESHOLDS.items():
             deltas = [
@@ -115,8 +121,8 @@ def assess(
             ]
             error = _mae(deltas)
             passed = error is not None and error <= threshold
-            if window == 0 and not passed:
-                failures.append(f"{metric}_mae>{threshold}")
+            if not passed:
+                failures.append(f"window_{window}_{metric}_mae>{threshold}")
             metrics[metric] = {
                 "n": len(deltas),
                 "mae": error,

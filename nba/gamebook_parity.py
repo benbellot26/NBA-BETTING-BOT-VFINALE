@@ -144,17 +144,61 @@ def assess(
         - _finite(canonical_players[key].get("MIN"), "canonical.player.MIN")
         for key in overlap_players
     ]
-    usage_deltas = [
-        _finite(alternate_players[key].get("USG_PCT"), "alternate.player.USG_PCT")
-        - _finite(canonical_players[key].get("USG_PCT"), "canonical.player.USG_PCT")
-        for key in overlap_players
-    ]
     minutes_mae = _mae(minute_deltas)
-    usage_mae = _mae(usage_deltas)
     if minutes_mae is None or minutes_mae > PLAYER_MINUTES_MAE_MAX:
         failures.append(f"player_minutes_mae>{PLAYER_MINUTES_MAE_MAX}")
+
+    canonical_recent = _player_map(canonical.get("player_recent") or [])
+    alternate_recent = _player_map(alternate.get("player_recent") or [])
+    recent_overlap = sorted(set(canonical_recent) & set(alternate_recent))
+    recent_minute_deltas = [
+        _finite(alternate_recent[key].get("MIN"), "alternate.recent.MIN")
+        - _finite(canonical_recent[key].get("MIN"), "canonical.recent.MIN")
+        for key in recent_overlap
+    ]
+    recent_minutes_mae = _mae(recent_minute_deltas)
+    if len(recent_overlap) < MIN_PLAYER_OVERLAP:
+        failures.append(f"recent_player_overlap<{MIN_PLAYER_OVERLAP}")
+    if recent_minutes_mae is None or recent_minutes_mae > PLAYER_RECENT_MINUTES_MAE_MAX:
+        failures.append(
+            f"recent_player_minutes_mae>{PLAYER_RECENT_MINUTES_MAE_MAX}"
+        )
+
+    canonical_advanced = _player_map(canonical.get("player_advanced") or [])
+    alternate_advanced = _player_map(alternate.get("player_advanced") or [])
+    usage_overlap = sorted(set(canonical_advanced) & set(alternate_advanced))
+    usage_deltas = [
+        _finite(alternate_advanced[key].get("USG_PCT"), "alternate.player.USG_PCT")
+        - _finite(canonical_advanced[key].get("USG_PCT"), "canonical.player.USG_PCT")
+        for key in usage_overlap
+    ]
+    usage_mae = _mae(usage_deltas)
+    if len(usage_overlap) < MIN_PLAYER_OVERLAP:
+        failures.append(f"usage_player_overlap<{MIN_PLAYER_OVERLAP}")
     if usage_mae is None or usage_mae > PLAYER_USAGE_MAE_MAX:
         failures.append(f"player_usage_mae>{PLAYER_USAGE_MAE_MAX}")
+
+    canonical_style = _base_style_map(canonical.get("base_season") or [])
+    alternate_style = _base_style_map(alternate.get("base_season") or [])
+    style_overlap = sorted(set(canonical_style) & set(alternate_style))
+    if len(style_overlap) < MIN_TEAM_COVERAGE:
+        failures.append(f"base_style_team_overlap<{MIN_TEAM_COVERAGE}")
+    style_metrics: dict[str, Any] = {}
+    for metric, threshold in STYLE_THRESHOLDS.items():
+        deltas = [
+            alternate_style[team][metric] - canonical_style[team][metric]
+            for team in style_overlap
+        ]
+        error = _mae(deltas)
+        passed = error is not None and error <= threshold
+        if not passed:
+            failures.append(f"{metric}_mae>{threshold}")
+        style_metrics[metric] = {
+            "n": len(deltas),
+            "mae": error,
+            "threshold": threshold,
+            "pass": passed,
+        }
 
     # Player OFF/DEF ratings cannot be reproduced from final-box gamebooks
     # without inventing on/off possessions. Therefore this source can never
@@ -171,9 +215,16 @@ def assess(
         "season": canonical.get("season"),
         "date_to": canonical.get("date_to"),
         "team_windows": windows,
+        "gamebook_completeness": completeness,
+        "minimum_gamebook_completeness": MIN_GAMEBOOK_COMPLETENESS,
         "player_overlap": len(overlap_players),
         "player_minutes_mae": minutes_mae,
+        "recent_player_overlap": len(recent_overlap),
+        "recent_player_minutes_mae": recent_minutes_mae,
+        "usage_player_overlap": len(usage_overlap),
         "player_usage_mae": usage_mae,
+        "base_style_team_overlap": len(style_overlap),
+        "base_style_metrics": style_metrics,
         "limitations": limitations,
         "review_ready": not failures,
         "production_provider_authorized": False,

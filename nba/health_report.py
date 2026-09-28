@@ -44,6 +44,7 @@ def build(root: str | Path = "runtime", *, at: str | None = None) -> dict[str, A
     www_stats_probe=_json(root/"www_stats_probe.json") or {}
     stats_backend_probe=_json(root/"stats_backend_probe.json") or {}
     stats_route_transport_probe=_json(root/"stats_route_transport_probe.json") or {}
+    stats_runner_matrix=_json(root/"stats_runner_matrix.json") or {}
     official_report_probe=_json(root/"official_report_probe.json") or {}
     gamebook_reference=_json(root/"gamebook_reference"/"stat_pack.json") or {}
     canonical_stats_reference=_json(root/"canonical_stats_reference"/"status.json") or {}
@@ -133,6 +134,17 @@ def build(root: str | Path = "runtime", *, at: str | None = None) -> dict[str, A
             ],
             "predictive_evidence_eligible":False,
             "production_provider_authorized":False,
+        },
+        "stats_runner_matrix":{
+            "checked_at":stats_runner_matrix.get("checked_at"),
+            "received_runners":stats_runner_matrix.get("received_runners") or [],
+            "working_runners":stats_runner_matrix.get("working_runners") or [],
+            "alternate_route_working_runners":stats_runner_matrix.get("alternate_route_working_runners") or [],
+            "hosted_runner_solution_found":bool(stats_runner_matrix.get("hosted_runner_solution_found")),
+            "runners":stats_runner_matrix.get("runners") or {},
+            "predictive_evidence_eligible":False,
+            "production_provider_authorized":False,
+            "runner_auto_switch_allowed":False,
         },
         "canonical_stats_reference":{
             "checked_at":canonical_stats_reference.get("checked_at"),

@@ -3,23 +3,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from nba.communications_schedule import ReferenceScheduleGame
 from nba.historical_pinnacle_probe import run
-
-
-def schedule():
-    return [ReferenceScheduleGame(
-        reference_id="nba-pr-2025-26-2026-03-20-1",
-        schedule_number=1,
-        game_date="2026-03-20",
-        commence_time="2026-03-20T23:00:00+00:00",
-        team1="Golden State Warriors",
-        team2="Detroit Pistons",
-        relation="at",
-        away="Golden State Warriors",
-        home="Detroit Pistons",
-        neutral_site=False,
-    )]
 
 
 def payload():
@@ -59,7 +43,6 @@ class HistoricalPinnacleProbeTests(unittest.TestCase):
             result=run(
                 output=str(Path(d)/"probe.json"),
                 budget_path=str(Path(d)/"budget.json"),
-                reference_schedule=schedule(),
             )
         self.assertEqual(result["state"],"PINNACLE_HISTORICAL_READY")
         self.assertTrue(result["historical_pinnacle_available"])
@@ -77,7 +60,6 @@ class HistoricalPinnacleProbeTests(unittest.TestCase):
             result=run(
                 output=str(Path(d)/"probe.json"),
                 budget_path=str(Path(d)/"budget.json"),
-                reference_schedule=schedule(),
             )
         self.assertEqual(result["state"],"PINNACLE_HISTORICAL_ABSENT")
         self.assertFalse(result["historical_pinnacle_available"])

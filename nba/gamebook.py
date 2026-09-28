@@ -25,9 +25,9 @@ HEADER_RE = {
     "home": re.compile(r"HOME:\s*([^\n(]+)", re.I),
 }
 TEAM_TOTAL_RE = re.compile(
-    r"^240:00\s+"
-    + r"\s+".join([r"(-?\d+)"] * len(STAT_KEYS))
-    + r"\s*$"
+    r"^(\\d{3}:\\d{2})\\s+"
+    + r"\\s+".join([r"(-?\\d+)"] * len(STAT_KEYS))
+    + r"\\s*$"
 )
 
 

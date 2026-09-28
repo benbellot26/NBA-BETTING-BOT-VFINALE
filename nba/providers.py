@@ -7,6 +7,7 @@ from pathlib import Path
 import json
 from typing import Any, Callable
 
+from .communications_schedule import fetch_pregame_schedule
 from .injury_pdf import fetch_latest_report
 from .live_inputs import acquire_stat_pack
 from .provider_contract import DataProvider, ProviderSnapshot, NoGamesOnTargetDate, snapshot_from_parts
@@ -21,7 +22,14 @@ class OfficialNBAProvider:
 
     def capture(self, *, target_date: str) -> ProviderSnapshot:
         season = season_for_date(target_date)
-        schedule = fetch_schedule()
+        try:
+            schedule = fetch_schedule()
+        except Exception:
+            # Official NBA Communications PDF is acceptable for prospective
+            # date/team/tip identity, but not for outcomes or GameID authority.
+            schedule = fetch_pregame_schedule(
+                season=season, target_date=target_date
+            )
         slate = games_on(schedule, target_date)
         if not slate:
             raise NoGamesOnTargetDate("no NBA games on target date")

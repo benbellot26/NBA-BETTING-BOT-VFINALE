@@ -66,4 +66,20 @@ jobs:
               print("SEARCH", query, json.dumps(safe, indent=2))
             except Exception as exc:
               print("SEARCH", query, "ERROR", exc)
+          from nba.injury_pdf import fetch_latest_report
+          historical = fetch_latest_report(season="2025-26")
+          print("HISTORICAL_REPORT", json.dumps({
+            "reported_at": historical["reported_at"],
+            "record_count": historical["record_count"],
+            "teams": len(historical["team_status"]),
+            "source_url": historical["source_url"],
+          }, indent=2))
+          assert historical["team_status"], historical
+          try:
+            fetch_latest_report(season="2026-27")
+          except Exception as exc:
+            print("CURRENT_EXPECTED", type(exc).__name__, str(exc))
+            assert "not published for season 2026-27" in str(exc) or "no timestamped PDF report" in str(exc)
+          else:
+            print("CURRENT_REPORT_PUBLISHED")
           PY

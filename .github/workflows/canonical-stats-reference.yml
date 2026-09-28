@@ -1,0 +1,60 @@
+name: Pulsar NBA Canonical Stats Reference
+concurrency:
+  group: nba-runtime-data
+  cancel-in-progress: false
+on:
+  workflow_dispatch:
+    inputs:
+      target_date:
+        description: YYYY-MM-DD (optional)
+        required: false
+  push:
+    branches: [main]
+    paths:
+      - 'nba/canonical_stats_reference.py'
+      - 'nba/gamebook_parity.py'
+      - 'nba/live_inputs.py'
+      - 'nba/nba_stats_api.py'
+      - '.github/workflows/canonical-stats-reference.yml'
+  schedule:
+    - cron: '25 13 * * *'
+permissions:
+  contents: write
+jobs:
+  reference:
+    runs-on: ${{ vars.NBA_DATA_RUNNER || 'ubuntu-latest' }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - run: python -m pip install .
+      - name: Hydrate runtime state
+        run: .github/scripts/hydrate-runtime-data.sh
+      - name: Capture canonical stats parity reference
+        env:
+          TARGET_DATE: ${{ inputs.target_date }}
+        run: |
+          DATE_ARG=""
+          if [ -n "$TARGET_DATE" ]; then DATE_ARG="--date $TARGET_DATE"; fi
+          python -m nba.canonical_stats_reference $DATE_ARG
+      - name: Refresh health snapshot
+        if: always()
+        run: python -m nba.health_report --output runtime/health.json || true
+      - name: Upload parity reference artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pulsar-nba-canonical-stats-reference-${{ github.run_id }}
+          path: |
+            runtime/canonical_stats_reference/
+            runtime/gamebook_reference/parity.json
+            runtime/health.json
+          if-no-files-found: ignore
+          retention-days: 30
+      - name: Persist runtime-data branch
+        if: always()
+        run: .github/scripts/persist-runtime-data.sh

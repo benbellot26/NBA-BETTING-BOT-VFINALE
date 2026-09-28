@@ -1,35 +1,89 @@
 {
   "schema": "pulsar-nba-official-report-probe-v1",
-  "checked_at": "2026-09-28T08:06:38.523313+00:00",
+  "checked_at": "2026-09-28T09:07:54.918478+00:00",
   "role": "NETWORK_DIAGNOSTIC_ONLY",
   "predictive_evidence_eligible": false,
   "production_provider_authorized": false,
   "odds_api_requests": 0,
-  "official_gamebook_candidate": false,
+  "official_gamebook_candidate": true,
   "media_central_reachable": true,
   "gamebook_samples": {
     "2025_finals_ind_okc": {
-      "ok": false,
-      "error_type": "ValueError",
-      "error": "too few active away players in gamebook"
+      "ok": true,
+      "bytes": 114916,
+      "sha256": "dd5ad164acbd753546fdf2b8312b4275ff9d9771b379f71b24db27f77373686b",
+      "pages": 19,
+      "marker_hits": {
+        "NATIONAL BASKETBALL ASSOCIATION OFFICIAL SCORER'S": true,
+        "FINAL BOX": true,
+        "SCORE BY": true
+      },
+      "stat_header_signal": true,
+      "team_total_line_count": 2,
+      "exact_known_final": true,
+      "parsed_scores": {
+        "away": 111,
+        "home": 110
+      },
+      "parsed_player_counts": {
+        "away": 10,
+        "home": 11
+      },
+      "raw_text_persisted": false
     },
     "2026_regular_gsw_det": {
-      "ok": false,
-      "error_type": "ValueError",
-      "error": "too few active away players in gamebook"
+      "ok": true,
+      "bytes": 124975,
+      "sha256": "9e886ec034bfe67b5c4034e94b8f7bd0bf02183771a1ad8be5b32af0814d9106",
+      "pages": 19,
+      "marker_hits": {
+        "NATIONAL BASKETBALL ASSOCIATION OFFICIAL SCORER'S": true,
+        "FINAL BOX": true,
+        "SCORE BY": true
+      },
+      "stat_header_signal": true,
+      "team_total_line_count": 2,
+      "exact_known_final": true,
+      "parsed_scores": {
+        "away": 101,
+        "home": 115
+      },
+      "parsed_player_counts": {
+        "away": 11,
+        "home": 11
+      },
+      "raw_text_persisted": false
     },
     "2026_regular_lal_orl": {
-      "ok": false,
-      "error_type": "ValueError",
-      "error": "too few active away players in gamebook"
+      "ok": true,
+      "bytes": 122310,
+      "sha256": "9d30cbbb8f2c19ebc26e708e4081b75631e3be39964b28ee3d044e122a2dd46a",
+      "pages": 20,
+      "marker_hits": {
+        "NATIONAL BASKETBALL ASSOCIATION OFFICIAL SCORER'S": true,
+        "FINAL BOX": true,
+        "SCORE BY": true
+      },
+      "stat_header_signal": true,
+      "team_total_line_count": 2,
+      "exact_known_final": true,
+      "parsed_scores": {
+        "away": 105,
+        "home": 104
+      },
+      "parsed_player_counts": {
+        "away": 9,
+        "home": 10
+      },
+      "raw_text_persisted": false
     }
   },
-  "gamebook_samples_ok": 0,
+  "gamebook_samples_ok": 3,
   "gamebook_samples_total": 3,
   "media_central": {
     "ok": true,
-    "bytes": 273534,
-    "sha256": "39888a49ee2e52c6ec19b0d510ad86bb3436cf79d21bec267d73b8386544a203",
+    "bytes": 273527,
+    "sha256": "1dd505adc16632aa6f4f5409ac12efc8c3b7a92e790be5f53db4c1291f293734",
     "term_hits": {
       "Latest Boxscore Lines": false,
       "Game-by-Game": false,

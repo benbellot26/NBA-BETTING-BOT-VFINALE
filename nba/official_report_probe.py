@@ -17,12 +17,30 @@ from typing import Any
 from .gamebook import parse_gamebook_pdf
 from .provider_http import get_bytes, get_text
 
-# Verified NBA Official Scorer's Report from the 2025-26 regular season.
-# A fixed historical document makes runner diagnostics deterministic and avoids
-# depending on today's slate or on a source that has not published yet.
-KNOWN_GAMEBOOK_URL = (
-    "https://statsdmz.nba.com/pdfs/20260320/"
-    "20260320_GSWDET_book.pdf"
+# Fixed historical Official Scorer's Reports make runner diagnostics
+# deterministic and exercise regular-season + Finals layouts.
+KNOWN_GAMEBOOKS = (
+    {
+        "name": "2025_finals_ind_okc",
+        "url": "https://statsdmz.nba.com/pdfs/20250605/20250605_INDOKC_book.pdf",
+        "away": "Indiana Pacers", "home": "Oklahoma City Thunder",
+        "away_score": 111, "home_score": 110,
+        "away_fga": 82, "home_fga": 98,
+    },
+    {
+        "name": "2026_regular_gsw_det",
+        "url": "https://statsdmz.nba.com/pdfs/20260320/20260320_GSWDET_book.pdf",
+        "away": "Golden State Warriors", "home": "Detroit Pistons",
+        "away_score": 101, "home_score": 115,
+        "away_fga": 76, "home_fga": 86,
+    },
+    {
+        "name": "2026_regular_lal_orl",
+        "url": "https://statsdmz.nba.com/pdfs/20260321/20260321_LALORL_book.pdf",
+        "away": "Los Angeles Lakers", "home": "Orlando Magic",
+        "away_score": 105, "home_score": 104,
+        "away_fga": 87, "home_fga": 83,
+    },
 )
 MEDIA_CENTRAL_URL = "https://www.nba.com/stats/tools/media-central-game-stats"
 
@@ -46,7 +64,7 @@ REPORT_TERMS = (
 HREF_RE = re.compile(r'href=["\']([^"\']+)["\']', re.I)
 
 
-def _gamebook_probe(data: bytes) -> dict[str, Any]:
+def _gamebook_probe(data: bytes, expected: dict[str, Any]) -> dict[str, Any]:
     if not data.startswith(b"%PDF"):
         raise ValueError("official gamebook response is not a PDF")
     try:
@@ -72,14 +90,14 @@ def _gamebook_probe(data: bytes) -> dict[str, Any]:
     ))
     parsed = parse_gamebook_pdf(
         data,
-        expected_away="Golden State Warriors",
-        expected_home="Detroit Pistons",
+        expected_away=str(expected["away"]),
+        expected_home=str(expected["home"]),
     )
     exact_known_final = (
-        parsed["away_score"] == 101
-        and parsed["home_score"] == 115
-        and parsed["away"]["totals"]["FGA"] == 76
-        and parsed["home"]["totals"]["FGA"] == 86
+        parsed["away_score"] == int(expected["away_score"])
+        and parsed["home_score"] == int(expected["home_score"])
+        and parsed["away"]["totals"]["FGA"] == int(expected["away_fga"])
+        and parsed["home"]["totals"]["FGA"] == int(expected["home_fga"])
     )
     return {
         "ok": (
@@ -131,22 +149,24 @@ def _media_probe(html: str) -> dict[str, Any]:
 
 def run() -> dict[str, Any]:
     now = datetime.now(timezone.utc)
-    gamebook: dict[str, Any]
+    gamebooks: dict[str, Any] = {}
     media: dict[str, Any]
-    try:
-        data = get_bytes(
-            KNOWN_GAMEBOOK_URL,
-            headers={"Accept": "application/pdf"},
-            timeout=15.0,
-            retries=0,
-        )
-        gamebook = _gamebook_probe(data)
-    except Exception as exc:
-        gamebook = {
-            "ok": False,
-            "error_type": type(exc).__name__,
-            "error": str(exc),
-        }
+    for expected in KNOWN_GAMEBOOKS:
+        name = str(expected["name"])
+        try:
+            data = get_bytes(
+                str(expected["url"]),
+                headers={"Accept": "application/pdf"},
+                timeout=15.0,
+                retries=0,
+            )
+            gamebooks[name] = _gamebook_probe(data, expected)
+        except Exception as exc:
+            gamebooks[name] = {
+                "ok": False,
+                "error_type": type(exc).__name__,
+                "error": str(exc),
+            }
     try:
         html = get_text(
             MEDIA_CENTRAL_URL,
@@ -161,7 +181,9 @@ def run() -> dict[str, Any]:
             "error_type": type(exc).__name__,
             "error": str(exc),
         }
-    candidate = bool(gamebook.get("ok"))
+    candidate = bool(gamebooks) and all(
+        row.get("ok") is True for row in gamebooks.values()
+    )
     return {
         "schema": "pulsar-nba-official-report-probe-v1",
         "checked_at": now.isoformat(),
@@ -171,7 +193,11 @@ def run() -> dict[str, Any]:
         "odds_api_requests": 0,
         "official_gamebook_candidate": candidate,
         "media_central_reachable": bool(media.get("ok")),
-        "gamebook": gamebook,
+        "gamebook_samples": gamebooks,
+        "gamebook_samples_ok": sum(
+            row.get("ok") is True for row in gamebooks.values()
+        ),
+        "gamebook_samples_total": len(gamebooks),
         "media_central": media,
     }
 

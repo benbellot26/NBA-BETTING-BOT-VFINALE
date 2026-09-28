@@ -489,3 +489,18 @@ authority and cannot bet. Scheduled runs require
 `NBA_PROVIDER_SHADOW_ENABLED=true`; manual dispatch remains available.
 
 See `PROVIDER_SHADOW.md`.
+
+
+## Official postgame outcome fallback
+
+Settlement still prefers the official NBA schedule/CDN GameID result. If that
+endpoint is inaccessible, the postgame runtime may fall back to already cached,
+checksum-validated NBA Official Scorer gamebooks. This fallback is **outcome
+only**: it never feeds team stats, rotations, features or any pre-tip model
+input.
+
+Gamebook outcomes are persisted as `source=official_nba_gamebook`. Exact
+forecast GameID matching remains preferred; otherwise a gamebook may resolve a
+forecast only when date + home + away identifies exactly one official final.
+The gamebook reference workflow runs before the daily evidence workflow so
+cached finals are available without making settlement depend on the blocked CDN.

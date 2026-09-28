@@ -58,8 +58,8 @@ jobs:
           fi
           python -m nba.live_runtime $DATE_ARG --mode "$MODE" --output runtime/live_run.json
           if [ "$MODE" = "regular" ]; then
-            python -m nba.v2_runtime
             python -m nba.close_runtime --mode live
+            python -m nba.v2_runtime
           fi
       - name: Refresh health report
         if: always()

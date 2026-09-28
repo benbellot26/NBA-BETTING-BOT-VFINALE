@@ -14,7 +14,7 @@ from .data_quality import assess
 from .injury_pdf import game_report_ready
 from .live_inputs import prior_day_cutoff, team_id, team_metric_from_pack
 from .lineage import build_input_manifest
-from .market import fresh_quote
+from .market import fresh_quote, representative_point
 from .odds_normalizer import normalize_game
 from .odds_budget import reserve as reserve_odds_request
 from .pipeline import analyze_game
@@ -59,11 +59,10 @@ def _injury_map(report: dict[str, Any], team: str, game_date: str) -> dict[str, 
 
 
 def _line(books: list[dict[str, Any]], selection: str) -> float | None:
-    pinnacles = [book for book in books if str(book.get("bookmaker") or "").lower() == "pinnacle"]
-    for book in pinnacles or books:
-        for row in book.get("selections") or []:
-            if row.get("selection") == selection and row.get("point") is not None:
-                return float(row["point"])
+    if selection == "HOME":
+        return representative_point(books, "HOME", "AWAY")
+    if selection == "OVER":
+        return representative_point(books, "OVER", "UNDER")
     return None
 
 

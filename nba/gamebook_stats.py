@@ -32,6 +32,13 @@ def _safe_div(a: float, b: float, default: float = 0.0) -> float:
     return float(a) / float(b) if abs(float(b)) > 1e-12 else float(default)
 
 
+def _json_sha256(value: Any) -> str:
+    encoded = json.dumps(
+        value, sort_keys=True, separators=(",", ":"), allow_nan=False
+    ).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
 def _player_id(team: str, name: str) -> int:
     raw = f"{team_info(team).team_id}|{normalized_player_name(name)}".encode()
     value = int.from_bytes(hashlib.sha256(raw).digest()[:4], "big") & 0x7FFFFFFF
@@ -76,6 +83,9 @@ def _validate_cached(
     parsed = payload.get("parsed")
     if not isinstance(parsed, dict) or parsed.get("source") != SOURCE:
         raise ValueError("gamebook cache parsed payload invalid")
+    parsed_digest = str(payload.get("parsed_sha256") or "")
+    if parsed_digest != _json_sha256(parsed):
+        raise ValueError("gamebook cache parsed checksum mismatch")
     away = str(payload.get("away") or "")
     home = str(payload.get("home") or "")
     if not away or not home:
@@ -138,6 +148,8 @@ def fetch_gamebook(
                 "away": away,
                 "home": home,
                 "pdf_sha256": hashlib.sha256(data).hexdigest(),
+                "pdf_bytes": len(data),
+                "parsed_sha256": _json_sha256(parsed),
                 "parsed": parsed,
             }
             _validate_cached(payload, game)
@@ -365,7 +377,16 @@ def build_reference_stat_pack(
     teams_with_games = sum(bool(rows) for rows in team_games.values())
     expected = len(gamebooks) + len(missing or [])
     completeness = _safe_div(len(gamebooks), expected, 0.0) if expected else 1.0
-    return {
+    manifest = [
+        {
+            "reference_id": row["reference_id"],
+            "game_date": row["game_date"],
+            "pdf_sha256": row["pdf_sha256"],
+            "parsed_sha256": row["parsed_sha256"],
+        }
+        for row in sorted(gamebooks, key=lambda item: item["reference_id"])
+    ]
+    result = {
         "schema": "pulsar-nba-gamebook-stat-pack-v1",
         "role": ROLE,
         "production_provider_authorized": False,
@@ -387,11 +408,14 @@ def build_reference_stat_pack(
         "player_rating_method": "team_efficiency_neutral_baseline",
         "usage_scale": "fraction_0_to_1",
         "possession_method": "symmetric_boxscore_estimate",
+        "gamebook_manifest_sha256": _json_sha256(manifest),
         "limitations": {
             "player_off_def_ratings": "team_neutral_baseline",
             "production_requires_parity_gate": True,
         },
     }
+    result["stat_pack_sha256"] = _json_sha256(result)
+    return result
 
 
 def run(

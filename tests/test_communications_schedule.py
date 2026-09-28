@@ -1,6 +1,11 @@
 import unittest
 from unittest.mock import patch
-from nba.communications_schedule import discover_pdf_url,parse_schedule_text,fetch_reference_schedule
+from nba.communications_schedule import (
+    as_pregame_schedule,
+    discover_pdf_url,
+    fetch_reference_schedule,
+    parse_schedule_text,
+)
 
 class CommunicationsScheduleTests(unittest.TestCase):
     def test_discovers_official_schedule_pdf(self):
@@ -15,6 +20,25 @@ class CommunicationsScheduleTests(unittest.TestCase):
         self.assertEqual(games[0].commence_time,"2026-10-20T19:00:00+00:00")
         self.assertTrue(games[1].neutral_site)
         self.assertIsNone(games[1].home)
+
+    def test_pregame_conversion_uses_explicit_reference_id(self):
+        games=parse_schedule_text(
+            "1 Tue. 10/20/26 Boston at Detroit 3:00 PM 3:00 PM",
+            season="2026-27", minimum_games=1,
+        )
+        converted=as_pregame_schedule(games,target_date="2026-10-20")
+        self.assertEqual(converted[0].game_id,"nba-pr-2026-27-2026-10-20-1")
+        self.assertEqual(converted[0].home,"Detroit Pistons")
+        self.assertEqual(converted[0].status,1)
+        self.assertIn("NBA Communications",converted[0].status_text)
+
+    def test_pregame_conversion_refuses_neutral_site_without_home_designation(self):
+        games=parse_schedule_text(
+            "189 Sat. 11/7/26 Denver vs Indiana 4:00 PM 5:00 PM",
+            season="2026-27", minimum_games=1,
+        )
+        with self.assertRaisesRegex(RuntimeError,"neutral-site"):
+            as_pregame_schedule(games,target_date="2026-11-07")
 
     def test_fetch_reference_schedule_follows_release_pdf(self):
         html='<a href="/files/2026-27-NBA-Regular-Season-Schedule-By-Date.pdf">PDF</a>'

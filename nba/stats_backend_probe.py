@@ -22,7 +22,13 @@ from .schedule import season_for_date
 SCRIPT_RE=re.compile(r"<script[^>]+src=[\"']([^\"']+)[\"']",re.I)
 BACKEND_URL_RE=re.compile(
     r"https?://(?:stats\\.nba\\.com|api-hub\\.nba\\.com)"
-    r"(?:/[A-Za-z0-9._~!SCRIPT_RE=re.compile(r"<script[^>]+src=[\"']([^\"']+)[\"']",re.I)
+    r"(?:/[A-Za-z0-9._~!()*+,;=:@%/-]{0,180})?",
+    re.I,
+)
+ROUTE_RE=re.compile(
+    r"/(?:stats|api)/[A-Za-z0-9._~!()*+,;=:@%/-]{1,160}",
+    re.I,
+)
 MARKERS={()*+,;=:@%/-]{0,180})?",
     re.I,
 )

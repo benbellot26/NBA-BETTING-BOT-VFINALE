@@ -1,1 +1,2 @@
-One-shot historical Pinnacle availability probe. This intentionally consumes one historical Odds API request on merge.
+Second one-shot historical Pinnacle availability probe after archive-layout hotfix.
+Uses explicit 2026-03-20T20:00:00Z snapshot and intentionally consumes one historical Odds API request on merge.

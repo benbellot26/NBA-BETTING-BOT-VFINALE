@@ -67,6 +67,19 @@ class GamebookParserTests(unittest.TestCase):
         self.assertEqual(result["away"]["players"][0]["name"], "Gui Santos")
         self.assertEqual(result["home"]["players"][4]["stats"]["AST"], 8)
 
+    def test_wrapped_player_stat_line_is_supported(self):
+        wrapped = FINAL_BOX.replace(
+            "15 Gui Santos F 29:47 4 10 1 4 4 4 0 5 5 5 3 0 3 0 -3 13",
+            "15 Gui Santos F 29:47 4 10 1 4 4 4\n0 5 5 5 3 0 3 0 -3 13",
+        )
+        result = parse_final_box_text(
+            wrapped,
+            expected_away="Golden State Warriors",
+            expected_home="Detroit Pistons",
+        )
+        self.assertEqual(result["away"]["players"][0]["name"], "Gui Santos")
+        self.assertEqual(result["away"]["players"][0]["stats"]["PTS"], 13)
+
     def test_wrapped_team_total_line_is_supported(self):
         wrapped = FINAL_BOX.replace(
             "240:00 35 76 12 33 19 26 10 28 38 23 17 6 25 6 -14 101",

@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-health-v1",
-  "generated_at": "2026-09-28T09:52:20.532840+00:00",
+  "generated_at": "2026-09-28T11:52:20.239595+00:00",
   "state": "PROVIDER_DEGRADED",
   "live_operational": false,
   "real_betting_authorized": false,
@@ -11,9 +11,9 @@
   "provider_ok": false,
   "provider_state": "BLOCKED",
   "diagnostics": {
-    "provider_age_hours": 0.7396762422222222,
+    "provider_age_hours": 2.7395947852777778,
     "provider_fresh": true,
-    "market_age_hours": 98.77561962749999,
+    "market_age_hours": 100.77553817055555,
     "market_fresh": false
   },
   "provider_details": {
@@ -48,6 +48,8 @@
     }
   },
   "market_coverage_ready": false,
+  "market_availability_state": null,
+  "market_benchmark_bookmaker": null,
   "ready_for_real_rehearsal": false,
   "readiness_failures": [
     "provider_not_operational:BLOCKED",
@@ -117,6 +119,7 @@
   "bookmaker_discovery": {
     "checked_at": "2026-09-24T07:16:06.567907+00:00",
     "pinnacle_present": false,
+    "pinnacle_state": null,
     "complete_featured_market_events": {
       "draftkings": 41,
       "onexbet": 39,
@@ -129,7 +132,10 @@
       "unibet_nl": 8,
       "betsson": 5,
       "nordicbet": 5
-    }
+    },
+    "consensus_market_events": {},
+    "complete_consensus_events": 0,
+    "consensus_replaces_pinnacle": false
   },
   "www_stats_probe": {
     "checked_at": "2026-09-28T09:07:52.748089+00:00",
@@ -283,6 +289,29 @@
     "collection_complete": true,
     "teams_with_games": 0,
     "production_provider_authorized": false
+  },
+  "provider_shadow": {
+    "role": null,
+    "generation": null,
+    "status": null,
+    "target_date": null,
+    "checked_at": null,
+    "forecasts": 0,
+    "last_added": 0,
+    "gamebook_completeness": null,
+    "resolved_n": 0,
+    "paired_v1_n": 0,
+    "margin_mae": null,
+    "total_mae": null,
+    "paired_shadow_margin_mae": null,
+    "paired_v1_margin_mae": null,
+    "paired_shadow_total_mae": null,
+    "paired_v1_total_mae": null,
+    "review_ready": null,
+    "review_failures": [],
+    "production_provider_authorized": false,
+    "predictive_authority": false,
+    "betting_certified": false
   },
   "official_report_probe": {
     "checked_at": "2026-09-28T09:07:54.918478+00:00",
@@ -444,6 +473,7 @@
       "market_smoke": 1
     }
   },
+  "market_consensus_evidence": {},
   "evidence": {
     "forecasts": 0,
     "paper_entries": 0,

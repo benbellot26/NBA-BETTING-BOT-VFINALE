@@ -62,3 +62,47 @@ alongside Brier/LogLoss/ECE:
 These fields are descriptive only. No dispersion threshold, bookmaker-count
 threshold beyond the existing minimum of three, or consensus result can alter
 betting certification. Pinnacle remains the unique sharp benchmark.
+
+
+## Regular vs preseason NBA sport keys
+
+The Odds API exposes regular-season NBA and NBA preseason under distinct sport
+keys. Pulsar therefore keeps production regular-season acquisition on
+`basketball_nba`, while deep diagnostics may explicitly probe either:
+
+- `basketball_nba`
+- `basketball_nba_preseason`
+
+The ordinary daily market smoke is unchanged and still costs one request.
+It does not auto-switch sport keys.
+
+## Deep Pinnacle transport probe
+
+The manual **Pulsar NBA Pinnacle Deep Diagnostic** workflow compares two current
+requests for the same selected sport key:
+
+1. targeted `bookmakers=pinnacle`;
+2. regional `regions=eu`.
+
+This distinguishes:
+
+- `TARGETED_PINNACLE_READY`: targeted Pinnacle has a complete featured-market event;
+- `TARGETED_PINNACLE_PARTIAL`: Pinnacle exists but lacks full paired coverage;
+- `TARGET_FILTER_MISMATCH`: the targeted query is empty/absent while the EU
+  regional response contains Pinnacle;
+- `PINNACLE_NOT_CURRENTLY_LISTED`: EU events exist but Pinnacle is absent;
+- `NO_EVENTS_FOR_SPORT_KEY`: neither query returns events;
+- `REGIONAL_MARKET_EMPTY`: targeted/region responses exist in an unusable state.
+
+This probe is diagnostic only. It never changes `coverage_ready`, the sharp
+benchmark, or certification.
+
+## Historical Pinnacle probe
+
+The same manual workflow can optionally query one historical snapshot using
+`bookmakers=pinnacle`. A historical snapshot with complete ML/spread/total
+pairs yields `HISTORICAL_PINNACLE_READY`.
+
+This is useful to distinguish current slate availability from broader provider
+or account access. Historical evidence still cannot replace current Pinnacle
+quotes for betting decisions or CLV capture.

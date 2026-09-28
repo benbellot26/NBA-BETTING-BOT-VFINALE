@@ -50,6 +50,8 @@ def build(root: str | Path = "runtime", *, at: str | None = None) -> dict[str, A
     provider_shadow_performance=_json(root/"provider_shadow"/"performance.json") or {}
     provider_shadow_gate=_json(root/"provider_shadow"/"review_gate.json") or {}
     provider_shadow_forecasts=_jsonl(root/"provider_shadow"/"gamebook_forecasts.jsonl")
+    pinnacle_transport_probe=_json(root/"pinnacle_transport_probe.json") or {}
+    pinnacle_historical_probe=_json(root/"pinnacle_historical_probe.json") or {}
     audit=_json(ev/"audit.json") or {}
     forecasts=_jsonl(ev/"final_forecasts.jsonl")
     paper=_jsonl(ev/"paper_entries.jsonl")

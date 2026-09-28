@@ -8,23 +8,41 @@ class RunnerProbeTests(unittest.TestCase):
     def test_runner_probe_is_diagnostic_only_and_never_calls_odds(self):
         with patch("nba.runner_probe.get_json",return_value={"leagueSchedule":{}}), patch(
             "nba.runner_probe.get_text",return_value="<html>nba</html>"), patch(
+            "nba.runner_probe.get_bytes",return_value=b"%PDF fixture"), patch(
             "nba.runner_probe.fetch_reference_schedule",return_value=[object()]*1200), patch(
             "nba.runner_probe.team_stats",return_value=[{"TEAM_NAME":"x"}]*30):
             report=run()
         self.assertEqual(report["role"],"NETWORK_DIAGNOSTIC_ONLY")
         self.assertFalse(report["predictive_evidence_eligible"])
         self.assertEqual(report["odds_api_requests"],0)
-        self.assertEqual(len(report["reachable_routes"]),7)
+        self.assertEqual(len(report["reachable_routes"]),9)
+        self.assertTrue(report["probes"]["historical_injury_page"]["ok"])
+        self.assertTrue(report["probes"]["known_official_injury_pdf"]["ok"])
 
     def test_runner_probe_records_failure_without_raising(self):
         with patch("nba.runner_probe.get_json",side_effect=RuntimeError("HTTP 403")), patch(
             "nba.runner_probe.get_text",return_value="ok"), patch(
+            "nba.runner_probe.get_bytes",return_value=b"%PDF fixture"), patch(
             "nba.runner_probe.fetch_reference_schedule",return_value=[object()]*1200), patch(
             "nba.runner_probe.team_stats",return_value=[{"TEAM_NAME":"x"}]*30):
             report=run()
         self.assertFalse(report["probes"]["cdn_schedule_json"]["ok"])
         self.assertEqual(report["probes"]["cdn_schedule_json"]["state"],
                          "ACCESS_BLOCKED")
+
+    def test_static_injury_pdf_block_is_distinguished_from_page_access(self):
+        with patch("nba.runner_probe.get_json",return_value={"leagueSchedule":{}}), patch(
+            "nba.runner_probe.get_text",return_value="ok"), patch(
+            "nba.runner_probe.get_bytes",side_effect=RuntimeError("HTTP 403")), patch(
+            "nba.runner_probe.fetch_reference_schedule",return_value=[object()]*1200), patch(
+            "nba.runner_probe.team_stats",return_value=[{"TEAM_NAME":"x"}]*30):
+            report=run()
+        self.assertTrue(report["probes"]["historical_injury_page"]["ok"])
+        self.assertFalse(report["probes"]["known_official_injury_pdf"]["ok"])
+        self.assertEqual(
+            report["probes"]["known_official_injury_pdf"]["state"],
+            "ACCESS_BLOCKED",
+        )
 
 
 if __name__=="__main__":

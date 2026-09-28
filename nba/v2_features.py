@@ -17,7 +17,7 @@ from .rotations import RotationPlayer
 from .teams import canonical_team
 
 FEATURE_SCHEMA = "pulsar-nba-v2-features-v1"
-_SHA256 = re.compile(r"[a-fA-F0-9]{64}\\Z")
+_SHA256 = re.compile(r"[a-fA-F0-9]{64}\Z")
 FORBIDDEN_FEATURE_TOKENS = (
     "odds", "market", "price", "book", "pinnacle", "sharp",
     "breakeven", "spread_line", "total_line",

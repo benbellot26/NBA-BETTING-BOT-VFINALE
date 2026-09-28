@@ -36,9 +36,7 @@ models convert predicted absolute error to a Gaussian standard deviation via
 labels use an internal chronological holdout when the training sample is large
 enough, instead of simply fitting the same residuals used to estimate the mean.
 
-The feature set includes the frozen V1 projection, team efficiency/pace/style,
-rest and schedule density, travel/timezone/altitude, and projected rotation
-impact/availability. It does not include any market-derived feature.
+The feature set includes the frozen V1 projection, raw season/30/15/10/5 ORtg-DRtg-Pace windows for both teams, blended team efficiency/pace/style, rest and schedule density, travel/timezone/altitude, and projected rotation impact/availability. The raw windows let the challenger learn temporal weighting instead of inheriting V1's fixed recent-form weights. It does not include any market-derived feature.
 
 ## Evaluation
 

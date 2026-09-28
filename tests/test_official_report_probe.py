@@ -5,6 +5,7 @@ from nba.official_report_probe import (
     _gamebook_probe,
     _injury_page_probe,
     _media_probe,
+    _wp_injury_probe,
     run,
 )
 
@@ -81,12 +82,32 @@ PISTONS 21 36 30 28 115
         )
         self.assertNotIn("nonce=secret", str(result))
 
+    def test_wp_injury_probe_scans_rendered_json_without_persisting_content(self):
+        payload=[{
+            "id":123,
+            "slug":"nba-injury-report-2025-26-season",
+            "content":{
+                "rendered":"<iframe src=\"https://ak-static.cms.nba.com/"
+                "referee/injury/Injury-Report_2026-02-01_11_15PM.pdf\"></iframe>"
+            },
+        }]
+        result=_wp_injury_probe(payload,season="2025-26")
+        self.assertEqual(result["response_type"],"list")
+        self.assertEqual(result["item_count"],1)
+        self.assertIn("content",result["item_keys"])
+        self.assertGreater(result["marker_counts"]["Injury-Report_"],0)
+        self.assertFalse(result["raw_html_persisted"])
+        self.assertNotIn("rendered",result)
+
     def test_network_failure_is_diagnostic_only(self):
         with patch(
             "nba.official_report_probe.get_bytes",
             side_effect=RuntimeError("blocked"),
         ), patch(
             "nba.official_report_probe.get_text",
+            side_effect=RuntimeError("blocked"),
+        ), patch(
+            "nba.official_report_probe.get_json",
             side_effect=RuntimeError("blocked"),
         ):
             result = run()

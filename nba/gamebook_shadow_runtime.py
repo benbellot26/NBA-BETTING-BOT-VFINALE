@@ -16,6 +16,7 @@ from typing import Any
 from zoneinfo import ZoneInfo
 
 from .communications_schedule import (
+    ReferenceScheduleGame,
     as_pregame_schedule,
     fetch_reference_schedule,
 )
@@ -36,6 +37,8 @@ ROLE = "ALTERNATE_PROVIDER_SHADOW"
 GENERATION = "pulsar-nba-gamebook-provider-shadow-v1"
 MIN_COMPLETED_TEAM_GAMES = 5
 MIN_GAMEBOOK_COMPLETENESS = 1.0
+SCHEDULE_CACHE_SCHEMA = "pulsar-nba-communications-cache-v1"
+SCHEDULE_CACHE_MAX_AGE_HOURS = 24.0
 
 
 def _dt(value: str) -> datetime:
@@ -79,6 +82,42 @@ def _status(path: str | Path, payload: dict[str, Any]) -> None:
     target.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
 
 
+
+def _reference_schedule_cached(
+    *,
+    season: str,
+    now: datetime,
+    cache_path: str | Path,
+) -> list[ReferenceScheduleGame]:
+    target=Path(cache_path)
+    if target.exists():
+        try:
+            payload=json.loads(target.read_text(encoding="utf-8"))
+            generated=_dt(str(payload["generated_at"]))
+            age_hours=(now-generated).total_seconds()/3600.0
+            rows=[ReferenceScheduleGame(**row) for row in payload["games"]]
+            if (
+                payload.get("schema")==SCHEDULE_CACHE_SCHEMA
+                and payload.get("season")==season
+                and -0.1 <= age_hours <= SCHEDULE_CACHE_MAX_AGE_HOURS
+                and len(rows)>=1000
+            ):
+                return rows
+        except (OSError,ValueError,TypeError,KeyError):
+            pass
+    rows=fetch_reference_schedule(season=season)
+    if len(rows)<1000:
+        raise RuntimeError("NBA Communications schedule cache refresh too small")
+    payload={
+        "schema":SCHEDULE_CACHE_SCHEMA,
+        "season":season,
+        "generated_at":now.isoformat(),
+        "games":[asdict(row) for row in rows],
+    }
+    target.parent.mkdir(parents=True,exist_ok=True)
+    target.write_text(json.dumps(payload,sort_keys=True,separators=(",",":")),encoding="utf-8")
+    return rows
+
 def run(
     *,
     target_date: str,
@@ -87,6 +126,7 @@ def run(
     cache_root: str = "runtime/gamebook_reference",
     stat_pack_output: str = "runtime/gamebook_reference/stat_pack.json",
     snapshot_root: str = "runtime/provider_shadow/snapshots",
+    schedule_cache_path: str = "runtime/provider_shadow/communications_schedule.json",
     max_network_games: int = 60,
     now: datetime | None = None,
     reference_schedule: list[Any] | None = None,
@@ -116,7 +156,9 @@ def run(
         reference = (
             list(reference_schedule)
             if reference_schedule is not None
-            else fetch_reference_schedule(season=season)
+            else _reference_schedule_cached(
+                season=season,now=current,cache_path=schedule_cache_path
+            )
         )
         schedule = as_pregame_schedule(reference, target_date=target_date)
         slate = [
@@ -125,6 +167,16 @@ def run(
         ]
         if not slate:
             result["status"] = "NO_UPCOMING_GAMES"
+            _status(status_output, result)
+            return result
+        final_window = [
+            game for game in slate
+            if 5 <= _minutes_to(game.commence_time, current) <= 30
+        ]
+        if not final_window:
+            result["status"] = "NO_ELIGIBLE_FINAL_WINDOW"
+            result["upcoming_games"] = len(slate)
+            result["source_fetch_deferred"] = True
             _status(status_output, result)
             return result
 
@@ -189,7 +241,7 @@ def run(
     seen = _existing(output)
     added = 0
     eligible = 0
-    for game in slate:
+    for game in final_window:
         try:
             minutes = _minutes_to(game.commence_time, current)
             if not 5 <= minutes <= 30:

@@ -1,10 +1,18 @@
 from __future__ import annotations
+from datetime import datetime, timezone
 import os
 from typing import Any
 from urllib.parse import urlencode
 from .provider_http import get_json, get_json_with_headers, get_json_with_error_code
 
 ODDS_API_BASE="https://api.the-odds-api.com/v4"
+
+
+def _historical_timestamp(value: str) -> str:
+    parsed=datetime.fromisoformat(str(value).replace("Z","+00:00"))
+    if parsed.tzinfo is None:
+        raise ValueError("historical odds timestamp requires timezone")
+    return parsed.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 def _key(api_key:str|None)->str:
     key=api_key or os.environ.get("ODDS_API_KEY")
@@ -20,7 +28,7 @@ def fetch_nba_odds(*,api_key:str|None=None,regions:str="eu,us",markets:str="h2h,
     return data
 
 def fetch_historical_nba_odds(*,date_iso:str,api_key:str|None=None,regions:str="eu,us",markets:str="h2h,spreads,totals",bookmakers:str="pinnacle")->dict[str,Any]:
-    params={"apiKey":_key(api_key),"markets":markets,"oddsFormat":"decimal","dateFormat":"iso","date":date_iso}
+    params={"apiKey":_key(api_key),"markets":markets,"oddsFormat":"decimal","dateFormat":"iso","date":_historical_timestamp(date_iso)}
     if bookmakers:params["bookmakers"]=bookmakers
     else:params["regions"]=regions
     data=get_json(f"{ODDS_API_BASE}/historical/sports/basketball_nba/odds?{urlencode(params)}")
@@ -70,7 +78,7 @@ def fetch_historical_nba_odds_diagnostic(
         "markets": markets,
         "oddsFormat": "decimal",
         "dateFormat": "iso",
-        "date": date_iso,
+        "date": _historical_timestamp(date_iso),
     }
     if bookmakers:
         params["bookmakers"] = bookmakers

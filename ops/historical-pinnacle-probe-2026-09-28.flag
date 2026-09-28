@@ -1,2 +1,2 @@
-Third one-shot historical Pinnacle probe with scrubbed provider error-code capture.
-Intentionally consumes one historical Odds API request on merge to identify the exact HTTP 422 provider code.
+Fourth one-shot historical Pinnacle probe after canonical UTC-Z timestamp normalization.
+Intentionally consumes one historical Odds API request on merge to verify provider acceptance and historical Pinnacle availability.

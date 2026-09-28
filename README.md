@@ -4,7 +4,7 @@ Pulsar NBA is a standalone NBA probability, market, research and decision engine
 
 ## Current status
 
-**V1.8.0 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
+**V1.8.2 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
 
 ## End-to-end chain
 
@@ -418,3 +418,34 @@ schedule is blocked. Fallback games retain explicit `nba-pr-*` identities;
 neutral-site home/away ambiguity fails closed, and results still require an
 official outcome source. V1 model generation and betting certification are
 unchanged.
+
+
+## V1.8.2 — official gamebook reference fallback
+
+GitHub-hosted runners still cannot rely on `stats.nba.com`, but the NBA
+Official Scorer's Report PDFs at `statsdmz.nba.com` are reachable. V1.8.2
+adds a robust parser for those FINAL BOX gamebooks and a separate
+`ALTERNATE_REFERENCE_ONLY` stats adapter.
+
+The adapter derives team ORtg/DRtg/Pace, eFG%, turnover rate, offensive
+rebounding rate, base shooting-volume fields, player minutes and approximate
+usage from official final boxscores. Player-specific OFF/DEF ratings are not
+invented: the reference adapter uses team efficiency as a neutral baseline, so
+player impact remains an explicit limitation.
+
+The gamebook source is **not** automatically authorized as the production
+provider. `nba.gamebook_parity` compares a derived pack to a canonical
+`stats.nba.com` pack on the exact same PIT cutoff and can only return
+`MANUAL_REVIEW_ONLY`. Even a passing parity report keeps
+`production_provider_authorized=false` and `betting_certified=false`.
+
+A free daily workflow, **Pulsar NBA Gamebook Reference**, incrementally caches
+up to 60 new official gamebooks per run in `runtime-data` and rebuilds the
+reference stat pack. It consumes no Odds API requests. This lets the repository
+accumulate the alternate dataset while the canonical stats endpoint remains
+blocked, without silently changing V1's trusted provider boundary.
+
+Useful commands:
+
+    python -m nba.gamebook_stats --max-network-games 60
+    python -m nba.gamebook_parity --canonical canonical.json --alternate runtime/gamebook_reference/stat_pack.json

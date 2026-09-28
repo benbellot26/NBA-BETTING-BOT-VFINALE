@@ -1,0 +1,41 @@
+name: Pulsar NBA Stats Backend Discovery
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'ops/stats-backend-discovery.flag'
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - run: python -m pip install .
+      - name: Hydrate runtime state
+        run: .github/scripts/hydrate-runtime-data.sh
+      - name: Discover NBA Stats frontend backend hints
+        run: python -m nba.stats_backend_probe --output runtime/stats_backend_probe.json
+      - name: Refresh research readiness
+        run: python -m nba.research_readiness --output runtime/research_readiness.json || true
+      - name: Refresh health report
+        run: python -m nba.health_report --output runtime/health.json || true
+      - name: Upload diagnostic
+        uses: actions/upload-artifact@v4
+        with:
+          name: pulsar-nba-stats-backend-discovery-${{ github.run_id }}
+          path: |
+            runtime/stats_backend_probe.json
+            runtime/research_readiness.json
+            runtime/health.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Persist runtime state
+        run: .github/scripts/persist-runtime-data.sh

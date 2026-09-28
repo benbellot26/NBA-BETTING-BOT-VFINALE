@@ -21,13 +21,13 @@ BLOCKED_PROVIDER = {
 }
 READY_MARKET = {
     "schema":"pulsar-nba-market-smoke-v2",
-    "checked_at":"2026-09-24T07:00:00Z",
+    "checked_at":CHECKED_AT,
     "request_count":1,"coverage_ready":True,
     "complete_pinnacle_events":1
 }
 BLOCKED_MARKET = {
     "schema":"pulsar-nba-market-smoke-v2",
-    "checked_at":"2026-09-24T07:00:00Z",
+    "checked_at":CHECKED_AT,
     "request_count":1,"coverage_ready":False,
     "complete_pinnacle_events":0
 }

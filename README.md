@@ -382,7 +382,7 @@ cannot replace the official stats API without separate parity and PIT review.
 
 V1.8.0 keeps the V1 structural basketball generation frozen and adds a
 market-isolated learned challenger. New eligible FINAL forecasts archive a
-versioned 48-feature basketball/context payload plus separate
+versioned 78-feature basketball/context payload plus separate
 `evaluation_only` lines and Pinnacle no-vig probabilities. The learned model
 uses standard-library Ridge regressions for margin/total and conditional
 residual scale, then evaluates V1 vs V2 on expanding point-in-time holdouts.

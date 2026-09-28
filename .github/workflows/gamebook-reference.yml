@@ -12,7 +12,7 @@ on:
       - 'nba/communications_schedule.py'
       - '.github/workflows/gamebook-reference.yml'
   schedule:
-    - cron: '45 13 * * *'
+    - cron: '45 11 * * *'
 permissions:
   contents: write
 jobs:

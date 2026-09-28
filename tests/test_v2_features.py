@@ -39,6 +39,7 @@ class V2FeatureTests(unittest.TestCase):
             home=home, away=away, context=context,
             home_rotation=rotation, away_rotation=rotation,
             score_projection=score, advanced_windows=windows,
+            source_manifest_sha256="a" * 64,
         )
         validated = validate_feature_payload(payload)
         self.assertEqual(set(validated["features"]), set(FEATURE_NAMES))
@@ -49,6 +50,13 @@ class V2FeatureTests(unittest.TestCase):
         # Missing recent windows fall back to that team's season PIT row.
         self.assertEqual(validated["features"]["away_ortg_last5"], 114.0)
         self.assertEqual(len(FEATURE_NAMES), 78)
+        self.assertEqual(validated["source_manifest_sha256"], "a" * 64)
+        self.assertEqual(len(validated["sha256"]), 64)
+        tampered = dict(payload)
+        tampered["features"] = dict(payload["features"])
+        tampered["features"]["baseline_margin"] += 1
+        with self.assertRaisesRegex(ValueError, "checksum"):
+            validate_feature_payload(tampered, require_bound=True)
 
 
 if __name__ == "__main__":

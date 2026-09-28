@@ -14,7 +14,10 @@ class OperationsTests(unittest.TestCase):
         odds=_default_headers("https://api.the-odds-api.com/v4/sports")
         nba=_default_headers("https://stats.nba.com/stats/leaguedashteamstats")
         self.assertNotIn("Origin", odds)
+        self.assertNotIn("x-nba-stats-token", odds)
         self.assertEqual(nba["Origin"], "https://www.nba.com")
+        self.assertEqual(nba["x-nba-stats-origin"], "stats")
+        self.assertEqual(nba["x-nba-stats-token"], "true")
 
     def test_dst_window_covers_representative_nba_tips(self):
         self.assertTrue(all(representative_checks().values()))

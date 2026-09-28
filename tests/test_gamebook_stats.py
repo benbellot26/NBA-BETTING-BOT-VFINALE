@@ -53,6 +53,11 @@ class GamebookStatPackTests(unittest.TestCase):
         base = {row["TEAM_NAME"]: row for row in pack["base_season"]}
         self.assertEqual(base["Golden State Warriors"]["FGA"], 76.0)
         self.assertEqual(base["Detroit Pistons"]["FG3A"], 21.0)
+        usage = [row["USG_PCT"] for row in pack["player_advanced"]]
+        self.assertTrue(usage)
+        self.assertTrue(all(0.0 <= value <= 1.0 for value in usage))
+        self.assertEqual(pack["usage_scale"], "fraction_0_to_1")
+        self.assertEqual(pack["possession_method"], "symmetric_boxscore_estimate")
 
     def test_derived_player_rows_are_rotation_compatible(self):
         pack = build_reference_stat_pack(

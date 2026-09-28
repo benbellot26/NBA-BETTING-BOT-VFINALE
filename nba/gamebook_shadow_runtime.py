@@ -93,6 +93,7 @@ def run(
     stat_pack: dict[str, Any] | None = None,
     injuries: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
+    requested_now = now
     current = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
     season = season_for_date(target_date)
     result: dict[str, Any] = {
@@ -163,6 +164,16 @@ def run(
         result["failures"].append(f"{type(exc).__name__}:{exc}")
         _status(status_output, result)
         return result
+
+    # Analysis time is captured AFTER source acquisition. In tests an explicit
+    # deterministic clock is honored. Re-checking the FINAL window below then
+    # protects against a slow source request crossing tipoff.
+    current = (
+        requested_now.astimezone(timezone.utc)
+        if requested_now is not None
+        else datetime.now(timezone.utc)
+    )
+    result["checked_at"] = current.isoformat()
 
     # Context may use the full official Communications schedule, but neutral-site
     # rows are excluded because that source does not designate home/away.

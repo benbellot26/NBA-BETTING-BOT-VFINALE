@@ -11,11 +11,31 @@ from typing import Any, Iterable
 
 from .model import GameContext, ScoreProjection, TeamMetrics
 from .rotations import RotationPlayer
+from .teams import canonical_team
 
 FEATURE_SCHEMA = "pulsar-nba-v2-features-v1"
 FORBIDDEN_FEATURE_TOKENS = (
     "odds", "market", "price", "book", "pinnacle", "sharp",
     "breakeven", "spread_line", "total_line",
+)
+
+TEMPORAL_WINDOWS = (
+    ("season", 0),
+    ("last30", 30),
+    ("last15", 15),
+    ("last10", 10),
+    ("last5", 5),
+)
+TEMPORAL_METRICS = (
+    ("ortg", "OFF_RATING"),
+    ("drtg", "DEF_RATING"),
+    ("pace", "PACE"),
+)
+TEMPORAL_FEATURE_NAMES = tuple(
+    f"{side}_{metric}_{label}"
+    for side in ("home", "away")
+    for metric, _ in TEMPORAL_METRICS
+    for label, _ in TEMPORAL_WINDOWS
 )
 
 FEATURE_NAMES = (
@@ -38,7 +58,7 @@ FEATURE_NAMES = (
     "home_questionable_minutes", "away_questionable_minutes",
     "home_doubtful_count", "away_doubtful_count",
     "home_out_count", "away_out_count",
-)
+) + TEMPORAL_FEATURE_NAMES
 
 
 def _finite(value: Any, name: str) -> float:
@@ -76,6 +96,61 @@ def _rotation_features(players: Iterable[RotationPlayer]) -> dict[str, float]:
     }
 
 
+def _window_rows(
+    advanced_windows: dict[Any, list[dict[str, Any]]] | None,
+    window: int,
+) -> list[dict[str, Any]]:
+    if not advanced_windows:
+        return []
+    return list(
+        advanced_windows.get(window)
+        or advanced_windows.get(str(window))
+        or []
+    )
+
+
+def _row_for_team(
+    rows: list[dict[str, Any]], team_name: str,
+) -> dict[str, Any] | None:
+    target = canonical_team(team_name)
+    for row in rows:
+        if canonical_team(str(row.get("TEAM_NAME") or "")) == target:
+            return row
+    return None
+
+
+def _temporal_features(
+    side: str,
+    team: TeamMetrics,
+    advanced_windows: dict[Any, list[dict[str, Any]]] | None,
+) -> dict[str, float]:
+    """Expose raw season/recent windows so V2 can learn temporal weights.
+
+    Missing recent windows fall back to the season row. If no raw pack is
+    supplied (unit tests/offline compatibility), the already-PIT blended team
+    metric is repeated rather than fabricating a new history.
+    """
+    fallback = {"ortg": team.ortg, "drtg": team.drtg, "pace": team.pace}
+    season_row = _row_for_team(_window_rows(advanced_windows, 0), team.team)
+    out: dict[str, float] = {}
+    for metric, api_key in TEMPORAL_METRICS:
+        season_default = (
+            _finite(season_row.get(api_key), f"{side}_{metric}_season")
+            if season_row is not None and season_row.get(api_key) is not None
+            else float(fallback[metric])
+        )
+        for label, window in TEMPORAL_WINDOWS:
+            row = season_row if window == 0 else _row_for_team(
+                _window_rows(advanced_windows, window), team.team
+            )
+            raw = row.get(api_key) if row is not None else None
+            value = season_default if raw is None else _finite(
+                raw, f"{side}_{metric}_{label}"
+            )
+            out[f"{side}_{metric}_{label}"] = value
+    return out
+
+
 def validate_feature_payload(payload: dict[str, Any]) -> dict[str, Any]:
     if payload.get("schema") != FEATURE_SCHEMA:
         raise ValueError("unrecognized V2 feature schema")
@@ -106,13 +181,18 @@ def build_feature_snapshot(
     home_rotation: Iterable[RotationPlayer],
     away_rotation: Iterable[RotationPlayer],
     score_projection: ScoreProjection | dict[str, Any],
+    advanced_windows: dict[Any, list[dict[str, Any]]] | None = None,
 ) -> dict[str, Any]:
     """Build the exact pre-market training vector used by future V2 research."""
     home = home.validated()
     away = away.validated()
     if home.team != context.home or away.team != context.away:
         raise ValueError("V2 feature teams do not match game context")
-    score = asdict(score_projection) if isinstance(score_projection, ScoreProjection) else dict(score_projection)
+    score = (
+        asdict(score_projection)
+        if isinstance(score_projection, ScoreProjection)
+        else dict(score_projection)
+    )
     hrot = _rotation_features(home_rotation)
     arot = _rotation_features(away_rotation)
     features = {
@@ -156,4 +236,6 @@ def build_feature_snapshot(
         "home_out_count": hrot["out_count"],
         "away_out_count": arot["out_count"],
     }
+    features.update(_temporal_features("home", home, advanced_windows))
+    features.update(_temporal_features("away", away, advanced_windows))
     return validate_feature_payload({"schema": FEATURE_SCHEMA, "features": features})

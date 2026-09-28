@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-runner-network-probe-v1",
-  "checked_at": "2026-09-28T12:03:42.996655+00:00",
+  "checked_at": "2026-09-28T12:07:16.761222+00:00",
   "season": "2026-27",
   "probe_season": "2025-26",
   "role": "NETWORK_DIAGNOSTIC_ONLY",
@@ -25,63 +25,63 @@
       "name": "cdn_schedule_json",
       "ok": false,
       "state": "ACCESS_BLOCKED",
-      "elapsed_ms": 88.7,
+      "elapsed_ms": 200.2,
       "error": "GET https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_1.json failed: HTTP 403"
     },
     "api_hub_schedule_page": {
       "name": "api_hub_schedule_page",
       "ok": false,
       "state": "UNAVAILABLE",
-      "elapsed_ms": 138.8,
+      "elapsed_ms": 375.9,
       "error": "GET https://api-hub.nba.com/schedule failed: HTTP 461"
     },
     "nba_pr_schedule_release": {
       "name": "nba_pr_schedule_release",
       "ok": true,
       "state": "REACHABLE",
-      "elapsed_ms": 174.6,
+      "elapsed_ms": 259.3,
       "size": 128077
     },
     "nba_pr_schedule_pdf": {
       "name": "nba_pr_schedule_pdf",
       "ok": true,
       "state": "REACHABLE",
-      "elapsed_ms": 1446.0,
+      "elapsed_ms": 2167.2,
       "size": 1200
     },
     "www_nba_stats_page": {
       "name": "www_nba_stats_page",
       "ok": true,
       "state": "REACHABLE",
-      "elapsed_ms": 107.5,
-      "size": 325919
+      "elapsed_ms": 582.3,
+      "size": 325906
     },
     "official_injury_page": {
       "name": "official_injury_page",
       "ok": false,
       "state": "NOT_PUBLISHED",
-      "elapsed_ms": 147.7,
+      "elapsed_ms": 174.7,
       "error": "GET https://official.nba.com/nba-injury-report-2026-27-season/ failed: HTTP 404"
     },
     "historical_injury_page": {
       "name": "historical_injury_page",
       "ok": true,
       "state": "REACHABLE",
-      "elapsed_ms": 39.8,
-      "size": 116509
+      "elapsed_ms": 259.1,
+      "size": 116510
     },
     "known_official_injury_pdf": {
       "name": "known_official_injury_pdf",
       "ok": true,
       "state": "REACHABLE",
-      "elapsed_ms": 21.8,
+      "elapsed_ms": 75.7,
       "size": 87753
     },
     "historical_stats_api": {
       "name": "historical_stats_api",
       "ok": false,
       "state": "TIMEOUT",
-      "elapsed_ms": 10029.6,
+      "elapsed_ms": 10118.5,
       "error": "GET https://stats.nba.com/stats/leaguedashteamstats failed: TimeoutError"
     }
   }

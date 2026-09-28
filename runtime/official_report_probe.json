@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-official-report-probe-v1",
-  "checked_at": "2026-09-28T12:03:56.126084+00:00",
+  "checked_at": "2026-09-28T12:07:33.719024+00:00",
   "role": "NETWORK_DIAGNOSTIC_ONLY",
   "predictive_evidence_eligible": false,
   "production_provider_authorized": false,
@@ -82,8 +82,8 @@
   "gamebook_samples_total": 3,
   "media_central": {
     "ok": true,
-    "bytes": 273555,
-    "sha256": "1d2f5b107a331e7c5518e6091dd1d7e2822425ff389d6c2f21696cc40876fe07",
+    "bytes": 273536,
+    "sha256": "ead558e0904070876db9c35d1cf4f26b92560bb92d662766d7b8de8d4f530d8a",
     "term_hits": {
       "Latest Boxscore Lines": false,
       "Game-by-Game": false,
@@ -155,8 +155,8 @@
   "historical_injury_page": {
     "ok": true,
     "season": "2025-26",
-    "bytes": 116507,
-    "sha256": "55779ef1a045af19b5b8be4e18fdff3762e0b0d64f4ec109a084a594ef22eed7",
+    "bytes": 116508,
+    "sha256": "9abfc083ad55505a56f11785c84b37cd0af78727b1eead37d5a21f4b46504a05",
     "marker_counts": {
       "Injury-Report_": 0,
       "ak-static.cms.nba.com": 23,
@@ -221,6 +221,51 @@
         "src": "https://official.nba.com/LsKxasDIQ/Dgfi/gCo5g/k3L1bp9u5OrEViiVV1/d2tkKgcmAQ/HAt/Ad2MIQEg"
       }
     ],
+    "iframe_sources": [],
+    "cms_asset_hints": [
+      "https://ak-static.cms.nba.com/wp-content/plugins/video-embed-thumbnail-generator/css/kgvid_styles.css",
+      "https://ak-static.cms.nba.com/wp-content/plugins/video-embed-thumbnail-generator/video-js/kg-video-js-skin.css",
+      "https://ak-static.cms.nba.com/wp-content/plugins/video-embed-thumbnail-generator/video-js/video-js.css",
+      "https://ak-static.cms.nba.com/wp-content/themes/nba-official/css/genericons.min.css",
+      "https://ak-static.cms.nba.com/wp-content/themes/nba-official/css/replay-officials.css",
+      "https://ak-static.cms.nba.com/wp-content/themes/nba-official/css/theme.css",
+      "https://ak-static.cms.nba.com/wp-content/themes/nba-official/js/bootstrap.min.js",
+      "https://ak-static.cms.nba.com/wp-content/themes/nba-official/js/fluid-videos.min.js",
+      "https://ak-static.cms.nba.com/wp-content/themes/nba-official/js/nba-official.min.js",
+      "https://ak-static.cms.nba.com/wp-content/themes/nba-official/js/pulse-insights.js",
+      "https://ak-static.cms.nba.com/wp-content/uploads/sites/4/2024/06/2023-NBA-Collective-Bargaining-Agreement-Final.pdf",
+      "https://ak-static.cms.nba.com/wp-content/uploads/sites/4/2025/10/Official-2025-26-NBA-Playing-Rules.pdf",
+      "https://ak-static.cms.nba.com/wp-content/uploads/sites/4/2026/03/2026-NBA-Undergraduate-Advisory-Committee-Brochure.pdf",
+      "https://ak-static.cms.nba.com/wp-includes/css/classic-themes.min.css",
+      "https://ak-static.cms.nba.com/wp-includes/js/jquery/jquery-migrate.min.js",
+      "https://ak-static.cms.nba.com/wp-includes/js/jquery/jquery.min.js",
+      "https://ak-static.cms.nba.com/wp-includes/js/jquery/ui/core.min.js",
+      "https://ak-static.cms.nba.com/wp-includes/js/jquery/ui/datepicker.min.js"
+    ],
     "raw_html_persisted": false
+  },
+  "historical_injury_wp_rest": {
+    "ok": false,
+    "season": "2025-26",
+    "bytes": 2,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "marker_counts": {
+      "Injury-Report_": 0,
+      "ak-static.cms.nba.com": 0,
+      "referee/injury": 0,
+      "wp-json": 0,
+      "admin-ajax": 0,
+      "ajaxurl": 0,
+      "iframe": 0
+    },
+    "safe_endpoint_hints": [],
+    "script_sources": [],
+    "iframe_sources": [],
+    "cms_asset_hints": [],
+    "raw_html_persisted": false,
+    "response_type": "list",
+    "item_count": 0,
+    "top_level_keys": [],
+    "item_keys": []
   }
 }

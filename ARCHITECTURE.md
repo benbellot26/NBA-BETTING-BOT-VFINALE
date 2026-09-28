@@ -62,3 +62,14 @@ production provider contract. They must first pass the explicit
 `nba.gamebook_parity` comparison on a matching season/cutoff, then receive
 human review and fresh prospective validation under a separately frozen
 provider generation. The parity gate never changes betting certification.
+
+
+### Gamebook reference integrity
+
+The alternate official-gamebook pipeline treats every parsed final box as
+content-addressed reference evidence: PDF and parsed-payload checksums are
+bound to the Communications schedule identity, and each aggregate stat pack
+contains a manifest fingerprint. Parity validates the actual downstream input
+contract (all temporal team windows, base FT/3PA rates, season/recent minutes
+and advanced usage) before manual review. A passing parity report still cannot
+authorize the provider automatically.

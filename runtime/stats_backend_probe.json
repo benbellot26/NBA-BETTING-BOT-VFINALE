@@ -1,0 +1,250 @@
+{
+  "aggregate_marker_counts": {
+    "api_hub_host": 2,
+    "boxscore_traditional": 0,
+    "cume_stats_player": 0,
+    "cume_stats_team": 0,
+    "graphql": 0,
+    "league_dash_player": 0,
+    "league_dash_team": 0,
+    "stats_nba_host": 3,
+    "stats_path": 2
+  },
+  "backend_hints": [
+    "stats.nba.com",
+    "api-hub.nba.com"
+  ],
+  "checked_at": "2026-09-28T13:03:21.487650+00:00",
+  "endpoint_hints": [],
+  "odds_api_requests": 0,
+  "page": {
+    "bytes": 326161,
+    "marker_counts": {
+      "api_hub_host": 0,
+      "boxscore_traditional": 0,
+      "cume_stats_player": 0,
+      "cume_stats_team": 0,
+      "graphql": 0,
+      "league_dash_player": 0,
+      "league_dash_team": 0,
+      "stats_nba_host": 0,
+      "stats_path": 218
+    },
+    "script_src_count": 20,
+    "sha256": "dd878ed91d77d212114cdb63ce5bc64432724dc4407196cca5915e725675efac",
+    "url": "https://www.nba.com/stats/teams/advanced"
+  },
+  "predictive_evidence_eligible": false,
+  "production_provider_authorized": false,
+  "role": "NETWORK_DIAGNOSTIC_ONLY",
+  "schema": "pulsar-nba-stats-backend-discovery-v1",
+  "scripts": [
+    {
+      "bytes": 18292,
+      "marker_counts": {
+        "api_hub_host": 0,
+        "boxscore_traditional": 0,
+        "cume_stats_player": 0,
+        "cume_stats_team": 0,
+        "graphql": 0,
+        "league_dash_player": 0,
+        "league_dash_team": 0,
+        "stats_nba_host": 0,
+        "stats_path": 0
+      },
+      "ok": true,
+      "sha256": "fb0a2b763addefd3d629dd4adf897ce3ba007f6d96d5711b3ea1c959b255f4c7",
+      "url": "https://cdn.nba.com/user-consent/index-gam.min.js"
+    },
+    {
+      "bytes": 112594,
+      "marker_counts": {
+        "api_hub_host": 0,
+        "boxscore_traditional": 0,
+        "cume_stats_player": 0,
+        "cume_stats_team": 0,
+        "graphql": 0,
+        "league_dash_player": 0,
+        "league_dash_team": 0,
+        "stats_nba_host": 0,
+        "stats_path": 0
+      },
+      "ok": true,
+      "sha256": "0973c1d64c88adc8e3c950410cb58b288f72118d5965b78049438deb8f2f9683",
+      "url": "https://www.nba.com/_next/static/chunks/polyfills-42372ed130431b0a.js"
+    },
+    {
+      "bytes": 11889,
+      "marker_counts": {
+        "api_hub_host": 0,
+        "boxscore_traditional": 0,
+        "cume_stats_player": 0,
+        "cume_stats_team": 0,
+        "graphql": 0,
+        "league_dash_player": 0,
+        "league_dash_team": 0,
+        "stats_nba_host": 0,
+        "stats_path": 0
+      },
+      "ok": true,
+      "sha256": "d9cde4043c804fde2e9ee40c13dff25d5362f90dd9c0e4e6fd5f0b23af63e592",
+      "url": "https://www.nba.com/_next/static/chunks/webpack-6e3f0e05b49989e3.js"
+    },
+    {
+      "bytes": 140992,
+      "marker_counts": {
+        "api_hub_host": 0,
+        "boxscore_traditional": 0,
+        "cume_stats_player": 0,
+        "cume_stats_team": 0,
+        "graphql": 0,
+        "league_dash_player": 0,
+        "league_dash_team": 0,
+        "stats_nba_host": 0,
+        "stats_path": 0
+      },
+      "ok": true,
+      "sha256": "b6dd0a6aa73ef831f02b5dc5acca428abf8ee9ad6b8feca211d4defe2b07e79b",
+      "url": "https://www.nba.com/_next/static/chunks/framework-ad7abf312d5d61d4.js"
+    },
+    {
+      "bytes": 121519,
+      "marker_counts": {
+        "api_hub_host": 0,
+        "boxscore_traditional": 0,
+        "cume_stats_player": 0,
+        "cume_stats_team": 0,
+        "graphql": 0,
+        "league_dash_player": 0,
+        "league_dash_team": 0,
+        "stats_nba_host": 0,
+        "stats_path": 0
+      },
+      "ok": true,
+      "sha256": "5f2d12db433d14cd3b87ae7de76a0ee102d7c4c645aafd02125f90ce18567c70",
+      "url": "https://www.nba.com/_next/static/chunks/main-196c53f13b153e43.js"
+    },
+    {
+      "bytes": 1433987,
+      "marker_counts": {
+        "api_hub_host": 2,
+        "boxscore_traditional": 0,
+        "cume_stats_player": 0,
+        "cume_stats_team": 0,
+        "graphql": 0,
+        "league_dash_player": 0,
+        "league_dash_team": 0,
+        "stats_nba_host": 3,
+        "stats_path": 1
+      },
+      "ok": true,
+      "sha256": "4cb7414ec0a209b63ddec30249a0fff9bd3bfb3fefdabba06e6c1f3ec56b71a6",
+      "url": "https://www.nba.com/_next/static/chunks/pages/_app-f31363c7185906d8.js"
+    },
+    {
+      "bytes": 32193,
+      "marker_counts": {
+        "api_hub_host": 0,
+        "boxscore_traditional": 0,
+        "cume_stats_player": 0,
+        "cume_stats_team": 0,
+        "graphql": 0,
+        "league_dash_player": 0,
+        "league_dash_team": 0,
+        "stats_nba_host": 0,
+        "stats_path": 0
+      },
+      "ok": true,
+      "sha256": "59c52fa65d30ede99b19c0a4df4540914a82aa5d1927017662941e1f2e3ee915",
+      "url": "https://www.nba.com/_next/static/chunks/94463-b80c0ce4f0ed269b.js"
+    },
+    {
+      "bytes": 213212,
+      "marker_counts": {
+        "api_hub_host": 0,
+        "boxscore_traditional": 0,
+        "cume_stats_player": 0,
+        "cume_stats_team": 0,
+        "graphql": 0,
+        "league_dash_player": 0,
+        "league_dash_team": 0,
+        "stats_nba_host": 0,
+        "stats_path": 0
+      },
+      "ok": true,
+      "sha256": "2efa45be4fe20131f5e97709b8cc5f7f568cb2e3e5988d321d8dc1569d88d673",
+      "url": "https://www.nba.com/_next/static/chunks/32044-414cc822cb5f5824.js"
+    },
+    {
+      "bytes": 8265,
+      "marker_counts": {
+        "api_hub_host": 0,
+        "boxscore_traditional": 0,
+        "cume_stats_player": 0,
+        "cume_stats_team": 0,
+        "graphql": 0,
+        "league_dash_player": 0,
+        "league_dash_team": 0,
+        "stats_nba_host": 0,
+        "stats_path": 0
+      },
+      "ok": true,
+      "sha256": "45e79e0c8cb84bf06966e56c78e82b722dc96a4389294913d575955c5fdc143f",
+      "url": "https://www.nba.com/_next/static/chunks/92590-4117aaa2b753056c.js"
+    },
+    {
+      "bytes": 25504,
+      "marker_counts": {
+        "api_hub_host": 0,
+        "boxscore_traditional": 0,
+        "cume_stats_player": 0,
+        "cume_stats_team": 0,
+        "graphql": 0,
+        "league_dash_player": 0,
+        "league_dash_team": 0,
+        "stats_nba_host": 0,
+        "stats_path": 0
+      },
+      "ok": true,
+      "sha256": "b52ad7874359fbda6fd7b1d200c21231524fbb6df49bfa0f3a601123960fe1dd",
+      "url": "https://www.nba.com/_next/static/chunks/21293-e9f85ca75bc67996.js"
+    },
+    {
+      "bytes": 8239,
+      "marker_counts": {
+        "api_hub_host": 0,
+        "boxscore_traditional": 0,
+        "cume_stats_player": 0,
+        "cume_stats_team": 0,
+        "graphql": 0,
+        "league_dash_player": 0,
+        "league_dash_team": 0,
+        "stats_nba_host": 0,
+        "stats_path": 1
+      },
+      "ok": true,
+      "sha256": "6f1230e2e180a7ab290becf1de24d347c0f4b88382a684b4bddfd0232a3698bc",
+      "url": "https://www.nba.com/_next/static/chunks/18138-295e10460a7a3412.js"
+    },
+    {
+      "bytes": 6829,
+      "marker_counts": {
+        "api_hub_host": 0,
+        "boxscore_traditional": 0,
+        "cume_stats_player": 0,
+        "cume_stats_team": 0,
+        "graphql": 0,
+        "league_dash_player": 0,
+        "league_dash_team": 0,
+        "stats_nba_host": 0,
+        "stats_path": 0
+      },
+      "ok": true,
+      "sha256": "26ef3187480eef03b5ba26755b1c6d432ce696111d732347d437ebbd273401a5",
+      "url": "https://www.nba.com/_next/static/chunks/87683-e14f84b8b05fdac8.js"
+    }
+  ],
+  "scripts_reachable": 12,
+  "scripts_requested": 12,
+  "season": "2025-26"
+}

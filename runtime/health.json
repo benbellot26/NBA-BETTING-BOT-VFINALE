@@ -1,12 +1,12 @@
 {
   "schema": "pulsar-nba-health-v1",
-  "generated_at": "2026-09-28T12:53:30.784156+00:00",
+  "generated_at": "2026-09-28T13:03:22.840517+00:00",
   "state": "PROVIDER_DEGRADED",
   "live_operational": false,
   "real_betting_authorized": false,
   "research_readiness": {
     "schema": "pulsar-nba-research-readiness-v1",
-    "generated_at": "2026-09-28T12:53:30.785807+00:00",
+    "generated_at": "2026-09-28T13:03:22.842023+00:00",
     "role": "RESEARCH_STATUS_ONLY",
     "live_betting_authorized": false,
     "betting_certified": false,
@@ -75,9 +75,9 @@
   "provider_ok": false,
   "provider_state": "BLOCKED",
   "diagnostics": {
-    "provider_age_hours": 0.15373691250000002,
+    "provider_age_hours": 0.3181970127777778,
     "provider_fresh": true,
-    "market_age_hours": 0.3652471538888889,
+    "market_age_hours": 0.5297072541666666,
     "market_fresh": true
   },
   "provider_details": {
@@ -354,6 +354,29 @@
         "basketball_field_signal": false
       }
     }
+  },
+  "stats_backend_probe": {
+    "checked_at": "2026-09-28T13:03:21.487650+00:00",
+    "season": "2025-26",
+    "scripts_requested": 12,
+    "scripts_reachable": 12,
+    "backend_hints": [
+      "stats.nba.com",
+      "api-hub.nba.com"
+    ],
+    "endpoint_hints": [],
+    "aggregate_marker_counts": {
+      "api_hub_host": 2,
+      "boxscore_traditional": 0,
+      "cume_stats_player": 0,
+      "cume_stats_team": 0,
+      "graphql": 0,
+      "league_dash_player": 0,
+      "league_dash_team": 0,
+      "stats_nba_host": 3,
+      "stats_path": 2
+    },
+    "production_provider_authorized": false
   },
   "canonical_stats_reference": {
     "checked_at": "2026-09-28T09:50:48.668807+00:00",

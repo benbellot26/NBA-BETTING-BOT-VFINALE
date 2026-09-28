@@ -38,6 +38,26 @@ class ProviderBoundaryTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "no upcoming"):
             replace(fixture, schedule=[asdict(prior)]).validated()
 
+    def test_official_provider_uses_communications_schedule_when_cdn_blocked(self):
+        fixture = DeterministicFixtureProvider().capture(target_date="2026-11-15")
+        fallback = [ScheduleGame(
+            "nba-pr-2026-27-2026-11-15-100", "2026-11-15",
+            "2026-11-15T22:20:00Z", "Boston Celtics", "New York Knicks",
+            1, "Scheduled - NBA Communications",
+        )]
+        with patch("nba.providers.fetch_schedule", side_effect=RuntimeError("HTTP 403")), patch(
+            "nba.providers.fetch_pregame_schedule", return_value=fallback
+        ) as communications, patch(
+            "nba.providers.acquire_stat_pack", return_value=fixture.stats
+        ), patch(
+            "nba.providers.fetch_latest_report", return_value=fixture.injuries
+        ):
+            snapshot = OfficialNBAProvider().capture(target_date="2026-11-15")
+        self.assertEqual(snapshot.schedule[0]["game_id"], fallback[0].game_id)
+        communications.assert_called_once_with(
+            season="2026-27", target_date="2026-11-15"
+        )
+
     def test_official_provider_does_not_fetch_stats_if_no_games(self):
         with patch("nba.providers.fetch_schedule", return_value=[]), patch(
             "nba.providers.acquire_stat_pack") as stats, patch(

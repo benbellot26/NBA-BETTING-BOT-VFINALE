@@ -29,14 +29,6 @@ ROUTE_RE=re.compile(
     r"/(?:stats|api)/[A-Za-z0-9._~!()*+,;=:@%/-]{1,160}",
     re.I,
 )
-MARKERS={()*+,;=:@%/-]{0,180})?",
-    re.I,
-)
-ROUTE_RE=re.compile(
-    r"/(?:stats|api)/[A-Za-z0-9._~!SCRIPT_RE=re.compile(r"<script[^>]+src=[\"']([^\"']+)[\"']",re.I)
-MARKERS={()*+,;=:@%/-]{1,160}",
-    re.I,
-)
 MARKERS={
     "stats_nba_host":"stats.nba.com",
     "api_hub_host":"api-hub.nba.com",

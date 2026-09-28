@@ -186,9 +186,10 @@ def _final_for_record(
 ):
     """Resolve an official final without inventing a missing NBA GameID.
 
-    Exact GameID is always preferred. The date/team fallback is permitted only
-    for explicit nba-pr-* identities created from the official Communications
-    pregame PDF, and only when it resolves to exactly one official final.
+    Exact GameID is always preferred. Date/team fallback is allowed for
+    Communications nba-pr-* identities and for validated Official Scorer
+    gamebook finals when it resolves to exactly one date/home/away match.
+    This never fabricates an NBA GameID; the resolution mode is persisted.
     """
     game_id = str(record.get("game_id") or "")
     exact = finals.get(game_id)

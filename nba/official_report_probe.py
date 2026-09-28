@@ -13,9 +13,12 @@ import json
 import re
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 from .gamebook import parse_gamebook_pdf
+from .injury_pdf import injury_page_url
 from .provider_http import get_bytes, get_text
+from .schedule import season_for_date
 
 # Fixed historical Official Scorer's Reports make runner diagnostics
 # deterministic and exercise regular-season + Finals layouts.
@@ -58,6 +61,24 @@ REPORT_TERMS = (
     "Provided by Elias",
 )
 HREF_RE = re.compile(r'href=["\']([^"\']+)["\']', re.I)
+ATTR_URL_RE = re.compile(
+    r'(?:src|href|data-[a-z0-9_-]*(?:url|src|endpoint))=["\']([^"\']+)["\']',
+    re.I,
+)
+ABS_URL_RE = re.compile(r'https?://[^"\'<>\\\s]+', re.I)
+SCRIPT_RE = re.compile(
+    r'<script[^>]+(?:id=["\']([^"\']*)["\'])?[^>]*src=["\']([^"\']+)["\']',
+    re.I,
+)
+INJURY_STRUCTURE_MARKERS = (
+    "Injury-Report_",
+    "ak-static.cms.nba.com",
+    "referee/injury",
+    "wp-json",
+    "admin-ajax",
+    "ajaxurl",
+    "iframe",
+)
 
 
 def _gamebook_probe(data: bytes, expected: dict[str, Any]) -> dict[str, Any]:
@@ -146,10 +167,84 @@ def _media_probe(html: str) -> dict[str, Any]:
     }
 
 
+def _previous_season(season: str) -> str:
+    start = int(season[:4]) - 1
+    return f"{start}-{str(start + 1)[-2:]}"
+
+
+def _safe_url_hint(value: str, base_host: str = "official.nba.com") -> str | None:
+    clean = (
+        str(value)
+        .replace("\\/", "/")
+        .replace("&amp;", "&")
+        .strip()
+    )
+    if not clean:
+        return None
+    if clean.startswith("//"):
+        clean = "https:" + clean
+    if clean.startswith("/"):
+        clean = f"https://{base_host}{clean}"
+    if not clean.startswith(("http://", "https://")):
+        return None
+    parsed = urlsplit(clean)
+    host = (parsed.hostname or "").lower()
+    if not (
+        host == "official.nba.com"
+        or host.endswith(".nba.com")
+        or host.endswith(".cms.nba.com")
+    ):
+        return None
+    # Diagnostics retain only scheme/host/path to avoid persisting query
+    # tokens, nonces or other transient parameters.
+    return f"{parsed.scheme}://{parsed.netloc}{parsed.path}"
+
+
+def _injury_page_probe(html: str, *, season: str) -> dict[str, Any]:
+    normalized = str(html).replace("\\/", "/")
+    encoded = normalized.encode("utf-8")
+    marker_counts = {
+        marker: normalized.casefold().count(marker.casefold())
+        for marker in INJURY_STRUCTURE_MARKERS
+    }
+    hints: set[str] = set()
+    for candidate in (
+        list(ATTR_URL_RE.findall(normalized))
+        + list(ABS_URL_RE.findall(normalized))
+    ):
+        safe = _safe_url_hint(candidate)
+        if safe and any(
+            token in safe.lower()
+            for token in ("injury", "report", "ajax", "api", "json", "referee")
+        ):
+            hints.add(safe)
+    scripts = []
+    for script_id, src in SCRIPT_RE.findall(normalized):
+        safe = _safe_url_hint(src)
+        if safe is not None:
+            scripts.append({
+                "id": script_id or None,
+                "src": safe,
+            })
+    return {
+        "ok": len(normalized) > 1000,
+        "season": season,
+        "bytes": len(encoded),
+        "sha256": hashlib.sha256(encoded).hexdigest(),
+        "marker_counts": marker_counts,
+        "safe_endpoint_hints": sorted(hints)[:100],
+        "script_sources": scripts[:80],
+        "raw_html_persisted": False,
+    }
+
+
 def run() -> dict[str, Any]:
     now = datetime.now(timezone.utc)
+    current_season = season_for_date(now)
+    historical_season = _previous_season(current_season)
     gamebooks: dict[str, Any] = {}
     media: dict[str, Any]
+    injury_page: dict[str, Any]
     for expected in KNOWN_GAMEBOOKS:
         name = str(expected["name"])
         try:
@@ -180,6 +275,24 @@ def run() -> dict[str, Any]:
             "error_type": type(exc).__name__,
             "error": str(exc),
         }
+    try:
+        injury_html = get_text(
+            injury_page_url(historical_season),
+            headers={"Accept": "text/html,*/*"},
+            timeout=12.0,
+            retries=0,
+        )
+        injury_page = _injury_page_probe(
+            injury_html, season=historical_season
+        )
+    except Exception as exc:
+        injury_page = {
+            "ok": False,
+            "season": historical_season,
+            "error_type": type(exc).__name__,
+            "error": str(exc),
+            "raw_html_persisted": False,
+        }
     candidate = bool(gamebooks) and all(
         row.get("ok") is True for row in gamebooks.values()
     )
@@ -198,6 +311,7 @@ def run() -> dict[str, Any]:
         ),
         "gamebook_samples_total": len(gamebooks),
         "media_central": media,
+        "historical_injury_page": injury_page,
     }
 
 

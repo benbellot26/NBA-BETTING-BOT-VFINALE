@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 import math
+from statistics import median
 from typing import Any
 
 
@@ -96,3 +97,109 @@ def fresh_quote(last_update: str | None, analyzed_at: str, *, max_age_minutes: f
         return -2.0 <= age <= max_age_minutes
     except (ValueError, TypeError):
         return False
+
+
+def representative_point(
+    books: list[dict[str, Any]],
+    left: str,
+    right: str,
+    *,
+    prefer_bookmaker: str = "pinnacle",
+) -> float | None:
+    """Choose a deterministic paired contract line.
+
+    Prefer the requested benchmark bookmaker when it exposes a valid pair.
+    Otherwise choose the most widely offered paired line across books, with
+    deterministic tie-breaking around the median observed line. This only
+    chooses the contract to evaluate; it does not create a sharp benchmark.
+    """
+    preferred = str(prefer_bookmaker or "").lower()
+    for book in books:
+        if str(book.get("bookmaker") or "").lower() != preferred:
+            continue
+        points = [
+            float(row["point"])
+            for row in book.get("selections") or []
+            if row.get("selection") == left and row.get("point") is not None
+        ]
+        for point in points:
+            if paired_price_rows(book, left, right, point=point) is not None:
+                return point
+
+    counts: dict[float, int] = {}
+    all_points: list[float] = []
+    for book in books:
+        points = [
+            float(row["point"])
+            for row in book.get("selections") or []
+            if row.get("selection") == left and row.get("point") is not None
+        ]
+        seen: set[float] = set()
+        for point in points:
+            if point in seen:
+                continue
+            if paired_price_rows(book, left, right, point=point) is None:
+                continue
+            seen.add(point)
+            counts[point] = counts.get(point, 0) + 1
+            all_points.append(point)
+    if not counts:
+        return None
+    center = median(all_points)
+    return min(
+        counts,
+        key=lambda point: (-counts[point], abs(point - center), point),
+    )
+
+
+def consensus_no_vig(
+    books: list[dict[str, Any]],
+    left: str,
+    right: str,
+    *,
+    point: float | None = None,
+    analyzed_at: str | None = None,
+    min_books: int = 3,
+    exclude_bookmakers: set[str] | None = None,
+) -> dict[str, Any] | None:
+    """Median no-vig probability across independent paired bookmakers.
+
+    This is an EVALUATION-ONLY market consensus. It must never be treated as
+    Pinnacle/sharp probability and is intentionally returned with explicit
+    role metadata.
+    """
+    if min_books < 2:
+        raise ValueError("consensus requires at least two bookmakers")
+    excluded = {
+        str(name).lower() for name in (exclude_bookmakers or {"pinnacle"})
+    }
+    rows: list[tuple[str, float]] = []
+    seen_books: set[str] = set()
+    for book in books:
+        name = str(book.get("bookmaker") or "").strip().lower()
+        if not name or name in excluded or name in seen_books:
+            continue
+        if analyzed_at is not None and not fresh_quote(
+            book.get("last_update"), analyzed_at
+        ):
+            continue
+        pair = paired_price_rows(book, left, right, point=point)
+        if pair is None:
+            continue
+        lp, _ = no_vig_pair(pair[0]["price"], pair[1]["price"])
+        rows.append((name, lp))
+        seen_books.add(name)
+    if len(rows) < min_books:
+        return None
+    probabilities = [value for _, value in rows]
+    center = float(median(probabilities))
+    return {
+        "role": "MARKET_CONSENSUS_EVALUATION_ONLY",
+        left: center,
+        right: 1.0 - center,
+        "book_count": len(rows),
+        "bookmakers": sorted(name for name, _ in rows),
+        "dispersion_pp": 100.0 * (max(probabilities) - min(probabilities)),
+        "point": point,
+        "pinnacle_included": False,
+    }

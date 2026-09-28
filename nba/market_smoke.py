@@ -37,12 +37,23 @@ def run(*, require_events: bool=False, budget_path: str='runtime/odds_budget.jso
             paired_pinnacle_counts[market]+=int(market in event_pairs)
         pinnacle_events+=int(has_pin)
         complete_pinnacle_events+=int(len(event_pairs)==3)
+    if not events:
+        availability_state = "NO_NBA_EVENTS"
+    elif complete_pinnacle_events > 0:
+        availability_state = "PINNACLE_READY"
+    elif pinnacle_events > 0:
+        availability_state = "PINNACLE_PARTIAL"
+    else:
+        availability_state = "PINNACLE_ABSENT"
     result={
         "schema":"pulsar-nba-market-smoke-v2","checked_at":datetime.now(timezone.utc).isoformat(),"request_count":1,
         "events":len(events),"pinnacle_events":pinnacle_events,
         "market_book_counts":market_counts,
         "paired_pinnacle_market_events":paired_pinnacle_counts,
         "complete_pinnacle_events":complete_pinnacle_events,
+        "availability_state":availability_state,
+        "benchmark_bookmaker":"pinnacle",
+        "pinnacle_replacement_allowed":False,
         "quota":payload.get("usage") or {},
         "coverage_ready":complete_pinnacle_events>0,
         "betting_certified":False,

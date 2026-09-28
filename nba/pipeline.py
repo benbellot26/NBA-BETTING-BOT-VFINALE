@@ -6,7 +6,13 @@ from typing import Any, Iterable
 
 from .decision import evaluate_candidate
 from .distribution import probability_surface
-from .market import best_execution, fresh_quote, paired_price_rows, pinnacle_no_vig
+from .market import (
+    best_execution,
+    consensus_no_vig,
+    fresh_quote,
+    paired_price_rows,
+    pinnacle_no_vig,
+)
 from .model import GameContext, TeamMetrics, prediction_payload
 from .rotations import RotationPlayer
 from .structural import project_game
@@ -52,8 +58,31 @@ def analyze_game(
                       market_fresh=market_fresh, unresolved_key_player=unresolved)
     payload["probability_intervals"] = bands
     payload["decision"] = {"candidates": []}
+    payload["market_benchmark"] = {
+        "schema": "pulsar-nba-market-consensus-v1",
+        "role": "EVALUATION_ONLY",
+        "used_for_decision": False,
+        "markets": {},
+    }
     if not books_by_market:
         return payload
+
+    consensus_specs = (
+        ("ML", "HOME", "AWAY", None),
+        ("SPREAD", "HOME", "AWAY", spread_line),
+        ("TOTAL", "OVER", "UNDER", total_line),
+    )
+    for market_name, left_name, right_name, point_value in consensus_specs:
+        consensus = consensus_no_vig(
+            books_by_market.get(market_name) or [],
+            left_name,
+            right_name,
+            point=point_value,
+            analyzed_at=context.analyzed_at,
+            min_books=3,
+        )
+        if consensus is not None:
+            payload["market_benchmark"]["markets"][market_name] = consensus
     cert = certification or {"certified": False, "markets": {}}
     specs = [
         ("home_ml", "ML", "HOME", "AWAY", None),

@@ -3,6 +3,8 @@ concurrency:
   group: nba-runtime-data
   cancel-in-progress: false
 on:
+  schedule:
+    - cron: '30 14 * * 1'
   push:
     branches: [main]
     paths:

@@ -1,11 +1,11 @@
 {
   "schema": "pulsar-nba-operational-readiness-v1",
   "role": "PRESEASON_OPERATIONAL_GATE_ONLY",
-  "checked_at": "2026-09-28T12:31:35.998395+00:00",
+  "checked_at": "2026-09-28T12:44:34.834227+00:00",
   "max_age_hours": 24.0,
   "diagnostic_age_hours": {
-    "provider": 0.3998636136111111,
-    "market": 2.8886944444444445e-05
+    "provider": 0.004861932222222223,
+    "market": 0.21637217361111113
   },
   "ready_for_real_rehearsal": false,
   "live_operational": false,

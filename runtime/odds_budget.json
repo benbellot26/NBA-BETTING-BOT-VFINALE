@@ -2,12 +2,12 @@
   "limit": 48,
   "purposes": {
     "bookmaker_discovery": 1,
-    "historical_pinnacle_probe": 2,
+    "historical_pinnacle_probe": 1,
     "market_smoke": 1
   },
-  "remaining": 44,
+  "remaining": 45,
   "schema": "pulsar-nba-odds-budget-v1",
-  "updated_at": "2026-09-28T12:44:00.552912+00:00",
-  "used": 4,
+  "updated_at": "2026-09-28T12:40:27.727957+00:00",
+  "used": 3,
   "utc_date": "2026-09-28"
 }

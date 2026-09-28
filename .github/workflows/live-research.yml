@@ -57,7 +57,10 @@ jobs:
             python -m nba.provider_smoke --output runtime/provider_smoke.json
           fi
           python -m nba.live_runtime $DATE_ARG --mode "$MODE" --output runtime/live_run.json
-          if [ "$MODE" = "regular" ]; then python -m nba.close_runtime --mode live; fi
+          if [ "$MODE" = "regular" ]; then
+            python -m nba.v2_runtime
+            python -m nba.close_runtime --mode live
+          fi
       - name: Refresh health report
         if: always()
         run: python -m nba.health_report || true

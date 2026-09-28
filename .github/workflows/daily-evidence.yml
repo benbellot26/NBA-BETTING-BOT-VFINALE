@@ -27,6 +27,8 @@ jobs:
         run: python -m nba.performance_runtime
       - name: Verify prospective evidence integrity
         run: python -m nba.evidence_audit
+      - name: Refresh learned V2 prospective comparison
+        run: python -m nba.v2_prospective
       - name: Refresh health report
         if: always()
         run: python -m nba.health_report || true

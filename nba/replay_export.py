@@ -53,6 +53,10 @@ def join(forecasts: list[dict[str, Any]], outcomes: list[dict[str, Any]]) -> lis
             "home_score": result["home_score"],
             "away_score": result["away_score"],
         }
+        if forecast.get("v2_features") is not None:
+            row["v2_features"] = forecast["v2_features"]
+        if forecast.get("evaluation_only") is not None:
+            row["evaluation_only"] = forecast["evaluation_only"]
         rows.append(validate_row(row))
     rows.sort(key=lambda row: (row["tipoff_at"], row["game_id"]))
     return rows
@@ -69,11 +73,15 @@ def export(*, forecasts_path: str, outcomes_path: str,
                       for row in data)
     target.write_text(content, encoding="utf-8")
     manifest = {
-        "schema": "pulsar-nba-pit-replay-v1", "n": len(data),
+        "schema": "pulsar-nba-pit-replay-v2", "n": len(data),
         "sha256": hashlib.sha256(content.encode()).hexdigest(),
         "first_tipoff": data[0]["tipoff_at"], "last_tipoff": data[-1]["tipoff_at"],
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "no_market_features": True, "requires_chronological_split": True,
+        "learned_v2_rows": sum(row.get("v2_features") is not None for row in data),
+        "evaluation_only_market_metadata": any(
+            row.get("evaluation_only") is not None for row in data
+        ),
     }
     target.with_suffix(".manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     return manifest

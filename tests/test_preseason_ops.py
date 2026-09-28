@@ -1,30 +1,33 @@
 import tempfile
 import unittest
+from datetime import datetime, timezone
 from pathlib import Path
 from unittest.mock import Mock
 
 from nba.preseason_ops import run
 
 
+CHECKED_AT = datetime.now(timezone.utc).isoformat()
+
 READY_PROVIDER = {
     "schema":"pulsar-nba-provider-smoke-v2",
-    "checked_at":"2026-09-24T07:00:00Z",
+    "checked_at":CHECKED_AT,
     "state":"READY","operational_ready":True,"providers":{}
 }
 BLOCKED_PROVIDER = {
     "schema":"pulsar-nba-provider-smoke-v2",
-    "checked_at":"2026-09-24T07:00:00Z",
+    "checked_at":CHECKED_AT,
     "state":"BLOCKED","operational_ready":False,"providers":{}
 }
 READY_MARKET = {
     "schema":"pulsar-nba-market-smoke-v2",
-    "checked_at":"2026-09-24T07:00:00Z",
+    "checked_at":CHECKED_AT,
     "request_count":1,"coverage_ready":True,
     "complete_pinnacle_events":1
 }
 BLOCKED_MARKET = {
     "schema":"pulsar-nba-market-smoke-v2",
-    "checked_at":"2026-09-24T07:00:00Z",
+    "checked_at":CHECKED_AT,
     "request_count":1,"coverage_ready":False,
     "complete_pinnacle_events":0
 }

@@ -36,6 +36,13 @@ def record_paper_candidates(live_run:dict[str,Any],path:str|Path)->dict[str,Any]
 from .tracking import append_jsonl
 
 
+def _sharp_probability(game: dict[str, Any], selection: str) -> float | None:
+    for candidate in (game.get("decision") or {}).get("candidates") or []:
+        if candidate.get("selection") == selection and candidate.get("sharp_probability") is not None:
+            return float(candidate["sharp_probability"])
+    return None
+
+
 def record_final_forecasts(live_run: dict[str, Any], path: str | Path) -> dict[str, int]:
     """Store one genuinely pre-tip FINAL prediction for every analyzable game.
 
@@ -58,6 +65,18 @@ def record_final_forecasts(live_run: dict[str, Any], path: str | Path) -> dict[s
         if len(snapshot) != 64:
             continue
         score = game["score_projection"]
+        probabilities = game.get("probabilities") or {}
+        sharp = {
+            "ML": _sharp_probability(game, "home_ml"),
+            "SPREAD": _sharp_probability(game, "home_spread"),
+            "TOTAL": _sharp_probability(game, "over"),
+        }
+        sharp = {key: value for key, value in sharp.items() if value is not None}
+        evaluation_only = {
+            "spread_line": probabilities.get("spread_line"),
+            "total_line": probabilities.get("total_line"),
+            "pinnacle_entry_probability": sharp,
+        }
         record = {
             "entry_key": key, "game_id": game["game_id"],
             "game_date": game["game_date"], "model_generation": identity,
@@ -70,8 +89,12 @@ def record_final_forecasts(live_run: dict[str, Any], path: str | Path) -> dict[s
             "baseline_margin_sd": score["margin_sd"],
             "baseline_total_sd": score["total_sd"],
             "role": "PIT_FINAL_FORECAST",
-             "probabilities": game.get("probabilities"),
+            "probabilities": game.get("probabilities"),
             "input_manifest": game.get("input_manifest"),
+            "v2_features": game.get("v2_features"),
+            # Market-derived information is retained only for scoring. Learned
+            # V2 feature validation never exposes this object to training.
+            "evaluation_only": evaluation_only,
         }
         append_jsonl(target, record)
         existing.add(key)

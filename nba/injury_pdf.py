@@ -12,8 +12,14 @@ from .injury_report import InjuryRecord
 from .provider_http import get_bytes, get_text
 from .teams import TEAMS, canonical_team
 
-PDF_LINK_RE = re.compile(r'href=["\']([^"\']*Injury-Report_[^"\']+\.pdf)["\']', re.I)
-REPORT_TS_RE = re.compile(r"Injury-Report_(\d{4})-(\d{2})-(\d{2})_(\d{2})_(\d{2})(AM|PM)", re.I)
+PDF_LINK_RE = re.compile(
+    r'["\']([^"\']*Injury-Report_[^"\']+\.pdf)["\']',
+    re.I,
+)
+REPORT_TS_RE = re.compile(
+    r"Injury-Report_(\d{4})-(\d{2})-(\d{2})_(\d{2})(?:_(\d{2}))?(AM|PM)",
+    re.I,
+)
 DATE_RE = re.compile(r"\b(\d{2}/\d{2}/\d{4})\b")
 MATCHUP_RE = re.compile(r"\b([A-Z]{3})@([A-Z]{3})\b")
 PLAYER_RE = re.compile(
@@ -29,7 +35,15 @@ def injury_page_url(season: str) -> str:
 
 
 def discover_report_links(html: str, base_url: str) -> list[str]:
-    return list(dict.fromkeys(urljoin(base_url, link) for link in PDF_LINK_RE.findall(html)))
+    # WordPress/templates may expose report URLs in ordinary hrefs or inside
+    # quoted JSON/script payloads. Normalize escaped slashes before scanning.
+    normalized = str(html).replace("\\/", "/")
+    return list(
+        dict.fromkeys(
+            urljoin(base_url, link)
+            for link in PDF_LINK_RE.findall(normalized)
+        )
+    )
 
 
 def _report_dt(url: str) -> datetime:
@@ -37,8 +51,16 @@ def _report_dt(url: str) -> datetime:
     if match is None:
         raise ValueError("official injury report URL lacks timestamp")
     year, month, day, hour, minute, ampm = match.groups()
+    # Older/current NBA filenames sometimes omit "_30" for half-hour reports,
+    # e.g. Injury-Report_2022-02-04_02PM.pdf is the 02:30 PM report.
+    mm = 30 if minute is None else int(minute)
+    if not 0 <= mm <= 59:
+        raise ValueError("official injury report URL has invalid minute")
     hh = int(hour) % 12 + (12 if ampm.upper() == "PM" else 0)
-    return datetime(int(year), int(month), int(day), hh, int(minute), tzinfo=ZoneInfo("America/New_York"))
+    return datetime(
+        int(year), int(month), int(day), hh, mm,
+        tzinfo=ZoneInfo("America/New_York"),
+    )
 
 
 def latest_report_url(*, season: str, page_url: str | None = None) -> str:

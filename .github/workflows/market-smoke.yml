@@ -38,6 +38,12 @@ jobs:
           ARG=""
           if [ "$REQUIRE_EVENTS" = "true" ]; then ARG="--require-events"; fi
           python -m nba.market_smoke $ARG --output runtime/market_smoke.json
+      - name: Persist Pinnacle availability history
+        if: always()
+        run: |
+          if [ -f runtime/market_smoke.json ]; then
+            python -m nba.market_availability
+          fi
       - name: Refresh readiness snapshot
         if: always()
         run: python -m nba.readiness_gate --output runtime/readiness_gate.json || true

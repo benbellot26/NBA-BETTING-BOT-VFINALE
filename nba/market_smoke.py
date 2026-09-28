@@ -5,17 +5,24 @@ from datetime import datetime, timezone
 from pathlib import Path
 from .acquisition import fetch_nba_odds_diagnostic
 from .odds_normalizer import normalize_game
-from .market import paired_price_rows
+from .market import paired_price_rows, fresh_quote
 from .odds_budget import reserve as reserve_odds_request
 
 def run(*, require_events: bool=False, budget_path: str='runtime/odds_budget.json')->dict:
     reserve_odds_request(path=budget_path,purpose='market_smoke')
     payload=fetch_nba_odds_diagnostic()
-    events=[normalize_game(row) for row in payload["events"]]
+    raw_events=list(payload["events"])
+    events=[normalize_game(row) for row in raw_events]
     market_counts={"ML":0,"SPREAD":0,"TOTAL":0}
     paired_pinnacle_counts={"ML":0,"SPREAD":0,"TOTAL":0}
     pinnacle_events=0
     complete_pinnacle_events=0
+    pinnacle_fresh_market_events={"ML":0,"SPREAD":0,"TOTAL":0}
+    raw_events_with_any_bookmaker=sum(bool(row.get("bookmakers")) for row in raw_events)
+    raw_events_with_pinnacle=sum(any(
+        str(book.get("key") or book.get("title") or "").strip().lower()=="pinnacle"
+        for book in (row.get("bookmakers") or [])
+    ) for row in raw_events)
     for event in events:
         event_pairs=set()
         has_pin=False
@@ -31,9 +38,12 @@ def run(*, require_events: bool=False, budget_path: str='runtime/odds_budget.jso
                     row.get("point") for row in book.get("selections") or []
                     if row.get("selection")==left and row.get("point") is not None
                 )
-                if any(paired_price_rows(book,left,right,point=point)
-                       for point in points):
+                paired = any(paired_price_rows(book,left,right,point=point)
+                             for point in points)
+                if paired:
                     event_pairs.add(market)
+                    if fresh_quote(book.get("last_update"), datetime.now(timezone.utc).isoformat()):
+                        pinnacle_fresh_market_events[market]+=1
             paired_pinnacle_counts[market]+=int(market in event_pairs)
         pinnacle_events+=int(has_pin)
         complete_pinnacle_events+=int(len(event_pairs)==3)
@@ -43,13 +53,21 @@ def run(*, require_events: bool=False, budget_path: str='runtime/odds_budget.jso
         availability_state = "PINNACLE_READY"
     elif pinnacle_events > 0:
         availability_state = "PINNACLE_PARTIAL"
+    elif raw_events_with_any_bookmaker == 0:
+        availability_state = "PINNACLE_TARGET_EMPTY"
     else:
         availability_state = "PINNACLE_ABSENT"
     result={
         "schema":"pulsar-nba-market-smoke-v2","checked_at":datetime.now(timezone.utc).isoformat(),"request_count":1,
         "events":len(events),"pinnacle_events":pinnacle_events,
+        "query_mode":"TARGETED_BOOKMAKER",
+        "requested_bookmakers":["pinnacle"],
+        "raw_events_with_any_bookmaker":raw_events_with_any_bookmaker,
+        "raw_events_with_pinnacle":raw_events_with_pinnacle,
+        "raw_empty_bookmaker_events":len(raw_events)-raw_events_with_any_bookmaker,
         "market_book_counts":market_counts,
         "paired_pinnacle_market_events":paired_pinnacle_counts,
+        "fresh_pinnacle_market_events":pinnacle_fresh_market_events,
         "complete_pinnacle_events":complete_pinnacle_events,
         "availability_state":availability_state,
         "benchmark_bookmaker":"pinnacle",

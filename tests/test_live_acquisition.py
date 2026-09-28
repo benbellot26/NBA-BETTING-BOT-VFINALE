@@ -1,5 +1,5 @@
 import unittest
-from nba.injury_pdf import discover_report_links,parse_report_text
+from nba.injury_pdf import _report_dt, discover_report_links,parse_report_text
 from nba.rotation_projection import project_rotation
 from nba.schedule import parse_schedule,season_for_date
 from nba.schedule_context import build_game_context
@@ -9,6 +9,26 @@ class LiveAcquisitionTests(unittest.TestCase):
         games=parse_schedule(payload);self.assertEqual(games[0].game_date,"2026-10-20");self.assertTrue(games[0].final);ctx=build_game_context(games[1],games,analyzed_at="2026-10-21T12:00:00Z");self.assertTrue(ctx.away_b2b);self.assertGreater(ctx.away_travel_km,0)
     def test_injury_parser(self):
         html='<a href="https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-10-20_05_15PM.pdf">x</a>';self.assertEqual(len(discover_report_links(html,"https://official.nba.com/x")),1);rows=parse_report_text("Boston Celtics\nTatum, Jayson Questionable Injury/Illness - Ankle; Sprain\nBrown, Jaylen Out Injury/Illness - Knee",reported_at="2026-10-20T17:15:00Z");self.assertEqual(len(rows),2);self.assertEqual(rows[1].status,"OUT")
+    def test_injury_discovery_finds_escaped_embedded_pdf_url(self):
+        html='{"url":"https:\\/\\/ak-static.cms.nba.com\\/referee\\/injury\\/Injury-Report_2026-10-20_05_15PM.pdf"}'
+        links=discover_report_links(html,"https://official.nba.com/x")
+        self.assertEqual(
+            links,
+            ["https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-10-20_05_15PM.pdf"],
+        )
+
+    def test_injury_timestamp_supports_explicit_and_legacy_half_hour_names(self):
+        explicit=_report_dt(
+            "https://ak-static.cms.nba.com/referee/injury/"
+            "Injury-Report_2026-02-01_11_15PM.pdf"
+        )
+        legacy=_report_dt(
+            "https://ak-static.cms.nba.com/referee/injury/"
+            "Injury-Report_2022-02-04_02PM.pdf"
+        )
+        self.assertEqual((explicit.hour,explicit.minute),(23,15))
+        self.assertEqual((legacy.hour,legacy.minute),(14,30))
+
     def test_rotation_projection(self):
         season=[];recent=[];adv=[]
         for i in range(10):season.append({"TEAM_ID":1610612738,"PLAYER_ID":i,"PLAYER_NAME":f"P{i}","MIN":24});recent.append({"TEAM_ID":1610612738,"PLAYER_ID":i,"PLAYER_NAME":f"P{i}","MIN":24+i/10});adv.append({"TEAM_ID":1610612738,"PLAYER_ID":i,"OFF_RATING":116+i/10,"DEF_RATING":114-i/10,"USG_PCT":.2})

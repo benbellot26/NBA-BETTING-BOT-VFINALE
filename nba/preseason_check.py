@@ -15,7 +15,10 @@ WORKFLOWS = (
     ".github/workflows/live-research.yml",
     ".github/workflows/daily-evidence.yml",
 )
-DATA_RUNNER_WORKFLOWS = WORKFLOWS + (".github/workflows/provider-smoke.yml",)
+DATA_RUNNER_WORKFLOWS = WORKFLOWS + (
+    ".github/workflows/provider-smoke.yml",
+    ".github/workflows/gamebook-reference.yml",
+)
 
 MARKETS = ("ML", "SPREAD", "TOTAL")
 

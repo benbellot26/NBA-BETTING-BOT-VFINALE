@@ -4,7 +4,7 @@ Pulsar NBA is a standalone NBA probability, market, research and decision engine
 
 ## Current status
 
-**V1.8.2 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
+**V1.8.3 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
 
 ## End-to-end chain
 
@@ -449,3 +449,14 @@ Useful commands:
 
     python -m nba.gamebook_stats --max-network-games 60
     python -m nba.gamebook_parity --canonical canonical.json --alternate runtime/gamebook_reference/stat_pack.json
+
+
+## V1.8.3 — gamebook parity hardening
+
+The official-gamebook alternate source remains reference-only. V1.8.3 aligns
+its usage-rate scale and possession estimator with the canonical input
+contract, validates season/30/15/10/5 windows plus recent rotation minutes and
+FT/3PA style ratios, requires near-complete gamebook coverage, and binds cached
+parsed boxes to their schedule identity and checksums. Health reports now show
+gamebook accumulation explicitly. None of these changes authorize this source
+for production or alter the frozen V1 champion.

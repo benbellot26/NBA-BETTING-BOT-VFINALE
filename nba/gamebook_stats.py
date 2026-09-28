@@ -32,18 +32,35 @@ def _safe_div(a: float, b: float, default: float = 0.0) -> float:
     return float(a) / float(b) if abs(float(b)) > 1e-12 else float(default)
 
 
+def _json_sha256(value: Any) -> str:
+    encoded = json.dumps(
+        value, sort_keys=True, separators=(",", ":"), allow_nan=False
+    ).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
 def _player_id(team: str, name: str) -> int:
     raw = f"{team_info(team).team_id}|{normalized_player_name(name)}".encode()
     value = int.from_bytes(hashlib.sha256(raw).digest()[:4], "big") & 0x7FFFFFFF
     return value or 1
 
 
-def _poss(totals: dict[str, Any]) -> float:
-    return (
-        float(totals["FGA"])
-        + 0.44 * float(totals["FTA"])
-        - float(totals["OREB"])
-        + float(totals["TOV"])
+def _poss_side(totals: dict[str, Any], opponent: dict[str, Any]) -> float:
+    """Estimate possessions from a final box using the standard team formula."""
+    fga = float(totals["FGA"])
+    fgm = float(totals["FG"])
+    fta = float(totals["FTA"])
+    oreb = float(totals["OREB"])
+    tov = float(totals["TOV"])
+    opp_dreb = float(opponent["DREB"])
+    rebound_den = oreb + opp_dreb
+    orb_share = oreb / rebound_den if rebound_den > 0 else 0.0
+    return fga + 0.4 * fta - 1.07 * orb_share * (fga - fgm) + tov
+
+
+def _game_possessions(team: dict[str, Any], opponent: dict[str, Any]) -> float:
+    return 0.5 * (
+        _poss_side(team, opponent) + _poss_side(opponent, team)
     )
 
 
@@ -52,14 +69,39 @@ def _cache_path(root: str | Path, reference_id: str) -> Path:
     return Path(root) / "gamebooks" / f"{clean}.json"
 
 
-def _validate_cached(payload: dict[str, Any]) -> dict[str, Any]:
+def _validate_cached(
+    payload: dict[str, Any],
+    game: ReferenceScheduleGame | None = None,
+) -> dict[str, Any]:
     if payload.get("schema") != "pulsar-nba-gamebook-cache-v1":
         raise ValueError("unsupported gamebook cache schema")
     if payload.get("source") != SOURCE:
         raise ValueError("gamebook cache source mismatch")
+    digest = str(payload.get("pdf_sha256") or "")
+    if len(digest) != 64 or any(ch not in "0123456789abcdef" for ch in digest.lower()):
+        raise ValueError("gamebook cache PDF digest invalid")
     parsed = payload.get("parsed")
     if not isinstance(parsed, dict) or parsed.get("source") != SOURCE:
         raise ValueError("gamebook cache parsed payload invalid")
+    parsed_digest = str(payload.get("parsed_sha256") or "")
+    if parsed_digest != _json_sha256(parsed):
+        raise ValueError("gamebook cache parsed checksum mismatch")
+    away = str(payload.get("away") or "")
+    home = str(payload.get("home") or "")
+    if not away or not home:
+        raise ValueError("gamebook cache team identity missing")
+    parsed_away = str((parsed.get("away") or {}).get("expected_name") or "")
+    parsed_home = str((parsed.get("home") or {}).get("expected_name") or "")
+    if parsed_away != away or parsed_home != home:
+        raise ValueError("gamebook cache parsed team identity mismatch")
+    if game is not None:
+        if payload.get("reference_id") != game.reference_id:
+            raise ValueError("gamebook cache reference mismatch")
+        if payload.get("game_date") != game.game_date:
+            raise ValueError("gamebook cache date mismatch")
+        expected = {game.team1, game.team2}
+        if {away, home} != expected:
+            raise ValueError("gamebook cache schedule participants mismatch")
     return payload
 
 
@@ -80,7 +122,9 @@ def fetch_gamebook(
 ) -> dict[str, Any]:
     path = _cache_path(cache_root, game.reference_id)
     if path.exists():
-        return _validate_cached(json.loads(path.read_text(encoding="utf-8")))
+        return _validate_cached(
+            json.loads(path.read_text(encoding="utf-8")), game
+        )
 
     errors: list[str] = []
     for away, home in _candidate_orders(game):
@@ -104,8 +148,11 @@ def fetch_gamebook(
                 "away": away,
                 "home": home,
                 "pdf_sha256": hashlib.sha256(data).hexdigest(),
+                "pdf_bytes": len(data),
+                "parsed_sha256": _json_sha256(parsed),
                 "parsed": parsed,
             }
+            _validate_cached(payload, game)
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(
                 json.dumps(payload, sort_keys=True, separators=(",", ":")),
@@ -188,7 +235,7 @@ def _team_games(gamebooks: list[dict[str, Any]]) -> dict[str, list[dict[str, Any
 def _aggregate_team(team: str, games: list[dict[str, Any]]) -> dict[str, Any] | None:
     if not games:
         return None
-    team_pts = opp_pts = own_poss = opp_poss = 0.0
+    team_pts = opp_pts = possessions = 0.0
     pace_sum = 0.0
     fgm = fga = fg3m = fg3a = ftm = fta = oreb = dreb = tov = 0.0
     opp_oreb = opp_dreb = 0.0
@@ -197,14 +244,12 @@ def _aggregate_team(team: str, games: list[dict[str, Any]]) -> dict[str, Any] | 
         opp = game["opponent"]
         ot = own["totals"]
         pt = opp["totals"]
-        p_own = _poss(ot)
-        p_opp = _poss(pt)
-        own_poss += p_own
-        opp_poss += p_opp
+        game_possessions = _game_possessions(ot, pt)
+        possessions += game_possessions
         team_pts += float(ot["PTS"])
         opp_pts += float(pt["PTS"])
         game_minutes = float(own["minutes_seconds"]) / 5.0 / 60.0
-        pace_sum += ((p_own + p_opp) / 2.0) * 48.0 / max(1.0, game_minutes)
+        pace_sum += game_possessions * 48.0 / max(1.0, game_minutes)
         fgm += float(ot["FG"])
         fga += float(ot["FGA"])
         fg3m += float(ot["FG3M"])
@@ -221,8 +266,8 @@ def _aggregate_team(team: str, games: list[dict[str, Any]]) -> dict[str, Any] | 
         "TEAM_ID": team_info(team).team_id,
         "TEAM_NAME": team,
         "GP": gp,
-        "OFF_RATING": 100.0 * _safe_div(team_pts, own_poss, 1.0),
-        "DEF_RATING": 100.0 * _safe_div(opp_pts, opp_poss, 1.0),
+        "OFF_RATING": 100.0 * _safe_div(team_pts, possessions, 1.0),
+        "DEF_RATING": 100.0 * _safe_div(opp_pts, possessions, 1.0),
         "PACE": pace_sum / gp,
         "EFG_PCT": _safe_div(fgm + 0.5 * fg3m, fga, 0.55),
         "TM_TOV_PCT": 100.0 * _safe_div(tov, fga + 0.44 * fta + tov, 0.13),
@@ -262,6 +307,7 @@ def _player_rows(
         team_summary = _aggregate_team(team, selected)
         assert team_summary is not None
         team_fga = team_fta = team_tov = 0.0
+        team_floor_minutes = 0.0
         appearances: dict[str, dict[str, Any]] = {}
         for game in selected:
             own = game["team"]
@@ -269,6 +315,7 @@ def _player_rows(
             team_fga += float(totals["FGA"])
             team_fta += float(totals["FTA"])
             team_tov += float(totals["TOV"])
+            team_floor_minutes += float(own["minutes_seconds"]) / 5.0 / 60.0
             for player in own.get("players") or []:
                 name = str(player["name"])
                 key = normalized_player_name(name)
@@ -290,8 +337,8 @@ def _player_rows(
             player_actions = (
                 float(bucket["FGA"]) + 0.44 * float(bucket["FTA"]) + float(bucket["TOV"])
             )
-            usage = 100.0 * _safe_div(
-                player_actions * (len(selected) * 48.0),
+            usage = _safe_div(
+                player_actions * team_floor_minutes,
                 minutes * team_usage_den,
                 0.0,
             )
@@ -329,8 +376,17 @@ def build_reference_stat_pack(
     player_advanced = _player_rows(team_games, last_n=None, advanced=True)
     teams_with_games = sum(bool(rows) for rows in team_games.values())
     expected = len(gamebooks) + len(missing or [])
-    completeness = _safe_div(len(gamebooks), expected, 0.0) if expected else 0.0
-    return {
+    completeness = _safe_div(len(gamebooks), expected, 0.0) if expected else 1.0
+    manifest = [
+        {
+            "reference_id": row["reference_id"],
+            "game_date": row["game_date"],
+            "pdf_sha256": row["pdf_sha256"],
+            "parsed_sha256": row["parsed_sha256"],
+        }
+        for row in sorted(gamebooks, key=lambda item: item["reference_id"])
+    ]
+    result = {
         "schema": "pulsar-nba-gamebook-stat-pack-v1",
         "role": ROLE,
         "production_provider_authorized": False,
@@ -344,11 +400,22 @@ def build_reference_stat_pack(
         "player_recent": player_recent,
         "player_advanced": player_advanced,
         "gamebooks": len(gamebooks),
+        "expected_gamebooks": expected,
         "missing_gamebooks": list(missing or []),
         "gamebook_completeness": completeness,
+        "collection_complete": len(missing or []) == 0,
         "teams_with_games": teams_with_games,
         "player_rating_method": "team_efficiency_neutral_baseline",
+        "usage_scale": "fraction_0_to_1",
+        "possession_method": "symmetric_boxscore_estimate",
+        "gamebook_manifest_sha256": _json_sha256(manifest),
+        "limitations": {
+            "player_off_def_ratings": "team_neutral_baseline",
+            "production_requires_parity_gate": True,
+        },
     }
+    result["stat_pack_sha256"] = _json_sha256(result)
+    return result
 
 
 def run(

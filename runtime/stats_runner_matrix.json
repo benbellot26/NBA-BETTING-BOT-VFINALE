@@ -1,0 +1,98 @@
+{
+  "alternate_route_working_runners": [],
+  "checked_at": "2026-09-28T14:45:48.338762+00:00",
+  "expected_runners": [
+    "ubuntu-latest",
+    "windows-latest",
+    "macos-latest"
+  ],
+  "hosted_runner_solution_found": false,
+  "odds_api_requests": 0,
+  "predictive_evidence_eligible": false,
+  "production_provider_authorized": false,
+  "received_runners": [
+    "macos-latest",
+    "ubuntu-latest",
+    "windows-latest"
+  ],
+  "role": "NETWORK_DIAGNOSTIC_ONLY",
+  "runners": {
+    "macos-latest": {
+      "alternate_official_route_found": false,
+      "routes": [
+        {
+          "elapsed_ms": 8199.4,
+          "name": "stats_primary",
+          "rows": null,
+          "state": "TIMEOUT"
+        },
+        {
+          "elapsed_ms": 358.5,
+          "name": "api_hub_stats_path",
+          "rows": null,
+          "state": "HTTP_461"
+        },
+        {
+          "elapsed_ms": 330.5,
+          "name": "api_hub_direct",
+          "rows": null,
+          "state": "HTTP_461"
+        }
+      ],
+      "state": "NO_VALID_ROUTE",
+      "valid_stats_routes": []
+    },
+    "ubuntu-latest": {
+      "alternate_official_route_found": false,
+      "routes": [
+        {
+          "elapsed_ms": 8184.3,
+          "name": "stats_primary",
+          "rows": null,
+          "state": "TIMEOUT"
+        },
+        {
+          "elapsed_ms": 319.8,
+          "name": "api_hub_stats_path",
+          "rows": null,
+          "state": "HTTP_461"
+        },
+        {
+          "elapsed_ms": 141.0,
+          "name": "api_hub_direct",
+          "rows": null,
+          "state": "HTTP_461"
+        }
+      ],
+      "state": "NO_VALID_ROUTE",
+      "valid_stats_routes": []
+    },
+    "windows-latest": {
+      "alternate_official_route_found": false,
+      "routes": [
+        {
+          "elapsed_ms": 8157.0,
+          "name": "stats_primary",
+          "rows": null,
+          "state": "TIMEOUT"
+        },
+        {
+          "elapsed_ms": 312.0,
+          "name": "api_hub_stats_path",
+          "rows": null,
+          "state": "HTTP_461"
+        },
+        {
+          "elapsed_ms": 188.0,
+          "name": "api_hub_direct",
+          "rows": null,
+          "state": "HTTP_461"
+        }
+      ],
+      "state": "NO_VALID_ROUTE",
+      "valid_stats_routes": []
+    }
+  },
+  "schema": "pulsar-nba-stats-runner-matrix-v1",
+  "working_runners": []
+}

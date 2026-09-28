@@ -1,12 +1,12 @@
 {
   "schema": "pulsar-nba-health-v1",
-  "generated_at": "2026-09-28T14:40:23.146857+00:00",
+  "generated_at": "2026-09-28T14:45:48.790739+00:00",
   "state": "PROVIDER_DEGRADED",
   "live_operational": false,
   "real_betting_authorized": false,
   "research_readiness": {
     "schema": "pulsar-nba-research-readiness-v1",
-    "generated_at": "2026-09-28T14:40:23.148087+00:00",
+    "generated_at": "2026-09-28T14:45:48.792848+00:00",
     "role": "RESEARCH_STATUS_ONLY",
     "live_betting_authorized": false,
     "betting_certified": false,
@@ -75,9 +75,9 @@
   "provider_ok": false,
   "provider_state": "BLOCKED",
   "diagnostics": {
-    "provider_age_hours": 1.9349487738888889,
+    "provider_age_hours": 2.025405407777778,
     "provider_fresh": true,
-    "market_age_hours": 2.146459015277778,
+    "market_age_hours": 2.236915649166667,
     "market_fresh": true
   },
   "provider_details": {
@@ -410,6 +410,97 @@
     ],
     "predictive_evidence_eligible": false,
     "production_provider_authorized": false
+  },
+  "stats_runner_matrix": {
+    "checked_at": "2026-09-28T14:45:48.338762+00:00",
+    "received_runners": [
+      "macos-latest",
+      "ubuntu-latest",
+      "windows-latest"
+    ],
+    "working_runners": [],
+    "alternate_route_working_runners": [],
+    "hosted_runner_solution_found": false,
+    "runners": {
+      "macos-latest": {
+        "alternate_official_route_found": false,
+        "routes": [
+          {
+            "elapsed_ms": 8199.4,
+            "name": "stats_primary",
+            "rows": null,
+            "state": "TIMEOUT"
+          },
+          {
+            "elapsed_ms": 358.5,
+            "name": "api_hub_stats_path",
+            "rows": null,
+            "state": "HTTP_461"
+          },
+          {
+            "elapsed_ms": 330.5,
+            "name": "api_hub_direct",
+            "rows": null,
+            "state": "HTTP_461"
+          }
+        ],
+        "state": "NO_VALID_ROUTE",
+        "valid_stats_routes": []
+      },
+      "ubuntu-latest": {
+        "alternate_official_route_found": false,
+        "routes": [
+          {
+            "elapsed_ms": 8184.3,
+            "name": "stats_primary",
+            "rows": null,
+            "state": "TIMEOUT"
+          },
+          {
+            "elapsed_ms": 319.8,
+            "name": "api_hub_stats_path",
+            "rows": null,
+            "state": "HTTP_461"
+          },
+          {
+            "elapsed_ms": 141.0,
+            "name": "api_hub_direct",
+            "rows": null,
+            "state": "HTTP_461"
+          }
+        ],
+        "state": "NO_VALID_ROUTE",
+        "valid_stats_routes": []
+      },
+      "windows-latest": {
+        "alternate_official_route_found": false,
+        "routes": [
+          {
+            "elapsed_ms": 8157.0,
+            "name": "stats_primary",
+            "rows": null,
+            "state": "TIMEOUT"
+          },
+          {
+            "elapsed_ms": 312.0,
+            "name": "api_hub_stats_path",
+            "rows": null,
+            "state": "HTTP_461"
+          },
+          {
+            "elapsed_ms": 188.0,
+            "name": "api_hub_direct",
+            "rows": null,
+            "state": "HTTP_461"
+          }
+        ],
+        "state": "NO_VALID_ROUTE",
+        "valid_stats_routes": []
+      }
+    },
+    "predictive_evidence_eligible": false,
+    "production_provider_authorized": false,
+    "runner_auto_switch_allowed": false
   },
   "canonical_stats_reference": {
     "checked_at": "2026-09-28T09:50:48.668807+00:00",

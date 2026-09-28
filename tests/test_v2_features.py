@@ -29,15 +29,26 @@ class V2FeatureTests(unittest.TestCase):
             "g", "2026-11-01", context.analyzed_at, "H", "A",
             118, 112, 99, 6, 230, 11.5, 17.0,
         )
+        windows = {
+            0: [{"TEAM_NAME": "H", "OFF_RATING": 118, "DEF_RATING": 112, "PACE": 99},
+                {"TEAM_NAME": "A", "OFF_RATING": 114, "DEF_RATING": 116, "PACE": 98}],
+            30: [{"TEAM_NAME": "H", "OFF_RATING": 119, "DEF_RATING": 111, "PACE": 100}],
+            15: [], 10: [], 5: [{"TEAM_NAME": "H", "OFF_RATING": 123, "DEF_RATING": 109, "PACE": 101}],
+        }
         payload = build_feature_snapshot(
             home=home, away=away, context=context,
             home_rotation=rotation, away_rotation=rotation,
-            score_projection=score,
+            score_projection=score, advanced_windows=windows,
         )
         validated = validate_feature_payload(payload)
         self.assertEqual(set(validated["features"]), set(FEATURE_NAMES))
         self.assertEqual(validated["features"]["baseline_margin"], 6.0)
         self.assertEqual(validated["features"]["away_b2b"], 1.0)
+        self.assertEqual(validated["features"]["home_ortg_season"], 118.0)
+        self.assertEqual(validated["features"]["home_ortg_last5"], 123.0)
+        # Missing recent windows fall back to that team's season PIT row.
+        self.assertEqual(validated["features"]["away_ortg_last5"], 114.0)
+        self.assertEqual(len(FEATURE_NAMES), 78)
 
 
 if __name__ == "__main__":

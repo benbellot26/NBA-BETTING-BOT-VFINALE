@@ -132,12 +132,14 @@ class LearnedV2Model:
         clean = validate_training_row(row)
         margin = self.margin_model.predict_row(clean)
         total = self.total_model.predict_row(clean)
-        margin_mae = max(
-            0.25, math.exp(self.margin_log_mae_model.predict_row(clean)) - 0.5
+        margin_log_mae = max(
+            -2.0, min(4.0, self.margin_log_mae_model.predict_row(clean))
         )
-        total_mae = max(
-            0.25, math.exp(self.total_log_mae_model.predict_row(clean)) - 0.5
+        total_log_mae = max(
+            -2.0, min(4.0, self.total_log_mae_model.predict_row(clean))
         )
+        margin_mae = max(0.25, math.exp(margin_log_mae) - 0.5)
+        total_mae = max(0.25, math.exp(total_log_mae) - 0.5)
         # For a zero-mean Gaussian residual E|X| = sigma * sqrt(2/pi).
         margin_sd = max(7.5, min(24.0, margin_mae * math.sqrt(math.pi / 2.0)))
         total_sd = max(10.0, min(32.0, total_mae * math.sqrt(math.pi / 2.0)))

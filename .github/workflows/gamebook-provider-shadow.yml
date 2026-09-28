@@ -9,13 +9,12 @@ on:
         description: YYYY-MM-DD (optional)
         required: false
   schedule:
-    - cron: '*/20 17-23 * * *'
-    - cron: '*/20 0-6 * * *'
+    - cron: '*/20 16-23 * 1-6,10-12 *'
+    - cron: '*/20 0-7 * 1-6,10-12 *'
 permissions:
   contents: write
 jobs:
   shadow:
-    if: ${{ github.event_name == 'workflow_dispatch' || vars.NBA_PROVIDER_SHADOW_ENABLED == 'true' }}
     runs-on: ${{ vars.NBA_DATA_RUNNER || 'ubuntu-latest' }}
     timeout-minutes: 20
     steps:
@@ -44,6 +43,9 @@ jobs:
           if [ -f runtime/provider_shadow/performance.json ]; then
             python -m nba.gamebook_shadow_gate
           fi
+      - name: Refresh research readiness
+        if: always()
+        run: python -m nba.research_readiness --output runtime/research_readiness.json || true
       - name: Refresh health report
         if: always()
         run: python -m nba.health_report --output runtime/health.json || true
@@ -56,6 +58,7 @@ jobs:
             runtime/provider_shadow/
             runtime/gamebook_reference/
             runtime/health.json
+            runtime/research_readiness.json
           if-no-files-found: ignore
           retention-days: 90
       - name: Persist runtime-data branch

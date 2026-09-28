@@ -3,9 +3,7 @@
 This one-request diagnostic checks whether the historical NBA odds endpoint
 exposes Pinnacle even when the current endpoint does not.
 
-The default probe uses Golden State Warriors at Detroit Pistons on
-2026-03-20. The official NBA Communications schedule supplies the exact tipoff,
-and the requested historical snapshot is 30 minutes before that tip.
+The default probe uses Golden State Warriors at Detroit Pistons on 2026-03-20 and requests an explicit 20:00 UTC historical snapshot. This avoids depending on the mutable archive layout of old NBA Communications release pages; the returned odds event itself supplies the matched tipoff.
 
 The probe reports:
 

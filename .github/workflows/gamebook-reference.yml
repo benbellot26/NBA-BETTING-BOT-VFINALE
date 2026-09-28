@@ -4,6 +4,13 @@ concurrency:
   cancel-in-progress: false
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'nba/gamebook.py'
+      - 'nba/gamebook_stats.py'
+      - 'nba/communications_schedule.py'
+      - '.github/workflows/gamebook-reference.yml'
   schedule:
     - cron: '45 13 * * *'
 permissions:

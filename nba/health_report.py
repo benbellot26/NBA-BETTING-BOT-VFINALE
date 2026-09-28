@@ -39,6 +39,9 @@ def build(root: str | Path = "runtime", *, at: str | None = None) -> dict[str, A
     official_report_probe=_json(root/"official_report_probe.json") or {}
     gamebook_reference=_json(root/"gamebook_reference"/"stat_pack.json") or {}
     canonical_stats_reference=_json(root/"canonical_stats_reference"/"status.json") or {}
+    provider_shadow_status=_json(root/"provider_shadow"/"status.json") or {}
+    provider_shadow_performance=_json(root/"provider_shadow"/"performance.json") or {}
+    provider_shadow_forecasts=_jsonl(root/"provider_shadow"/"gamebook_forecasts.jsonl")
     audit=_json(ev/"audit.json") or {}
     forecasts=_jsonl(ev/"final_forecasts.jsonl")
     paper=_jsonl(ev/"paper_entries.jsonl")
@@ -104,6 +107,27 @@ def build(root: str | Path = "runtime", *, at: str | None = None) -> dict[str, A
             "collection_complete":gamebook_reference.get("collection_complete"),
             "teams_with_games":int(gamebook_reference.get("teams_with_games") or 0),
             "production_provider_authorized":gamebook_reference.get("production_provider_authorized"),
+        },
+        "provider_shadow":{
+            "role":provider_shadow_status.get("role"),
+            "generation":provider_shadow_status.get("generation"),
+            "status":provider_shadow_status.get("status"),
+            "target_date":provider_shadow_status.get("target_date"),
+            "checked_at":provider_shadow_status.get("checked_at"),
+            "forecasts":len(provider_shadow_forecasts),
+            "last_added":int(provider_shadow_status.get("added") or 0),
+            "gamebook_completeness":provider_shadow_status.get("gamebook_completeness"),
+            "resolved_n":int(provider_shadow_performance.get("resolved_n") or 0),
+            "paired_v1_n":int(provider_shadow_performance.get("paired_v1_n") or 0),
+            "margin_mae":provider_shadow_performance.get("margin_mae"),
+            "total_mae":provider_shadow_performance.get("total_mae"),
+            "paired_shadow_margin_mae":provider_shadow_performance.get("paired_shadow_margin_mae"),
+            "paired_v1_margin_mae":provider_shadow_performance.get("paired_v1_margin_mae"),
+            "paired_shadow_total_mae":provider_shadow_performance.get("paired_shadow_total_mae"),
+            "paired_v1_total_mae":provider_shadow_performance.get("paired_v1_total_mae"),
+            "production_provider_authorized":False,
+            "predictive_authority":False,
+            "betting_certified":False,
         },
         "official_report_probe":{
             "checked_at":official_report_probe.get("checked_at"),

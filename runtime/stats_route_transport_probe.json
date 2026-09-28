@@ -1,0 +1,38 @@
+{
+  "alternate_official_route_found": false,
+  "candidate_count": 3,
+  "checked_at": "2026-09-28T14:40:23.047986+00:00",
+  "odds_api_requests": 0,
+  "predictive_evidence_eligible": false,
+  "production_provider_authorized": false,
+  "role": "NETWORK_DIAGNOSTIC_ONLY",
+  "routes": [
+    {
+      "elapsed_ms": 8122.3,
+      "endpoint": "https://stats.nba.com/stats/leaguedashteamstats",
+      "error": "GET https://stats.nba.com/stats/leaguedashteamstats failed: TimeoutError",
+      "name": "stats_primary",
+      "ok": false,
+      "state": "TIMEOUT"
+    },
+    {
+      "elapsed_ms": 342.3,
+      "endpoint": "https://api-hub.nba.com/stats/leaguedashteamstats",
+      "error": "GET https://api-hub.nba.com/stats/leaguedashteamstats failed: HTTP 461",
+      "name": "api_hub_stats_path",
+      "ok": false,
+      "state": "HTTP_461"
+    },
+    {
+      "elapsed_ms": 285.3,
+      "endpoint": "https://api-hub.nba.com/leaguedashteamstats",
+      "error": "GET https://api-hub.nba.com/leaguedashteamstats failed: HTTP 461",
+      "name": "api_hub_direct",
+      "ok": false,
+      "state": "HTTP_461"
+    }
+  ],
+  "schema": "pulsar-nba-stats-route-transport-v1",
+  "season": "2025-26",
+  "valid_stats_routes": []
+}

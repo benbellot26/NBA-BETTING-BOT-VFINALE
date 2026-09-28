@@ -1,7 +1,12 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
-from nba.official_report_probe import _gamebook_probe, _media_probe, run
+from nba.official_report_probe import (
+    _gamebook_probe,
+    _injury_page_probe,
+    _media_probe,
+    run,
+)
 
 
 class OfficialReportProbeTests(unittest.TestCase):
@@ -53,6 +58,27 @@ PISTONS 21 36 30 28 115
         self.assertFalse(result["raw_html_persisted"])
         self.assertIn("/stats/gamebooks", result["report_link_hints"])
         self.assertNotIn("html", result)
+
+    def test_injury_page_probe_persists_safe_structure_only(self):
+        html = (
+            '<script id="loader" src="/wp-content/injury-loader.js"></script>'
+            '<div data-endpoint="https://official.nba.com/wp-json/injury/v1/reports?nonce=secret"></div>'
+            '<script>{"pdf":"https:\\/\\/ak-static.cms.nba.com\\/referee\\/injury\\/'
+            'Injury-Report_2026-02-01_11_15PM.pdf"}</script>'
+        )
+        result = _injury_page_probe(html, season="2025-26")
+        self.assertTrue(result["ok"])
+        self.assertFalse(result["raw_html_persisted"])
+        self.assertGreater(result["marker_counts"]["Injury-Report_"], 0)
+        self.assertIn(
+            "https://ak-static.cms.nba.com/referee/injury/"
+            "Injury-Report_2026-02-01_11_15PM.pdf",
+            result["safe_endpoint_hints"],
+        )
+        self.assertTrue(
+            all("?" not in url for url in result["safe_endpoint_hints"])
+        )
+        self.assertNotIn("nonce=secret", str(result))
 
     def test_network_failure_is_diagnostic_only(self):
         with patch(

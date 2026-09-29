@@ -1,15 +1,11 @@
 {
   "limit": 48,
   "purposes": {
-    "bookmaker_discovery": 2,
-    "historical_pinnacle_probe": 2,
-    "market_smoke": 2,
-    "pinnacle_eu_probe:basketball_nba_preseason": 1,
-    "pinnacle_target_probe:basketball_nba_preseason": 1
+    "market_smoke": 1
   },
-  "remaining": 40,
+  "remaining": 47,
   "schema": "pulsar-nba-odds-budget-v1",
-  "updated_at": "2026-09-28T20:37:18.257445+00:00",
-  "used": 8,
-  "utc_date": "2026-09-28"
+  "updated_at": "2026-09-29T19:25:31.701684+00:00",
+  "used": 1,
+  "utc_date": "2026-09-29"
 }

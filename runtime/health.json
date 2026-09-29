@@ -1,12 +1,12 @@
 {
   "schema": "pulsar-nba-health-v1",
-  "generated_at": "2026-09-29T18:54:21.868040+00:00",
+  "generated_at": "2026-09-29T19:25:32.087969+00:00",
   "state": "PROVIDER_DEGRADED",
   "live_operational": false,
   "real_betting_authorized": false,
   "research_readiness": {
     "schema": "pulsar-nba-research-readiness-v1",
-    "generated_at": "2026-09-29T18:54:21.870132+00:00",
+    "generated_at": "2026-09-29T19:25:32.089988+00:00",
     "role": "RESEARCH_STATUS_ONLY",
     "live_betting_authorized": false,
     "betting_certified": false,
@@ -28,8 +28,8 @@
         "state": "PINNACLE_READY",
         "ready": true,
         "next_action": "capture prospective Pinnacle entry/close evidence",
-        "targeted_events": 41,
-        "pinnacle_events": 3,
+        "targeted_events": 44,
+        "pinnacle_events": 12,
         "regional_pinnacle_present": true,
         "complete_consensus_events": 19,
         "replacement_allowed": false
@@ -73,9 +73,9 @@
   "provider_ok": false,
   "provider_state": "BLOCKED",
   "diagnostics": {
-    "provider_age_hours": 0.30334063555555557,
+    "provider_age_hours": 0.8228461713888888,
     "provider_fresh": true,
-    "market_age_hours": 22.347126940277775,
+    "market_age_hours": 6.160472222222223e-05,
     "market_fresh": true
   },
   "provider_details": {
@@ -698,15 +698,11 @@
     }
   },
   "odds_budget": {
-    "used": 8,
+    "used": 1,
     "limit": 48,
-    "remaining": 40,
+    "remaining": 47,
     "purposes": {
-      "bookmaker_discovery": 2,
-      "historical_pinnacle_probe": 2,
-      "market_smoke": 2,
-      "pinnacle_eu_probe:basketball_nba_preseason": 1,
-      "pinnacle_target_probe:basketball_nba_preseason": 1
+      "market_smoke": 1
     }
   },
   "market_consensus_evidence": {},

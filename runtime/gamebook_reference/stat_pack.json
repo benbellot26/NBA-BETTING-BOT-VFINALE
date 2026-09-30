@@ -8,7 +8,7 @@
   },
   "base_season": [],
   "collection_complete": true,
-  "date_to": "09/28/2026",
+  "date_to": "09/29/2026",
   "expected_gamebooks": 0,
   "gamebook_completeness": 1.0,
   "gamebook_manifest_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
@@ -18,7 +18,7 @@
     "production_requires_parity_gate": true
   },
   "missing_gamebooks": [],
-  "observed_at": "2026-09-29T17:00:58.574149+00:00",
+  "observed_at": "2026-09-30T16:59:54.371503+00:00",
   "player_advanced": [],
   "player_rating_method": "team_efficiency_neutral_baseline",
   "player_recent": [],
@@ -29,7 +29,7 @@
   "schema": "pulsar-nba-gamebook-stat-pack-v1",
   "season": "2026-27",
   "source": "NBA_OFFICIAL_SCORERS_REPORT",
-  "stat_pack_sha256": "991e902d60dd84a587cc01e4004dffd9c34c7c4aebe987217ea14a66dbade8a5",
+  "stat_pack_sha256": "466dd46a3d78ff71f760a251bfcd057534fb30ac84c74a370e902f69a13fe60b",
   "teams_with_games": 0,
   "usage_scale": "fraction_0_to_1"
 }

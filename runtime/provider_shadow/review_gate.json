@@ -1,0 +1,23 @@
+{
+  "auto_promote": false,
+  "betting_certified": false,
+  "comparisons": {},
+  "failures": [
+    "resolved_n<250",
+    "paired_v1_n<100",
+    "gamebook_completeness<1.0",
+    "margin_mae_paired_metric_missing",
+    "total_mae_paired_metric_missing",
+    "ml_brier_paired_metric_missing"
+  ],
+  "minimum_paired_v1": 100,
+  "minimum_resolved": 250,
+  "next_action": "keep provider shadow isolated and collect more paired evidence",
+  "paired_v1_n": 0,
+  "predictive_authority": false,
+  "production_provider_authorized": false,
+  "resolved_n": 0,
+  "review_ready": false,
+  "role": "MANUAL_REVIEW_ONLY",
+  "schema": "pulsar-nba-gamebook-provider-manual-review-v1"
+}

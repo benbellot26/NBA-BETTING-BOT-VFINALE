@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-official-report-probe-v1",
-  "checked_at": "2026-10-01T18:50:29.731373+00:00",
+  "checked_at": "2026-10-02T18:22:23.052568+00:00",
   "role": "NETWORK_DIAGNOSTIC_ONLY",
   "predictive_evidence_eligible": false,
   "production_provider_authorized": false,
@@ -82,8 +82,8 @@
   "gamebook_samples_total": 3,
   "media_central": {
     "ok": true,
-    "bytes": 273413,
-    "sha256": "7d97cd2a3eace3f3081fffc4da12f2fc6b31a080fca2b3611ad0a289a3275126",
+    "bytes": 273411,
+    "sha256": "cb809518d4148e7e1ffad4d8cc96f06add11131fcb207a28e8e1a6a1a75e156c",
     "term_hits": {
       "Latest Boxscore Lines": false,
       "Game-by-Game": false,
@@ -155,8 +155,8 @@
   "historical_injury_page": {
     "ok": true,
     "season": "2025-26",
-    "bytes": 116662,
-    "sha256": "1001153c9cbf248077e52296e6380af0ba64197c88924134769244b085869aaf",
+    "bytes": 116803,
+    "sha256": "82142733f98bdba71e0a604b69161635c1069926192ce65e4baeb29a4db63b49",
     "marker_counts": {
       "Injury-Report_": 1,
       "ak-static.cms.nba.com": 24,
@@ -219,7 +219,7 @@
       },
       {
         "id": null,
-        "src": "https://official.nba.com/ZcUbejc-kauta/Piw4vXOs-W/f5kY/V9ipJSrY5cYwYw5V/dBkwGSAzdA/Vls3c/it6HUc"
+        "src": "https://official.nba.com/VlUrU9/iNnRi/hsZSZ/AQ/kuOYz0Y7OwOYJO/HgAzLVlZ/I2EV/JjQ0VEU"
       }
     ],
     "iframe_sources": [],

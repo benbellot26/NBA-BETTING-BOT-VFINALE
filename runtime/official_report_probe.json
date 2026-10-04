@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-official-report-probe-v1",
-  "checked_at": "2026-10-03T17:13:17.322881+00:00",
+  "checked_at": "2026-10-04T17:32:53.175348+00:00",
   "role": "NETWORK_DIAGNOSTIC_ONLY",
   "predictive_evidence_eligible": false,
   "production_provider_authorized": false,
@@ -82,8 +82,8 @@
   "gamebook_samples_total": 3,
   "media_central": {
     "ok": true,
-    "bytes": 273386,
-    "sha256": "346c7beeab61421f44c964cff489655361c941f6dfdc300b9ef2c9894ad3a9b7",
+    "bytes": 273289,
+    "sha256": "5f8cff109eb7bc797e0ef32c373e5c4905c7079070fcb80bb445e734c94118c5",
     "term_hits": {
       "Latest Boxscore Lines": false,
       "Game-by-Game": false,
@@ -155,8 +155,8 @@
   "historical_injury_page": {
     "ok": true,
     "season": "2025-26",
-    "bytes": 116662,
-    "sha256": "0f1f7bc463cfb5d784f5c7680d41d0ed64285c3900284abb3e5c8e00caed8c18",
+    "bytes": 116656,
+    "sha256": "2a938ceb494865e50db9d295bd6778caa0ce290450a95a3ba7e3ae5749bfdf99",
     "marker_counts": {
       "Injury-Report_": 0,
       "ak-static.cms.nba.com": 23,
@@ -218,7 +218,7 @@
       },
       {
         "id": null,
-        "src": "https://official.nba.com/DvK9RF/A8ge/QbW5k/r7Z8ib3/sj/5kN3tcYzi7Y11iE3/bxsOIQlM/cj0aMk/BtMwI"
+        "src": "https://official.nba.com/-6Kj4s/E/0/bD_1xwhKt6CU/Q5iuNVEG3DYu5h/ekt7IT0/AHhfY/ioGLQQB"
       }
     ],
     "iframe_sources": [],

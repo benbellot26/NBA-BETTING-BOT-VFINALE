@@ -1,8 +1,8 @@
 {
   "schema": "pulsar-nba-market-smoke-v2",
-  "checked_at": "2026-10-04T18:09:32.093735+00:00",
+  "checked_at": "2026-10-05T21:29:19.298173+00:00",
   "request_count": 1,
-  "events": 44,
+  "events": 46,
   "pinnacle_events": 12,
   "query_mode": "TARGETED_BOOKMAKER",
   "requested_bookmakers": [
@@ -10,7 +10,7 @@
   ],
   "raw_events_with_any_bookmaker": 12,
   "raw_events_with_pinnacle": 12,
-  "raw_empty_bookmaker_events": 32,
+  "raw_empty_bookmaker_events": 34,
   "market_book_counts": {
     "ML": 12,
     "SPREAD": 12,
@@ -31,8 +31,8 @@
   "benchmark_bookmaker": "pinnacle",
   "pinnacle_replacement_allowed": false,
   "quota": {
-    "remaining": 488,
-    "used": 12,
+    "remaining": 485,
+    "used": 15,
     "last_cost": 3
   },
   "coverage_ready": true,

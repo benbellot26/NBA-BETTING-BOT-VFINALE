@@ -1,12 +1,12 @@
 {
   "schema": "pulsar-nba-health-v1",
-  "generated_at": "2026-10-05T21:29:19.493066+00:00",
+  "generated_at": "2026-10-05T21:31:54.331871+00:00",
   "state": "PROVIDER_DEGRADED",
   "live_operational": false,
   "real_betting_authorized": false,
   "research_readiness": {
     "schema": "pulsar-nba-research-readiness-v1",
-    "generated_at": "2026-10-05T21:29:19.495304+00:00",
+    "generated_at": "2026-10-05T21:31:54.334173+00:00",
     "role": "RESEARCH_STATUS_ONLY",
     "live_betting_authorized": false,
     "betting_certified": false,
@@ -31,7 +31,7 @@
         "targeted_events": 46,
         "pinnacle_events": 12,
         "regional_pinnacle_present": true,
-        "complete_consensus_events": 19,
+        "complete_consensus_events": 15,
         "replacement_allowed": false
       },
       "historical_pinnacle_research": {
@@ -73,9 +73,9 @@
   "provider_ok": false,
   "provider_state": "BLOCKED",
   "diagnostics": {
-    "provider_age_hours": 27.93959645527778,
+    "provider_age_hours": 27.982607234444444,
     "provider_fresh": true,
-    "market_age_hours": 5.413694444444445e-05,
+    "market_age_hours": 0.04306491611111111,
     "market_fresh": true
   },
   "provider_details": {
@@ -199,29 +199,31 @@
     }
   },
   "bookmaker_discovery": {
-    "checked_at": "2026-09-28T20:37:18.561455+00:00",
+    "checked_at": "2026-10-05T21:31:54.247442+00:00",
     "pinnacle_present": true,
     "pinnacle_state": "PRESENT_IN_DISCOVERY",
     "complete_featured_market_events": {
-      "draftkings": 41,
-      "onexbet": 39,
+      "draftkings": 44,
+      "onexbet": 41,
       "sport888": 20,
       "betrivers": 19,
       "unibet_nl": 19,
       "betmgm": 19,
       "gtbets": 19,
+      "williamhill": 19,
       "bovada": 17,
-      "fanduel": 10,
+      "fanduel": 14,
+      "tipico_de": 12,
+      "pinnacle": 12,
       "betsson": 5,
-      "nordicbet": 5,
-      "pinnacle": 3
+      "nordicbet": 5
     },
     "consensus_market_events": {
-      "ML": 21,
-      "SPREAD": 20,
-      "TOTAL": 20
+      "ML": 23,
+      "SPREAD": 19,
+      "TOTAL": 15
     },
-    "complete_consensus_events": 19,
+    "complete_consensus_events": 15,
     "consensus_replaces_pinnacle": false
   },
   "www_stats_probe": {
@@ -706,10 +708,11 @@
     }
   },
   "odds_budget": {
-    "used": 1,
+    "used": 2,
     "limit": 48,
-    "remaining": 47,
+    "remaining": 46,
     "purposes": {
+      "bookmaker_discovery": 1,
       "market_smoke": 1
     }
   },

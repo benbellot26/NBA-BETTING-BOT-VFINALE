@@ -22,8 +22,8 @@ POSITION_CODES = {
 }
 TIME_RE = re.compile(r"^\d{2}:\d{2}$")
 HEADER_RE = {
-    "away": re.compile(r"VISITOR:\s*([^\n(]+)", re.I),
-    "home": re.compile(r"HOME:\s*([^\n(]+)", re.I),
+    "away": re.compile(r"VISITOR\s*:\s*([^\n(]+)", re.I),
+    "home": re.compile(r"HOME\s*:\s*([^\n(]+)", re.I),
 }
 TEAM_MINUTES_RE = re.compile(r"^\d{3}:\d{2}$")
 INTEGER_RE = re.compile(r"^-?\d+$")

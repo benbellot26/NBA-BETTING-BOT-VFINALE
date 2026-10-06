@@ -3,14 +3,10 @@ concurrency:
   group: nba-runtime-data
   cancel-in-progress: false
 on:
-  push:
+  workflow_run:
+    workflows: ["Pulsar NBA Gamebook Reference"]
+    types: [completed]
     branches: [main]
-    paths:
-      - 'nba/schedule.py'
-      - 'nba/communications_schedule.py'
-      - 'nba/gamebook_stats.py'
-      - 'nba/gamebook_shadow_runtime.py'
-      - '.github/workflows/gamebook-provider-shadow.yml'
   workflow_dispatch:
     inputs:
       target_date:
@@ -23,6 +19,7 @@ permissions:
   contents: write
 jobs:
   shadow:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ${{ vars.NBA_DATA_RUNNER || 'ubuntu-latest' }}
     timeout-minutes: 20
     steps:

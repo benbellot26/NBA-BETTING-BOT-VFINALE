@@ -105,6 +105,31 @@ class GamebookParserTests(unittest.TestCase):
         self.assertEqual(result["away"]["players"][0]["name"], "Gui Santos")
         self.assertEqual(result["home"]["players"][4]["stats"]["AST"], 8)
 
+    def test_final_box_labels_are_optional_when_reconciliation_is_valid(self):
+        variant = FINAL_BOX.replace("FINAL BOX\n", "").replace(
+            "SCORE BY PERIOD\n1 2 3 4 FINAL\nWarriors 26 24 23 28 101\nPISTONS 21 36 30 28 115\n",
+            "",
+        )
+        result = parse_final_box_text(
+            variant,
+            expected_away="Golden State Warriors",
+            expected_home="Detroit Pistons",
+        )
+        self.assertEqual(result["away_score"], 101)
+        self.assertEqual(result["home_score"], 115)
+
+    def test_team_headers_allow_space_before_colon(self):
+        variant = FINAL_BOX.replace("VISITOR:", "VISITOR :").replace(
+            "HOME:", "HOME :"
+        )
+        result = parse_final_box_text(
+            variant,
+            expected_away="Golden State Warriors",
+            expected_home="Detroit Pistons",
+        )
+        self.assertEqual(result["away_score"], 101)
+        self.assertEqual(result["home_score"], 115)
+
     def test_wrapped_player_rows_are_supported(self):
         wrapped = FINAL_BOX.replace(
             "15 Gui Santos F 29:47 4 10 1 4 4 4 0 5 5 5 3 0 3 0 -3 13",

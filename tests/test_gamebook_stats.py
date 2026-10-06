@@ -3,7 +3,8 @@ from unittest.mock import patch
 
 from nba.communications_schedule import ReferenceScheduleGame
 from nba.gamebook import parse_final_box_text
-from nba.gamebook_stats import (_json_sha256, _validate_cached, build_reference_stat_pack,\n                                reference_schedule_from_games, resolve_gamebook_schedule)
+from nba.gamebook_stats import (_json_sha256, _validate_cached, build_reference_stat_pack,
+                                reference_schedule_from_games, resolve_gamebook_schedule)
 from nba.rotation_projection import project_rotation
 from nba.schedule import ScheduleGame
 from nba.teams import team_info

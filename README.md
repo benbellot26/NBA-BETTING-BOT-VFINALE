@@ -4,7 +4,7 @@ Pulsar NBA is a standalone NBA probability, market, research and decision engine
 
 ## Current status
 
-**V1.8.11 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
+**V1.8.12 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
 
 ## End-to-end chain
 
@@ -626,3 +626,13 @@ longer accepted simply because they are the first 3-digit minute row: every
 candidate must have legal NBA team minutes and reconcile both points and total
 player minutes to the parsed roster. This keeps the fallback strict while
 handling preseason scorer-report extraction artifacts.
+
+
+## V1.8.12 — preseason team-total variants
+
+Official scorer team-total rows now tolerate two presentation-only variants
+seen in preseason extraction: an omitted team plus/minus column or a nonnumeric
+dash in that column. Team minutes may also differ by a few extraction/rounding
+seconds from the legal 240-minute (plus overtime) total and are normalized only
+when within a strict five-second tolerance. Acceptance still requires exact
+player/team point reconciliation and reconciled total player minutes.

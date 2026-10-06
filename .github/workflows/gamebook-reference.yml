@@ -11,6 +11,7 @@ on:
       - 'nba/gamebook_stats.py'
       - 'nba/communications_schedule.py'
       - 'nba/schedule.py'
+      - 'nba/reference_schedule.py'
       - '.github/workflows/gamebook-reference.yml'
   schedule:
     - cron: '45 11 * * *'

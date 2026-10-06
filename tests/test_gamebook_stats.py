@@ -50,11 +50,36 @@ class GamebookStatPackTests(unittest.TestCase):
             for index in range(1000)
         ]
         with patch("nba.gamebook_stats.fetch_schedule", return_value=games), patch(
-            "nba.gamebook_stats.fetch_reference_schedule"
+            "nba.gamebook_stats.fetch_communications_schedule"
         ) as fallback:
             rows = resolve_gamebook_schedule(season="2026-27")
         self.assertEqual(len(rows), 1000)
         fallback.assert_not_called()
+
+    def test_gamebook_schedule_uses_reference_only_external_when_nba_json_blocked(self):
+        external = [
+            ReferenceScheduleGame(
+                reference_id="espn-1",
+                schedule_number=1,
+                game_date="2026-10-06",
+                commence_time="2026-10-07T02:00:00+00:00",
+                team1="Los Angeles Lakers",
+                team2="Golden State Warriors",
+                relation="at",
+                away="Los Angeles Lakers",
+                home="Golden State Warriors",
+                neutral_site=False,
+            )
+        ]
+        with patch("nba.gamebook_stats.fetch_schedule", side_effect=RuntimeError("HTTP 403")), patch(
+            "nba.gamebook_stats.fetch_external_reference_schedule",
+            return_value=external,
+        ), patch("nba.gamebook_stats.fetch_communications_schedule") as communications:
+            rows = resolve_gamebook_schedule(
+                season="2026-27", target_date="2026-10-06"
+            )
+        self.assertEqual(rows, external)
+        communications.assert_not_called()
 
     def test_empty_preseason_history_is_complete_not_missing(self):
         pack = build_reference_stat_pack(

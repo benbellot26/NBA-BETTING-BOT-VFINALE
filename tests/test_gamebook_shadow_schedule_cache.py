@@ -33,9 +33,9 @@ class GamebookShadowScheduleCacheTests(unittest.TestCase):
         ) as fetch:
             path=Path(d)/"schedule.json"
             first=_reference_schedule_cached(
-                season="2026-27",now=now,cache_path=path)
+                season="2026-27",target_date="2026-11-15",now=now,cache_path=path)
             second=_reference_schedule_cached(
-                season="2026-27",
+                season="2026-27",target_date="2026-11-15",
                 now=now+dt.timedelta(hours=1),
                 cache_path=path,
             )
@@ -51,9 +51,9 @@ class GamebookShadowScheduleCacheTests(unittest.TestCase):
         ) as fetch:
             path=Path(d)/"schedule.json"
             _reference_schedule_cached(
-                season="2026-27",now=now,cache_path=path)
+                season="2026-27",target_date="2026-11-15",now=now,cache_path=path)
             _reference_schedule_cached(
-                season="2026-27",
+                season="2026-27",target_date="2026-11-15",
                 now=now+dt.timedelta(hours=25),
                 cache_path=path,
             )

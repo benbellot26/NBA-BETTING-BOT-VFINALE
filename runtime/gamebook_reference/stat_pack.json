@@ -1178,16 +1178,16 @@
   "missing_gamebooks": [
     {
       "game_date": "2026-10-03",
-      "reason": "RuntimeError:official gamebook unavailable for espn-401902644: Miami Heat@Toronto Raptors:ValueError:gamebook final-box sections are incomplete",
+      "reason": "RuntimeError:official gamebook unavailable for espn-401902644: Miami Heat@Toronto Raptors:ValueError:gamebook final-box team sections are incomplete",
       "reference_id": "espn-401902644"
     },
     {
       "game_date": "2026-10-05",
-      "reason": "RuntimeError:official gamebook unavailable for espn-401898716: Los Angeles Lakers@Sacramento Kings:ValueError:gamebook does not contain FINAL BOX",
+      "reason": "RuntimeError:official gamebook unavailable for espn-401898716: Los Angeles Lakers@Sacramento Kings:ValueError:invalid away team minute total in gamebook",
       "reference_id": "espn-401898716"
     }
   ],
-  "observed_at": "2026-10-06T08:31:59.204865+00:00",
+  "observed_at": "2026-10-06T08:36:05.858580+00:00",
   "player_advanced": [
     {
       "DEF_RATING": 123.50198921188158,
@@ -7117,7 +7117,7 @@
   "schema": "pulsar-nba-gamebook-stat-pack-v1",
   "season": "2026-27",
   "source": "NBA_OFFICIAL_SCORERS_REPORT",
-  "stat_pack_sha256": "1f375e23cf80b46cd12fc356ca6f832e3bd5b69e6c0bc7208d3c13485c53eb57",
+  "stat_pack_sha256": "ff84f5c7c46f541a0441dd22125242c02745e0bd59dd722e5a1a3f904966d0e9",
   "teams_with_games": 12,
   "usage_scale": "fraction_0_to_1"
 }

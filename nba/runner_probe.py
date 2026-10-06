@@ -16,6 +16,7 @@ from .injury_pdf import injury_page_url
 from .nba_stats_api import team_stats
 from .provider_http import get_bytes, get_json, get_text
 from .provider_smoke import _classify_failure, _previous
+from .reference_schedule import BASE_URL as ESPN_SCOREBOARD_URL
 from .schedule import (DEFAULT_SCHEDULE_URL, LEGACY_SCHEDULE_URL,
                        legacy_data_schedule_url, season_for_date)
 
@@ -49,6 +50,17 @@ def run() -> dict[str, Any]:
         "data_nba_mobile_schedule": _timed(
             "data_nba_mobile_schedule", "schedule",
             lambda: get_json(legacy_data_schedule_url(now), timeout=10.0, retries=0)),
+        "espn_reference_schedule": _timed(
+            "espn_reference_schedule", "schedule",
+            lambda: get_json(
+                f"{ESPN_SCOREBOARD_URL}?dates={now.strftime('%Y%m')}&limit=1000",
+                headers={
+                    "Accept": "application/json",
+                    "User-Agent": "pulsar-nba-reference/1.0",
+                },
+                timeout=10.0,
+                retries=0,
+            )),
         "api_hub_schedule_page": _timed(
             "api_hub_schedule_page", "schedule",
             lambda: get_text("https://api-hub.nba.com/schedule",

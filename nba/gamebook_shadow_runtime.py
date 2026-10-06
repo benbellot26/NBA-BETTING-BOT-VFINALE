@@ -18,7 +18,6 @@ from zoneinfo import ZoneInfo
 from .communications_schedule import (
     ReferenceScheduleGame,
     as_pregame_schedule,
-    fetch_reference_schedule,
 )
 from .gamebook_stats import resolve_gamebook_schedule, run as build_gamebook_pack
 from .injury_pdf import fetch_latest_report, game_report_ready
@@ -186,6 +185,7 @@ def run(
             cache_root=cache_root,
             output=stat_pack_output,
             max_network_games=max_network_games,
+            schedule=reference,
         )
         if pack.get("role") != "ALTERNATE_REFERENCE_ONLY":
             raise ValueError("gamebook stat pack role mismatch")

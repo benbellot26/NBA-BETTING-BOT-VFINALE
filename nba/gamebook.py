@@ -63,6 +63,20 @@ def _normalize_team(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", "", str(value).casefold())
 
 
+def _expected_team_match(text: str, expected_name: str) -> re.Match[str] | None:
+    parts = [re.escape(part) for part in expected_name.split() if part]
+    if not parts:
+        return None
+    return re.search(r"\b" + r"\s+".join(parts) + r"\b", text, re.I)
+
+
+def _valid_team_minutes(value: str) -> bool:
+    seconds = _minutes(value)
+    regulation = 240 * 60
+    overtime_increment = 25 * 60
+    return seconds >= regulation and (seconds - regulation) % overtime_increment == 0
+
+
 def _minutes(value: str) -> int:
     minute, second = value.split(":", 1)
     return 60 * int(minute) + int(second)
@@ -156,44 +170,22 @@ def _parse_team_segment(
     *, text: str, side: str, expected_name: str,
 ) -> TeamBox:
     header = HEADER_RE[side].search(text)
-    if header is None:
+    if header is not None:
+        observed = " ".join(header.group(1).split()).strip()
+        if _normalize_team(observed) != _normalize_team(expected_name):
+            raise ValueError(
+                f"gamebook {side} team mismatch: {observed!r} != {expected_name!r}"
+            )
+    elif _expected_team_match(text, expected_name) is not None:
+        observed = expected_name
+    else:
         raise ValueError(f"missing {side} team header in gamebook")
-    observed = " ".join(header.group(1).split()).strip()
-    if _normalize_team(observed) != _normalize_team(expected_name):
-        raise ValueError(
-            f"gamebook {side} team mismatch: {observed!r} != {expected_name!r}"
-        )
-    tokens = text.split()
-    team_minutes_token = None
-    team_stat_tokens = None
-    for index, token in enumerate(tokens):
-        if not TEAM_MINUTES_RE.fullmatch(token):
-            continue
-        candidate = tokens[index + 1:index + 1 + len(STAT_KEYS)]
-        if len(candidate) == len(STAT_KEYS) and all(
-            INTEGER_RE.fullmatch(value) for value in candidate
-        ):
-            team_minutes_token = token
-            team_stat_tokens = candidate
-            break
-    if team_minutes_token is None or team_stat_tokens is None:
-        raise ValueError(f"missing {side} team total row in gamebook")
-    team_minutes = _minutes(team_minutes_token)
-    regulation = 240 * 60
-    overtime_increment = 25 * 60
-    if team_minutes < regulation or (team_minutes - regulation) % overtime_increment:
-        raise ValueError(f"invalid {side} team minute total in gamebook")
-    totals = _stats(team_stat_tokens)
-    # PDF text extractors do not agree on row line breaks. Parse normal
-    # line-oriented rows first, then fall back to a whitespace-stream parser
-    # that recognizes jersey/name/(position)/minutes + the exact 16 stat cells.
+
     line_players = [
         player for line in text.splitlines()
         if (player := _player_line(line)) is not None
     ]
     stream_players = _stream_players(text)
-    # Prefer the representation with greater validated coverage. Deduplicate
-    # exact jersey/name pairs in case both extraction modes happen to match.
     candidates = stream_players if len(stream_players) > len(line_players) else line_players
     deduped: list[PlayerBox] = []
     seen_players: set[tuple[str, str]] = set()
@@ -206,19 +198,40 @@ def _parse_team_segment(
     players = tuple(deduped)
     if len(players) < 5:
         raise ValueError(f"too few active {side} players in gamebook")
-    if sum(player.stats["PTS"] for player in players) != totals["PTS"]:
-        raise ValueError(f"{side} player points do not reconcile to team total")
+
+    player_points = sum(player.stats["PTS"] for player in players)
     player_minutes = sum(player.minutes_seconds for player in players)
-    if abs(player_minutes - team_minutes) > 5:
-        raise ValueError(
-            f"{side} player minutes do not reconcile to team total: "
-            f"{player_minutes} != {team_minutes}"
-        )
+    tokens = text.split()
+    total_candidates: list[tuple[str, dict[str, int]]] = []
+    for index, token in enumerate(tokens):
+        if not TEAM_MINUTES_RE.fullmatch(token):
+            continue
+        raw_stats = tokens[index + 1:index + 1 + len(STAT_KEYS)]
+        if len(raw_stats) != len(STAT_KEYS) or not all(
+            INTEGER_RE.fullmatch(value) for value in raw_stats
+        ):
+            continue
+        if not _valid_team_minutes(token):
+            continue
+        total_candidates.append((token, _stats(raw_stats)))
+
+    reconciled = [
+        (token, totals)
+        for token, totals in total_candidates
+        if totals["PTS"] == player_points
+        and abs(player_minutes - _minutes(token)) <= 5
+    ]
+    if not reconciled:
+        if not total_candidates:
+            raise ValueError(f"missing valid {side} team total row in gamebook")
+        raise ValueError(f"{side} team total does not reconcile to parsed players")
+
+    team_minutes_token, totals = reconciled[0]
     return TeamBox(
         side=side,
         observed_name=observed,
         expected_name=expected_name,
-        minutes_seconds=team_minutes,
+        minutes_seconds=_minutes(team_minutes_token),
         totals=totals,
         players=players,
     )
@@ -230,23 +243,29 @@ def parse_final_box_text(
     normalized = str(text).replace("\r", "")
     visitor_at = re.search(r"VISITOR\s*:", normalized, re.I)
     home_at = re.search(r"HOME\s*:", normalized, re.I)
-    if visitor_at is None or home_at is None:
-        raise ValueError("gamebook final-box team sections are incomplete")
-    if visitor_at.start() >= home_at.start():
+
+    if visitor_at is not None and home_at is not None:
+        away_start = visitor_at.start()
+        home_start = home_at.start()
+    else:
+        away_name = _expected_team_match(normalized, expected_away)
+        home_name = _expected_team_match(normalized, expected_home)
+        if away_name is None or home_name is None:
+            raise ValueError("gamebook final-box team sections are incomplete")
+        away_start = away_name.start()
+        home_start = home_name.start()
+
+    if away_start >= home_start:
         raise ValueError("gamebook final-box team sections are out of order")
 
-    # Some preseason scorer PDFs omit or extract the decorative FINAL BOX /
-    # SCORE BY labels differently. Those labels are not evidence: the strict
-    # team identity, 16-column width, points and minutes reconciliation below
-    # are. Use SCORE BY only as an optional end delimiter for the home table.
-    score_at = re.search(r"SCORE\s+BY", normalized[home_at.end():], re.I)
+    score_at = re.search(r"SCORE\s+BY", normalized[home_start:], re.I)
     home_end = (
-        home_at.end() + score_at.start()
+        home_start + score_at.start()
         if score_at is not None
         else len(normalized)
     )
-    away_text = normalized[visitor_at.start():home_at.start()]
-    home_text = normalized[home_at.start():home_end]
+    away_text = normalized[away_start:home_start]
+    home_text = normalized[home_start:home_end]
     away_box = _parse_team_segment(
         text=away_text, side="away", expected_name=expected_away
     )

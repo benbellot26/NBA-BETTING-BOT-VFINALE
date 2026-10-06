@@ -130,6 +130,30 @@ class GamebookParserTests(unittest.TestCase):
         self.assertEqual(result["away_score"], 101)
         self.assertEqual(result["home_score"], 115)
 
+    def test_expected_team_names_recover_missing_visitor_home_labels(self):
+        variant = FINAL_BOX.replace("VISITOR:", "").replace("HOME:", "")
+        result = parse_final_box_text(
+            variant,
+            expected_away="Golden State Warriors",
+            expected_home="Detroit Pistons",
+        )
+        self.assertEqual(result["away_score"], 101)
+        self.assertEqual(result["home_score"], 115)
+
+    def test_invalid_total_candidate_before_real_total_is_ignored(self):
+        false_total = "200:00 1 1 0 0 0 0 0 1 1 0 0 0 0 0 0 1\n"
+        variant = FINAL_BOX.replace(
+            "240:00 35 76 12 33 19 26 10 28 38 23 17 6 25 6 -14 101",
+            false_total + "240:00 35 76 12 33 19 26 10 28 38 23 17 6 25 6 -14 101",
+        )
+        result = parse_final_box_text(
+            variant,
+            expected_away="Golden State Warriors",
+            expected_home="Detroit Pistons",
+        )
+        self.assertEqual(result["away"]["minutes_seconds"], 240 * 60)
+        self.assertEqual(result["away_score"], 101)
+
     def test_wrapped_player_rows_are_supported(self):
         wrapped = FINAL_BOX.replace(
             "15 Gui Santos F 29:47 4 10 1 4 4 4 0 5 5 5 3 0 3 0 -3 13",

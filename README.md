@@ -4,7 +4,7 @@ Pulsar NBA is a standalone NBA probability, market, research and decision engine
 
 ## Current status
 
-**V1.8.10 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
+**V1.8.11 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
 
 ## End-to-end chain
 
@@ -616,3 +616,13 @@ expected team identity, exact 16-column stat rows, reconciled player/team
 points and reconciled player/team minutes. This targets preseason PDFs whose
 text extraction differs from the regular-season template without weakening
 the numerical validation.
+
+
+## V1.8.11 — resilient team-table reconciliation
+
+Gamebook parsing can now recover team sections from the exact expected team
+names when PDF text extraction drops VISITOR/HOME labels. Team totals are no
+longer accepted simply because they are the first 3-digit minute row: every
+candidate must have legal NBA team minutes and reconcile both points and total
+player minutes to the parsed roster. This keeps the fallback strict while
+handling preseason scorer-report extraction artifacts.

@@ -1,6 +1,9 @@
 import unittest
+import sys
+from types import SimpleNamespace
+from unittest.mock import patch
 
-from nba.gamebook import gamebook_url, parse_final_box_text
+from nba.gamebook import extract_final_box_text, gamebook_url, parse_final_box_text
 
 
 FINAL_BOX = """
@@ -42,6 +45,41 @@ PISTONS 21 36 30 28 115
 
 
 class GamebookParserTests(unittest.TestCase):
+    def test_pdf_extraction_skips_cover_and_joins_split_final_box(self):
+        class Page:
+            def __init__(self, layout, plain=None):
+                self.layout=layout
+                self.plain=plain if plain is not None else layout
+            def extract_text(self, extraction_mode=None):
+                return self.layout if extraction_mode=="layout" else self.plain
+
+        pages=[
+            Page("NBA GAMEBOOK COVER"),
+            Page("FINAL BOX\nVISITOR: Los Angeles Lakers\nHOME: Sacramento Kings"),
+            Page("SCORE BY PERIOD\n1 2 3 4 FINAL"),
+        ]
+        fake=SimpleNamespace(PdfReader=lambda _:SimpleNamespace(pages=pages))
+        with patch.dict(sys.modules,{"pypdf":fake}):
+            text=extract_final_box_text(b"%PDF fixture")
+        self.assertNotIn("COVER",text)
+        self.assertIn("FINAL BOX",text)
+        self.assertIn("VISITOR:",text)
+        self.assertIn("HOME:",text)
+        self.assertIn("SCORE BY",text)
+
+    def test_pdf_extraction_prefers_plain_text_when_layout_loses_markers(self):
+        class Page:
+            def extract_text(self, extraction_mode=None):
+                if extraction_mode=="layout":
+                    return "FINAL BOX"
+                return "FINAL BOX\nVISITOR: A\nHOME: B\nSCORE BY PERIOD"
+
+        fake=SimpleNamespace(PdfReader=lambda _:SimpleNamespace(pages=[Page()]))
+        with patch.dict(sys.modules,{"pypdf":fake}):
+            text=extract_final_box_text(b"%PDF fixture")
+        self.assertIn("VISITOR:",text)
+        self.assertIn("SCORE BY",text)
+
     def test_constructs_official_gamebook_url_from_schedule_identity(self):
         self.assertEqual(
             gamebook_url(

@@ -1,7 +1,8 @@
 """Parser for NBA Official Scorer's Report gamebook PDFs.
 
-This module parses only the FINAL BOX first page. It is intentionally separate
-from live model inputs until a parity study approves a derived stats adapter.
+This module parses the FINAL BOX section from the first few pages of an official
+scorer gamebook. It is intentionally separate from live model inputs until a
+parity study approves a derived stats adapter.
 """
 from __future__ import annotations
 
@@ -256,7 +257,39 @@ def parse_final_box_text(
     }
 
 
-def extract_first_page(data: bytes) -> str:
+def _page_text(page: Any) -> str:
+    """Prefer whichever pypdf extraction mode preserves more FINAL BOX markers."""
+    candidates: list[str] = []
+    try:
+        candidates.append(page.extract_text(extraction_mode="layout") or "")
+    except (TypeError, ValueError, NotImplementedError):
+        pass
+    try:
+        candidates.append(page.extract_text() or "")
+    except (TypeError, ValueError, NotImplementedError):
+        pass
+    if not candidates:
+        return ""
+
+    def score(text: str) -> tuple[int, int]:
+        upper = text.upper()
+        markers = sum(
+            token in upper
+            for token in ("FINAL BOX", "VISITOR:", "HOME:", "SCORE BY")
+        )
+        return markers, len(text)
+
+    return max(candidates, key=score)
+
+
+def extract_final_box_text(data: bytes, *, max_pages: int = 4) -> str:
+    """Extract enough consecutive pages to contain a complete FINAL BOX.
+
+    Most NBA gamebooks put the table on page 1, but some preseason PDFs insert
+    a cover or split the final box across pages. Scan only the first few pages,
+    start at the first FINAL BOX marker, and stop as soon as the four structural
+    markers needed by the strict parser are present.
+    """
     if not data.startswith(b"%PDF"):
         raise ValueError("gamebook response is not a PDF")
     try:
@@ -266,20 +299,38 @@ def extract_first_page(data: bytes) -> str:
     reader = PdfReader(BytesIO(data))
     if not reader.pages:
         raise ValueError("gamebook PDF has no pages")
-    page = reader.pages[0]
-    try:
-        # Layout mode is materially more stable for official scorer tables.
-        text = page.extract_text(extraction_mode="layout") or ""
-    except (TypeError, ValueError, NotImplementedError):
-        text = page.extract_text() or ""
-    return text
+
+    extracted = [
+        _page_text(reader.pages[index])
+        for index in range(min(len(reader.pages), max_pages))
+    ]
+    start = next(
+        (index for index, text in enumerate(extracted) if "FINAL BOX" in text.upper()),
+        0,
+    )
+    combined: list[str] = []
+    for text in extracted[start:]:
+        combined.append(text)
+        joined = "\n".join(combined)
+        upper = joined.upper()
+        if all(
+            marker in upper
+            for marker in ("FINAL BOX", "VISITOR:", "HOME:", "SCORE BY")
+        ):
+            return joined
+    return "\n".join(combined)
+
+
+def extract_first_page(data: bytes) -> str:
+    """Backward-compatible wrapper; now returns the complete FINAL BOX text."""
+    return extract_final_box_text(data)
 
 
 def parse_gamebook_pdf(
     data: bytes, *, expected_away: str, expected_home: str,
 ) -> dict[str, Any]:
     return parse_final_box_text(
-        extract_first_page(data),
+        extract_final_box_text(data),
         expected_away=expected_away,
         expected_home=expected_home,
     )

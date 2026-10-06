@@ -4,7 +4,7 @@ Pulsar NBA is a standalone NBA probability, market, research and decision engine
 
 ## Current status
 
-**V1.8.8 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
+**V1.8.9 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
 
 ## End-to-end chain
 
@@ -134,8 +134,8 @@ See `ARCHITECTURE.md` and `RUNBOOK.md`.
 
 The Odds API authentication smoke is green, but official NBA schedule requests
 return HTTP 403, NBA stats time out, and the expected official injury PDF
-index is not available on GitHub-hosted runners. Independent ESPN/CDN probes
-also returned 403. These are production-blocking provider-access failures,
+index is not available on GitHub-hosted runners. All NBA-hosted JSON schedule routes also return 403 from hosted runners, while
+the isolated ESPN reference schedule is reachable. These remain production-blocking provider-access failures,
 not proof that NBA markets or prediction code are broken.
 
 The scheduled live and daily-evidence jobs are therefore **disabled by default**.
@@ -595,3 +595,13 @@ its event id is namespaced as an external reference.
 Official scorer gamebooks remain the sole basketball-data source for this
 alternate path. The provider shadow cache is coverage-aware so a fresh cache
 from an earlier target date cannot hide later games.
+
+
+## V1.8.9 — preseason gamebook pagination
+
+Official scorer gamebook parsing no longer assumes the complete FINAL BOX is
+contained on PDF page 1. The extractor inspects the first few pages, prefers
+the pypdf extraction mode that preserves the required table markers, skips
+cover pages, and joins consecutive pages until FINAL BOX, VISITOR, HOME and
+SCORE BY are all present. The existing strict score/minute/stat reconciliation
+still applies after extraction.

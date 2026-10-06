@@ -4,7 +4,7 @@ Pulsar NBA is a standalone NBA probability, market, research and decision engine
 
 ## Current status
 
-**V1.8.7 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
+**V1.8.8 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
 
 ## End-to-end chain
 
@@ -581,3 +581,17 @@ status and final scores.
 Provider diagnostics record which official schedule route supplied the data.
 The new route remains independent of betting-market data and does not change
 model features, certification gates or `NBA_LIVE_ENABLED`.
+
+
+## V1.8.8 — reference schedule isolation
+
+When every NBA-hosted JSON schedule route rejects GitHub-hosted egress, the
+official-gamebook research path may use ESPN's public scoreboard strictly as a
+`REFERENCE_SCHEDULE_ONLY` source for game date, tip time and team identity.
+It cannot become the production schedule/outcome provider, does not supply
+basketball features, injuries, prices or results used for certification, and
+its event id is namespaced as an external reference.
+
+Official scorer gamebooks remain the sole basketball-data source for this
+alternate path. The provider shadow cache is coverage-aware so a fresh cache
+from an earlier target date cannot hide later games.

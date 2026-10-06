@@ -28,7 +28,7 @@ class GamebookShadowScheduleCacheTests(unittest.TestCase):
     def test_fresh_cache_avoids_repeated_schedule_fetch(self):
         now=dt.datetime(2026,11,15,12,tzinfo=dt.timezone.utc)
         with tempfile.TemporaryDirectory() as d, patch(
-            "nba.gamebook_shadow_runtime.fetch_reference_schedule",
+            "nba.gamebook_shadow_runtime.resolve_gamebook_schedule",
             return_value=rows(),
         ) as fetch:
             path=Path(d)/"schedule.json"
@@ -46,7 +46,7 @@ class GamebookShadowScheduleCacheTests(unittest.TestCase):
     def test_stale_cache_refreshes(self):
         now=dt.datetime(2026,11,15,12,tzinfo=dt.timezone.utc)
         with tempfile.TemporaryDirectory() as d, patch(
-            "nba.gamebook_shadow_runtime.fetch_reference_schedule",
+            "nba.gamebook_shadow_runtime.resolve_gamebook_schedule",
             return_value=rows(),
         ) as fetch:
             path=Path(d)/"schedule.json"

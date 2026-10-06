@@ -15,7 +15,7 @@ class RunnerProbeTests(unittest.TestCase):
         self.assertEqual(report["role"],"NETWORK_DIAGNOSTIC_ONLY")
         self.assertFalse(report["predictive_evidence_eligible"])
         self.assertEqual(report["odds_api_requests"],0)
-        self.assertEqual(len(report["reachable_routes"]),9)
+        self.assertEqual(len(report["reachable_routes"]),10)
         self.assertTrue(report["probes"]["historical_injury_page"]["ok"])
         self.assertTrue(report["probes"]["known_official_injury_pdf"]["ok"])
         self.assertTrue(report["injury_transport"]["static_pdf_reachable"])
@@ -30,6 +30,9 @@ class RunnerProbeTests(unittest.TestCase):
             report=run()
         self.assertFalse(report["probes"]["cdn_schedule_json"]["ok"])
         self.assertEqual(report["probes"]["cdn_schedule_json"]["state"],
+                         "ACCESS_BLOCKED")
+        self.assertFalse(report["probes"]["cdn_schedule_json_legacy"]["ok"])
+        self.assertEqual(report["probes"]["cdn_schedule_json_legacy"]["state"],
                          "ACCESS_BLOCKED")
 
     def test_static_injury_pdf_block_is_distinguished_from_page_access(self):

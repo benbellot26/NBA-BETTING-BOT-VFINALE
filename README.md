@@ -4,7 +4,7 @@ Pulsar NBA is a standalone NBA probability, market, research and decision engine
 
 ## Current status
 
-**V1.8.4 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
+**V1.8.5 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
 
 ## End-to-end chain
 
@@ -544,3 +544,18 @@ skips before reserving an API request when the persisted probe says the current
 The Odds API plan has no historical access.
 
 See `RESEARCH_READINESS.md`.
+
+
+## V1.8.5 — preseason schedule resilience
+
+The official schedule adapter now prefers the current NBA CDN
+`scheduleLeagueV2.json` route and retains the legacy
+`scheduleLeagueV2_1.json` route as a fail-closed fallback. Gamebook reference
+and provider-shadow schedule discovery use the full official schedule when it
+is reachable, preserving official GameIDs and including preseason games. The
+NBA Communications PDF remains a regular-season pregame fallback only.
+
+Provider-smoke diagnostics are now persisted before the workflow emits its
+health failure signal, so a blocked upstream source cannot leave stale runtime
+state behind. These changes do not alter the frozen V1 basketball model,
+betting certification, or the `NBA_LIVE_ENABLED` gate.

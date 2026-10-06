@@ -6,7 +6,9 @@ from typing import Any
 from .provider_http import get_json
 from .teams import canonical_team
 
-DEFAULT_SCHEDULE_URL="https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_1.json"
+DEFAULT_SCHEDULE_URL="https://cdn.nba.com/static/json/staticData/scheduleLeagueV2.json"
+LEGACY_SCHEDULE_URL="https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_1.json"
+DEFAULT_SCHEDULE_URLS=(DEFAULT_SCHEDULE_URL,LEGACY_SCHEDULE_URL)
 
 @dataclass(frozen=True)
 class ScheduleGame:
@@ -45,9 +47,23 @@ def parse_schedule(payload:dict[str,Any])->list[ScheduleGame]:
     return [g for g in games if g.game_id and g.home and g.away and g.game_date]
 
 def fetch_schedule(*,url:str|None=None)->list[ScheduleGame]:
-    payload=get_json(url or os.environ.get("NBA_SCHEDULE_URL") or DEFAULT_SCHEDULE_URL)
-    if not isinstance(payload,dict):raise RuntimeError("NBA schedule payload is not an object")
-    return parse_schedule(payload)
+    configured=url or os.environ.get("NBA_SCHEDULE_URL")
+    urls=(configured,) if configured else DEFAULT_SCHEDULE_URLS
+    failures=[]
+    for candidate in urls:
+        try:
+            payload=get_json(candidate)
+            if not isinstance(payload,dict):
+                raise RuntimeError("NBA schedule payload is not an object")
+            games=parse_schedule(payload)
+            if not games:
+                raise RuntimeError("NBA schedule payload contained no games")
+            return games
+        except Exception as exc:
+            failures.append(f"{candidate}:{type(exc).__name__}:{exc}")
+    raise RuntimeError(
+        "NBA schedule unavailable across official CDN routes: "+" | ".join(failures)
+    )
 
 def games_on(games:list[ScheduleGame],target:str|date)->list[ScheduleGame]:
     target_s=target.isoformat() if isinstance(target,date) else _date(target)

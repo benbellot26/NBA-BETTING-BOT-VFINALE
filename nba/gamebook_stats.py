@@ -20,12 +20,49 @@ from .communications_schedule import ReferenceScheduleGame, fetch_reference_sche
 from .gamebook import gamebook_url, parse_gamebook_pdf
 from .provider_http import get_bytes
 from .rotation_projection import normalized_player_name
-from .schedule import season_for_date
+from .schedule import ScheduleGame, fetch_schedule, season_for_date
 from .teams import TEAMS, team_info
 
 WINDOWS = (0, 30, 15, 10, 5)
 ROLE = "ALTERNATE_REFERENCE_ONLY"
 SOURCE = "NBA_OFFICIAL_SCORERS_REPORT"
+
+def reference_schedule_from_games(
+    games: list[ScheduleGame],
+) -> list[ReferenceScheduleGame]:
+    """Preserve official GameIDs while adapting the current NBA schedule."""
+    return [
+        ReferenceScheduleGame(
+            reference_id=game.game_id,
+            schedule_number=index,
+            game_date=game.game_date,
+            commence_time=game.commence_time,
+            team1=game.away,
+            team2=game.home,
+            relation="at",
+            away=game.away,
+            home=game.home,
+            neutral_site=False,
+        )
+        for index, game in enumerate(games, start=1)
+        if game.game_id and game.home and game.away and game.game_date
+    ]
+
+
+def resolve_gamebook_schedule(*, season: str) -> list[ReferenceScheduleGame]:
+    """Use the full official current-season schedule, then fail over to PR PDF."""
+    try:
+        live = [
+            game for game in fetch_schedule()
+            if season_for_date(game.game_date) == season
+        ]
+        if len(live) < 1000:
+            raise RuntimeError(
+                f"official current-season schedule too small: {len(live)}"
+            )
+        return reference_schedule_from_games(live)
+    except Exception:
+        return fetch_reference_schedule(season=season)
 
 
 def _safe_div(a: float, b: float, default: float = 0.0) -> float:
@@ -177,7 +214,7 @@ def collect_gamebooks(
     max_network_games: int | None = None,
 ) -> tuple[list[dict[str, Any]], list[dict[str, str]]]:
     cutoff = date.fromisoformat(target_date)
-    rows = schedule if schedule is not None else fetch_reference_schedule(season=season)
+    rows = schedule if schedule is not None else resolve_gamebook_schedule(season=season)
     eligible = sorted(
         (row for row in rows if date.fromisoformat(row.game_date) < cutoff),
         key=lambda row: (row.game_date, row.schedule_number),
@@ -425,12 +462,14 @@ def run(
     cache_root: str = "runtime/gamebook_reference",
     output: str = "runtime/gamebook_reference/stat_pack.json",
     max_network_games: int | None = None,
+    schedule: list[ReferenceScheduleGame] | None = None,
 ) -> dict[str, Any]:
     gamebooks, missing = collect_gamebooks(
         season=season,
         target_date=target_date,
         cache_root=cache_root,
         max_network_games=max_network_games,
+        schedule=schedule,
     )
     pack = build_reference_stat_pack(
         season=season, target_date=target_date,

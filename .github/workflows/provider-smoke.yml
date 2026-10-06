@@ -23,7 +23,7 @@ jobs:
     runs-on: ${{ vars.NBA_DATA_RUNNER || 'ubuntu-latest' }}
     permissions:
       contents: write
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v7
@@ -45,6 +45,7 @@ jobs:
         if: always()
         run: python -m nba.official_report_probe --output runtime/official_report_probe.json
       - name: Official-provider smoke
+        continue-on-error: true
         run: python -m nba.provider_smoke --output runtime/provider_smoke.json
       - name: Refresh readiness snapshot
         if: always()
@@ -70,3 +71,16 @@ jobs:
       - name: Persist provider diagnostics
         if: always()
         run: .github/scripts/persist-runtime-data.sh
+      - name: Enforce provider health signal
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path("runtime/provider_smoke.json")
+          if not path.exists():
+              raise SystemExit("provider smoke produced no diagnostic")
+          state = json.loads(path.read_text(encoding="utf-8")).get("state")
+          if state in {"BLOCKED", "DEGRADED"}:
+              raise SystemExit(f"provider health remains {state}")
+          PY

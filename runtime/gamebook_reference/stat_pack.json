@@ -98,6 +98,22 @@
         "source": "NBA_OFFICIAL_SCORERS_REPORT"
       },
       {
+        "DEF_RATING": 93.35000042153119,
+        "EFG_PCT": 0.5697674418604651,
+        "FG3A": 40.0,
+        "FGA": 86.0,
+        "FTA": 36.0,
+        "GP": 1,
+        "OFF_RATING": 114.68714337502404,
+        "OREB_PCT": 0.25,
+        "PACE": 112.47991379310345,
+        "PTS": 129.0,
+        "TEAM_ID": 1610612748,
+        "TEAM_NAME": "Miami Heat",
+        "TM_TOV_PCT": 19.709870703248185,
+        "source": "NBA_OFFICIAL_SCORERS_REPORT"
+      },
+      {
         "DEF_RATING": 113.88958530936557,
         "EFG_PCT": 0.4175824175824176,
         "FG3A": 47.0,
@@ -175,6 +191,22 @@
         "TEAM_ID": 1610612756,
         "TEAM_NAME": "Phoenix Suns",
         "TM_TOV_PCT": 23.864384463462805,
+        "source": "NBA_OFFICIAL_SCORERS_REPORT"
+      },
+      {
+        "DEF_RATING": 114.68714337502404,
+        "EFG_PCT": 0.4574468085106383,
+        "FG3A": 41.0,
+        "FGA": 94.0,
+        "FTA": 30.0,
+        "GP": 1,
+        "OFF_RATING": 93.35000042153119,
+        "OREB_PCT": 0.22413793103448276,
+        "PACE": 112.47991379310345,
+        "PTS": 105.0,
+        "TEAM_ID": 1610612761,
+        "TEAM_NAME": "Toronto Raptors",
+        "TM_TOV_PCT": 15.055467511885896,
         "source": "NBA_OFFICIAL_SCORERS_REPORT"
       },
       {
@@ -292,6 +324,22 @@
         "source": "NBA_OFFICIAL_SCORERS_REPORT"
       },
       {
+        "DEF_RATING": 93.35000042153119,
+        "EFG_PCT": 0.5697674418604651,
+        "FG3A": 40.0,
+        "FGA": 86.0,
+        "FTA": 36.0,
+        "GP": 1,
+        "OFF_RATING": 114.68714337502404,
+        "OREB_PCT": 0.25,
+        "PACE": 112.47991379310345,
+        "PTS": 129.0,
+        "TEAM_ID": 1610612748,
+        "TEAM_NAME": "Miami Heat",
+        "TM_TOV_PCT": 19.709870703248185,
+        "source": "NBA_OFFICIAL_SCORERS_REPORT"
+      },
+      {
         "DEF_RATING": 113.88958530936557,
         "EFG_PCT": 0.4175824175824176,
         "FG3A": 47.0,
@@ -369,6 +417,22 @@
         "TEAM_ID": 1610612756,
         "TEAM_NAME": "Phoenix Suns",
         "TM_TOV_PCT": 23.864384463462805,
+        "source": "NBA_OFFICIAL_SCORERS_REPORT"
+      },
+      {
+        "DEF_RATING": 114.68714337502404,
+        "EFG_PCT": 0.4574468085106383,
+        "FG3A": 41.0,
+        "FGA": 94.0,
+        "FTA": 30.0,
+        "GP": 1,
+        "OFF_RATING": 93.35000042153119,
+        "OREB_PCT": 0.22413793103448276,
+        "PACE": 112.47991379310345,
+        "PTS": 105.0,
+        "TEAM_ID": 1610612761,
+        "TEAM_NAME": "Toronto Raptors",
+        "TM_TOV_PCT": 15.055467511885896,
         "source": "NBA_OFFICIAL_SCORERS_REPORT"
       },
       {
@@ -486,6 +550,22 @@
         "source": "NBA_OFFICIAL_SCORERS_REPORT"
       },
       {
+        "DEF_RATING": 93.35000042153119,
+        "EFG_PCT": 0.5697674418604651,
+        "FG3A": 40.0,
+        "FGA": 86.0,
+        "FTA": 36.0,
+        "GP": 1,
+        "OFF_RATING": 114.68714337502404,
+        "OREB_PCT": 0.25,
+        "PACE": 112.47991379310345,
+        "PTS": 129.0,
+        "TEAM_ID": 1610612748,
+        "TEAM_NAME": "Miami Heat",
+        "TM_TOV_PCT": 19.709870703248185,
+        "source": "NBA_OFFICIAL_SCORERS_REPORT"
+      },
+      {
         "DEF_RATING": 113.88958530936557,
         "EFG_PCT": 0.4175824175824176,
         "FG3A": 47.0,
@@ -563,6 +643,22 @@
         "TEAM_ID": 1610612756,
         "TEAM_NAME": "Phoenix Suns",
         "TM_TOV_PCT": 23.864384463462805,
+        "source": "NBA_OFFICIAL_SCORERS_REPORT"
+      },
+      {
+        "DEF_RATING": 114.68714337502404,
+        "EFG_PCT": 0.4574468085106383,
+        "FG3A": 41.0,
+        "FGA": 94.0,
+        "FTA": 30.0,
+        "GP": 1,
+        "OFF_RATING": 93.35000042153119,
+        "OREB_PCT": 0.22413793103448276,
+        "PACE": 112.47991379310345,
+        "PTS": 105.0,
+        "TEAM_ID": 1610612761,
+        "TEAM_NAME": "Toronto Raptors",
+        "TM_TOV_PCT": 15.055467511885896,
         "source": "NBA_OFFICIAL_SCORERS_REPORT"
       },
       {
@@ -680,6 +776,22 @@
         "source": "NBA_OFFICIAL_SCORERS_REPORT"
       },
       {
+        "DEF_RATING": 93.35000042153119,
+        "EFG_PCT": 0.5697674418604651,
+        "FG3A": 40.0,
+        "FGA": 86.0,
+        "FTA": 36.0,
+        "GP": 1,
+        "OFF_RATING": 114.68714337502404,
+        "OREB_PCT": 0.25,
+        "PACE": 112.47991379310345,
+        "PTS": 129.0,
+        "TEAM_ID": 1610612748,
+        "TEAM_NAME": "Miami Heat",
+        "TM_TOV_PCT": 19.709870703248185,
+        "source": "NBA_OFFICIAL_SCORERS_REPORT"
+      },
+      {
         "DEF_RATING": 113.88958530936557,
         "EFG_PCT": 0.4175824175824176,
         "FG3A": 47.0,
@@ -757,6 +869,22 @@
         "TEAM_ID": 1610612756,
         "TEAM_NAME": "Phoenix Suns",
         "TM_TOV_PCT": 23.864384463462805,
+        "source": "NBA_OFFICIAL_SCORERS_REPORT"
+      },
+      {
+        "DEF_RATING": 114.68714337502404,
+        "EFG_PCT": 0.4574468085106383,
+        "FG3A": 41.0,
+        "FGA": 94.0,
+        "FTA": 30.0,
+        "GP": 1,
+        "OFF_RATING": 93.35000042153119,
+        "OREB_PCT": 0.22413793103448276,
+        "PACE": 112.47991379310345,
+        "PTS": 105.0,
+        "TEAM_ID": 1610612761,
+        "TEAM_NAME": "Toronto Raptors",
+        "TM_TOV_PCT": 15.055467511885896,
         "source": "NBA_OFFICIAL_SCORERS_REPORT"
       },
       {
@@ -874,6 +1002,22 @@
         "source": "NBA_OFFICIAL_SCORERS_REPORT"
       },
       {
+        "DEF_RATING": 93.35000042153119,
+        "EFG_PCT": 0.5697674418604651,
+        "FG3A": 40.0,
+        "FGA": 86.0,
+        "FTA": 36.0,
+        "GP": 1,
+        "OFF_RATING": 114.68714337502404,
+        "OREB_PCT": 0.25,
+        "PACE": 112.47991379310345,
+        "PTS": 129.0,
+        "TEAM_ID": 1610612748,
+        "TEAM_NAME": "Miami Heat",
+        "TM_TOV_PCT": 19.709870703248185,
+        "source": "NBA_OFFICIAL_SCORERS_REPORT"
+      },
+      {
         "DEF_RATING": 113.88958530936557,
         "EFG_PCT": 0.4175824175824176,
         "FG3A": 47.0,
@@ -951,6 +1095,22 @@
         "TEAM_ID": 1610612756,
         "TEAM_NAME": "Phoenix Suns",
         "TM_TOV_PCT": 23.864384463462805,
+        "source": "NBA_OFFICIAL_SCORERS_REPORT"
+      },
+      {
+        "DEF_RATING": 114.68714337502404,
+        "EFG_PCT": 0.4574468085106383,
+        "FG3A": 41.0,
+        "FGA": 94.0,
+        "FTA": 30.0,
+        "GP": 1,
+        "OFF_RATING": 93.35000042153119,
+        "OREB_PCT": 0.22413793103448276,
+        "PACE": 112.47991379310345,
+        "PTS": 105.0,
+        "TEAM_ID": 1610612761,
+        "TEAM_NAME": "Toronto Raptors",
+        "TM_TOV_PCT": 15.055467511885896,
         "source": "NBA_OFFICIAL_SCORERS_REPORT"
       },
       {
@@ -1069,6 +1229,22 @@
       "source": "NBA_OFFICIAL_SCORERS_REPORT"
     },
     {
+      "DEF_RATING": 93.35000042153119,
+      "EFG_PCT": 0.5697674418604651,
+      "FG3A": 40.0,
+      "FGA": 86.0,
+      "FTA": 36.0,
+      "GP": 1,
+      "OFF_RATING": 114.68714337502404,
+      "OREB_PCT": 0.25,
+      "PACE": 112.47991379310345,
+      "PTS": 129.0,
+      "TEAM_ID": 1610612748,
+      "TEAM_NAME": "Miami Heat",
+      "TM_TOV_PCT": 19.709870703248185,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
       "DEF_RATING": 113.88958530936557,
       "EFG_PCT": 0.4175824175824176,
       "FG3A": 47.0,
@@ -1149,6 +1325,22 @@
       "source": "NBA_OFFICIAL_SCORERS_REPORT"
     },
     {
+      "DEF_RATING": 114.68714337502404,
+      "EFG_PCT": 0.4574468085106383,
+      "FG3A": 41.0,
+      "FGA": 94.0,
+      "FTA": 30.0,
+      "GP": 1,
+      "OFF_RATING": 93.35000042153119,
+      "OREB_PCT": 0.22413793103448276,
+      "PACE": 112.47991379310345,
+      "PTS": 105.0,
+      "TEAM_ID": 1610612761,
+      "TEAM_NAME": "Toronto Raptors",
+      "TM_TOV_PCT": 15.055467511885896,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
       "DEF_RATING": 102.21042935443698,
       "EFG_PCT": 0.5,
       "FG3A": 45.0,
@@ -1168,26 +1360,21 @@
   "collection_complete": false,
   "date_to": "10/05/2026",
   "expected_gamebooks": 8,
-  "gamebook_completeness": 0.75,
-  "gamebook_manifest_sha256": "ff43c51cf3a6b1e601b7eb12acfc71ec77eeb7e3fdebe244f7b8118d80f0c59d",
-  "gamebooks": 6,
+  "gamebook_completeness": 0.875,
+  "gamebook_manifest_sha256": "b2c8321d0809797a6be242788fb95b8569781367ab36670fa0f184ce19235714",
+  "gamebooks": 7,
   "limitations": {
     "player_off_def_ratings": "team_neutral_baseline",
     "production_requires_parity_gate": true
   },
   "missing_gamebooks": [
     {
-      "game_date": "2026-10-03",
-      "reason": "RuntimeError:official gamebook unavailable for espn-401902644: Miami Heat@Toronto Raptors:ValueError:gamebook final-box team sections are incomplete",
-      "reference_id": "espn-401902644"
-    },
-    {
       "game_date": "2026-10-05",
-      "reason": "RuntimeError:official gamebook unavailable for espn-401898716: Los Angeles Lakers@Sacramento Kings:ValueError:invalid away team minute total in gamebook",
+      "reason": "RuntimeError:official gamebook unavailable for espn-401898716: Los Angeles Lakers@Sacramento Kings:ValueError:missing valid away team total row in gamebook",
       "reference_id": "espn-401898716"
     }
   ],
-  "observed_at": "2026-10-06T08:36:05.858580+00:00",
+  "observed_at": "2026-10-06T08:40:05.834218+00:00",
   "player_advanced": [
     {
       "DEF_RATING": 123.50198921188158,
@@ -2323,6 +2510,215 @@
       "source": "NBA_OFFICIAL_SCORERS_REPORT"
     },
     {
+      "DEF_RATING": 93.35000042153119,
+      "GP": 1,
+      "MIN": 12.783333333333333,
+      "OFF_RATING": 114.68714337502404,
+      "PLAYER_ID": 6805762,
+      "PLAYER_NAME": "Andrew Wiggins",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.17762011251740736,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "DEF_RATING": 93.35000042153119,
+      "GP": 1,
+      "MIN": 14.116666666666667,
+      "OFF_RATING": 114.68714337502404,
+      "PLAYER_ID": 1933677136,
+      "PLAYER_NAME": "Giannis Antetokounmpo",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.1812172518287595,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "DEF_RATING": 93.35000042153119,
+      "GP": 1,
+      "MIN": 12.783333333333333,
+      "OFF_RATING": 114.68714337502404,
+      "PLAYER_ID": 1123686429,
+      "PLAYER_NAME": "Bam Adebayo",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.3445830182837703,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "DEF_RATING": 93.35000042153119,
+      "GP": 1,
+      "MIN": 12.783333333333333,
+      "OFF_RATING": 114.68714337502404,
+      "PLAYER_ID": 1080193127,
+      "PLAYER_NAME": "Klay Thompson",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.08881005625870368,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "DEF_RATING": 93.35000042153119,
+      "GP": 1,
+      "MIN": 12.783333333333333,
+      "OFF_RATING": 114.68714337502404,
+      "PLAYER_ID": 1602742058,
+      "PLAYER_NAME": "Davion Mitchell",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.20722346460364194,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "DEF_RATING": 93.35000042153119,
+      "GP": 1,
+      "MIN": 11.216666666666667,
+      "OFF_RATING": 114.68714337502404,
+      "PLAYER_ID": 1453667343,
+      "PLAYER_NAME": "Simone Fontecchio",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.20242886523157722,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "DEF_RATING": 93.35000042153119,
+      "GP": 1,
+      "MIN": 11.216666666666667,
+      "OFF_RATING": 114.68714337502404,
+      "PLAYER_ID": 966103655,
+      "PLAYER_NAME": "Tim Hardaway Jr.",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.21322507137726135,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "DEF_RATING": 93.35000042153119,
+      "GP": 1,
+      "MIN": 17.4,
+      "OFF_RATING": 114.68714337502404,
+      "PLAYER_ID": 1536399233,
+      "PLAYER_NAME": "Nikola Jovi\u0107",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.2775149795017345,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "DEF_RATING": 93.35000042153119,
+      "GP": 1,
+      "MIN": 11.216666666666667,
+      "OFF_RATING": 114.68714337502404,
+      "PLAYER_ID": 517728026,
+      "PLAYER_NAME": "Pelle Larsson",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.23886606097326113,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "DEF_RATING": 93.35000042153119,
+      "GP": 1,
+      "MIN": 11.216666666666667,
+      "OFF_RATING": 114.68714337502404,
+      "PLAYER_ID": 1210754422,
+      "PLAYER_NAME": "Bobby Portis Jr.",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.19838028792694568,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "DEF_RATING": 93.35000042153119,
+      "GP": 1,
+      "MIN": 18.416666666666668,
+      "OFF_RATING": 114.68714337502404,
+      "PLAYER_ID": 1775838056,
+      "PLAYER_NAME": "Ryan Conwell",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.18493388185635945,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "DEF_RATING": 93.35000042153119,
+      "GP": 1,
+      "MIN": 16.433333333333334,
+      "OFF_RATING": 114.68714337502404,
+      "PLAYER_ID": 848888555,
+      "PLAYER_NAME": "Tre Donaldson",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.2219915141210629,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "DEF_RATING": 93.35000042153119,
+      "GP": 1,
+      "MIN": 13.766666666666667,
+      "OFF_RATING": 114.68714337502404,
+      "PLAYER_ID": 1792355240,
+      "PLAYER_NAME": "Myron Gardner",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.2441007832024941,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "DEF_RATING": 93.35000042153119,
+      "GP": 1,
+      "MIN": 10.366666666666667,
+      "OFF_RATING": 114.68714337502404,
+      "PLAYER_ID": 1646764634,
+      "PLAYER_NAME": "Nick Richards",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.07300891012907366,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "DEF_RATING": 93.35000042153119,
+      "GP": 1,
+      "MIN": 10.233333333333333,
+      "OFF_RATING": 114.68714337502404,
+      "PLAYER_ID": 575640060,
+      "PLAYER_NAME": "J'Vonne Hadley",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.0369800831435536,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "DEF_RATING": 93.35000042153119,
+      "GP": 1,
+      "MIN": 17.583333333333332,
+      "OFF_RATING": 114.68714337502404,
+      "PLAYER_ID": 114675241,
+      "PLAYER_NAME": "Bez Mbeng",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.2582646944091971,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "DEF_RATING": 93.35000042153119,
+      "GP": 1,
+      "MIN": 9.5,
+      "OFF_RATING": 114.68714337502404,
+      "PLAYER_ID": 1367037654,
+      "PLAYER_NAME": "Ian Schieffelin",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.19439326793805706,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "DEF_RATING": 93.35000042153119,
+      "GP": 1,
+      "MIN": 9.2,
+      "OFF_RATING": 114.68714337502404,
+      "PLAYER_ID": 718480072,
+      "PLAYER_NAME": "Lester Quinones",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.08226728641355766,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "DEF_RATING": 93.35000042153119,
+      "GP": 1,
+      "MIN": 6.983333333333333,
+      "OFF_RATING": 114.68714337502404,
+      "PLAYER_ID": 920161942,
+      "PLAYER_NAME": "Vladislav Goldin",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.27095192183940225,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
       "DEF_RATING": 113.88958530936557,
       "GP": 1,
       "MIN": 18.35,
@@ -3255,6 +3651,138 @@
       "PLAYER_NAME": "Kennedy Chandler",
       "TEAM_ID": 1610612756,
       "USG_PCT": 0.22316198212472524,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "DEF_RATING": 114.68714337502404,
+      "GP": 1,
+      "MIN": 17.416666666666668,
+      "OFF_RATING": 93.35000042153119,
+      "PLAYER_ID": 322183477,
+      "PLAYER_NAME": "RJ Barrett",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.2952524662759044,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "DEF_RATING": 114.68714337502404,
+      "GP": 1,
+      "MIN": 12.216666666666667,
+      "OFF_RATING": 93.35000042153119,
+      "PLAYER_ID": 2025928884,
+      "PLAYER_NAME": "Scottie Barnes",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.46326777262968544,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "DEF_RATING": 114.68714337502404,
+      "GP": 1,
+      "MIN": 17.7,
+      "OFF_RATING": 93.35000042153119,
+      "PLAYER_ID": 129163494,
+      "PLAYER_NAME": "Jakob Poeltl",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.12377447688629833,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "DEF_RATING": 114.68714337502404,
+      "GP": 1,
+      "MIN": 17.566666666666666,
+      "OFF_RATING": 93.35000042153119,
+      "PLAYER_ID": 143290610,
+      "PLAYER_NAME": "Ja'Kobe Walter",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.194865533760153,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "DEF_RATING": 114.68714337502404,
+      "GP": 1,
+      "MIN": 11.966666666666667,
+      "OFF_RATING": 93.35000042153119,
+      "PLAYER_ID": 1234397056,
+      "PLAYER_NAME": "Immanuel Quickley",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.22248806996013754,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "DEF_RATING": 114.68714337502404,
+      "GP": 1,
+      "MIN": 20.083333333333332,
+      "OFF_RATING": 93.35000042153119,
+      "PLAYER_ID": 1960642485,
+      "PLAYER_NAME": "Collin Murray-Boyles",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.19771817111743858,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "DEF_RATING": 114.68714337502404,
+      "GP": 1,
+      "MIN": 27.783333333333335,
+      "OFF_RATING": 93.35000042153119,
+      "PLAYER_ID": 2089727421,
+      "PLAYER_NAME": "Jamal Shead",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.14894517134607943,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "DEF_RATING": 114.68714337502404,
+      "GP": 1,
+      "MIN": 30.583333333333332,
+      "OFF_RATING": 93.35000042153119,
+      "PLAYER_ID": 988243148,
+      "PLAYER_NAME": "Malachi Smith",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.17261817883468566,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "DEF_RATING": 114.68714337502404,
+      "GP": 1,
+      "MIN": 19.516666666666666,
+      "OFF_RATING": 93.35000042153119,
+      "PLAYER_ID": 558470614,
+      "PLAYER_NAME": "Jaden Bradley",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.11225319765435425,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "DEF_RATING": 114.68714337502404,
+      "GP": 1,
+      "MIN": 24.2,
+      "OFF_RATING": 93.35000042153119,
+      "PLAYER_ID": 1722918462,
+      "PLAYER_NAME": "Nimari Burnett",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.233867270893636,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "DEF_RATING": 114.68714337502404,
+      "GP": 1,
+      "MIN": 25.366666666666667,
+      "OFF_RATING": 93.35000042153119,
+      "PLAYER_ID": 675501585,
+      "PLAYER_NAME": "Chucky Hepburn",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.13974439337680214,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "DEF_RATING": 114.68714337502404,
+      "GP": 1,
+      "MIN": 15.6,
+      "OFF_RATING": 93.35000042153119,
+      "PLAYER_ID": 605290474,
+      "PLAYER_NAME": "Tyreke Key",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.2652688040960624,
       "source": "NBA_OFFICIAL_SCORERS_REPORT"
     },
     {
@@ -4365,6 +4893,177 @@
     },
     {
       "GP": 1,
+      "MIN": 12.783333333333333,
+      "PLAYER_ID": 6805762,
+      "PLAYER_NAME": "Andrew Wiggins",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.17762011251740736,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 14.116666666666667,
+      "PLAYER_ID": 1933677136,
+      "PLAYER_NAME": "Giannis Antetokounmpo",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.1812172518287595,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 12.783333333333333,
+      "PLAYER_ID": 1123686429,
+      "PLAYER_NAME": "Bam Adebayo",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.3445830182837703,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 12.783333333333333,
+      "PLAYER_ID": 1080193127,
+      "PLAYER_NAME": "Klay Thompson",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.08881005625870368,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 12.783333333333333,
+      "PLAYER_ID": 1602742058,
+      "PLAYER_NAME": "Davion Mitchell",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.20722346460364194,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 11.216666666666667,
+      "PLAYER_ID": 1453667343,
+      "PLAYER_NAME": "Simone Fontecchio",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.20242886523157722,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 11.216666666666667,
+      "PLAYER_ID": 966103655,
+      "PLAYER_NAME": "Tim Hardaway Jr.",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.21322507137726135,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 17.4,
+      "PLAYER_ID": 1536399233,
+      "PLAYER_NAME": "Nikola Jovi\u0107",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.2775149795017345,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 11.216666666666667,
+      "PLAYER_ID": 517728026,
+      "PLAYER_NAME": "Pelle Larsson",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.23886606097326113,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 11.216666666666667,
+      "PLAYER_ID": 1210754422,
+      "PLAYER_NAME": "Bobby Portis Jr.",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.19838028792694568,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 18.416666666666668,
+      "PLAYER_ID": 1775838056,
+      "PLAYER_NAME": "Ryan Conwell",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.18493388185635945,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 16.433333333333334,
+      "PLAYER_ID": 848888555,
+      "PLAYER_NAME": "Tre Donaldson",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.2219915141210629,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 13.766666666666667,
+      "PLAYER_ID": 1792355240,
+      "PLAYER_NAME": "Myron Gardner",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.2441007832024941,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 10.366666666666667,
+      "PLAYER_ID": 1646764634,
+      "PLAYER_NAME": "Nick Richards",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.07300891012907366,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 10.233333333333333,
+      "PLAYER_ID": 575640060,
+      "PLAYER_NAME": "J'Vonne Hadley",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.0369800831435536,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 17.583333333333332,
+      "PLAYER_ID": 114675241,
+      "PLAYER_NAME": "Bez Mbeng",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.2582646944091971,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 9.5,
+      "PLAYER_ID": 1367037654,
+      "PLAYER_NAME": "Ian Schieffelin",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.19439326793805706,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 9.2,
+      "PLAYER_ID": 718480072,
+      "PLAYER_NAME": "Lester Quinones",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.08226728641355766,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 6.983333333333333,
+      "PLAYER_ID": 920161942,
+      "PLAYER_NAME": "Vladislav Goldin",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.27095192183940225,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
       "MIN": 18.35,
       "PLAYER_ID": 655966259,
       "PLAYER_NAME": "Jaime Jaquez Jr.",
@@ -5126,6 +5825,114 @@
       "PLAYER_NAME": "Kennedy Chandler",
       "TEAM_ID": 1610612756,
       "USG_PCT": 0.22316198212472524,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 17.416666666666668,
+      "PLAYER_ID": 322183477,
+      "PLAYER_NAME": "RJ Barrett",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.2952524662759044,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 12.216666666666667,
+      "PLAYER_ID": 2025928884,
+      "PLAYER_NAME": "Scottie Barnes",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.46326777262968544,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 17.7,
+      "PLAYER_ID": 129163494,
+      "PLAYER_NAME": "Jakob Poeltl",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.12377447688629833,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 17.566666666666666,
+      "PLAYER_ID": 143290610,
+      "PLAYER_NAME": "Ja'Kobe Walter",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.194865533760153,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 11.966666666666667,
+      "PLAYER_ID": 1234397056,
+      "PLAYER_NAME": "Immanuel Quickley",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.22248806996013754,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 20.083333333333332,
+      "PLAYER_ID": 1960642485,
+      "PLAYER_NAME": "Collin Murray-Boyles",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.19771817111743858,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 27.783333333333335,
+      "PLAYER_ID": 2089727421,
+      "PLAYER_NAME": "Jamal Shead",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.14894517134607943,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 30.583333333333332,
+      "PLAYER_ID": 988243148,
+      "PLAYER_NAME": "Malachi Smith",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.17261817883468566,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 19.516666666666666,
+      "PLAYER_ID": 558470614,
+      "PLAYER_NAME": "Jaden Bradley",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.11225319765435425,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 24.2,
+      "PLAYER_ID": 1722918462,
+      "PLAYER_NAME": "Nimari Burnett",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.233867270893636,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 25.366666666666667,
+      "PLAYER_ID": 675501585,
+      "PLAYER_NAME": "Chucky Hepburn",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.13974439337680214,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 15.6,
+      "PLAYER_ID": 605290474,
+      "PLAYER_NAME": "Tyreke Key",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.2652688040960624,
       "source": "NBA_OFFICIAL_SCORERS_REPORT"
     },
     {
@@ -6203,6 +7010,177 @@
     },
     {
       "GP": 1,
+      "MIN": 12.783333333333333,
+      "PLAYER_ID": 6805762,
+      "PLAYER_NAME": "Andrew Wiggins",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.17762011251740736,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 14.116666666666667,
+      "PLAYER_ID": 1933677136,
+      "PLAYER_NAME": "Giannis Antetokounmpo",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.1812172518287595,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 12.783333333333333,
+      "PLAYER_ID": 1123686429,
+      "PLAYER_NAME": "Bam Adebayo",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.3445830182837703,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 12.783333333333333,
+      "PLAYER_ID": 1080193127,
+      "PLAYER_NAME": "Klay Thompson",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.08881005625870368,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 12.783333333333333,
+      "PLAYER_ID": 1602742058,
+      "PLAYER_NAME": "Davion Mitchell",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.20722346460364194,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 11.216666666666667,
+      "PLAYER_ID": 1453667343,
+      "PLAYER_NAME": "Simone Fontecchio",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.20242886523157722,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 11.216666666666667,
+      "PLAYER_ID": 966103655,
+      "PLAYER_NAME": "Tim Hardaway Jr.",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.21322507137726135,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 17.4,
+      "PLAYER_ID": 1536399233,
+      "PLAYER_NAME": "Nikola Jovi\u0107",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.2775149795017345,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 11.216666666666667,
+      "PLAYER_ID": 517728026,
+      "PLAYER_NAME": "Pelle Larsson",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.23886606097326113,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 11.216666666666667,
+      "PLAYER_ID": 1210754422,
+      "PLAYER_NAME": "Bobby Portis Jr.",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.19838028792694568,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 18.416666666666668,
+      "PLAYER_ID": 1775838056,
+      "PLAYER_NAME": "Ryan Conwell",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.18493388185635945,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 16.433333333333334,
+      "PLAYER_ID": 848888555,
+      "PLAYER_NAME": "Tre Donaldson",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.2219915141210629,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 13.766666666666667,
+      "PLAYER_ID": 1792355240,
+      "PLAYER_NAME": "Myron Gardner",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.2441007832024941,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 10.366666666666667,
+      "PLAYER_ID": 1646764634,
+      "PLAYER_NAME": "Nick Richards",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.07300891012907366,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 10.233333333333333,
+      "PLAYER_ID": 575640060,
+      "PLAYER_NAME": "J'Vonne Hadley",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.0369800831435536,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 17.583333333333332,
+      "PLAYER_ID": 114675241,
+      "PLAYER_NAME": "Bez Mbeng",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.2582646944091971,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 9.5,
+      "PLAYER_ID": 1367037654,
+      "PLAYER_NAME": "Ian Schieffelin",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.19439326793805706,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 9.2,
+      "PLAYER_ID": 718480072,
+      "PLAYER_NAME": "Lester Quinones",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.08226728641355766,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 6.983333333333333,
+      "PLAYER_ID": 920161942,
+      "PLAYER_NAME": "Vladislav Goldin",
+      "TEAM_ID": 1610612748,
+      "USG_PCT": 0.27095192183940225,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
       "MIN": 18.35,
       "PLAYER_ID": 655966259,
       "PLAYER_NAME": "Jaime Jaquez Jr.",
@@ -6968,6 +7946,114 @@
     },
     {
       "GP": 1,
+      "MIN": 17.416666666666668,
+      "PLAYER_ID": 322183477,
+      "PLAYER_NAME": "RJ Barrett",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.2952524662759044,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 12.216666666666667,
+      "PLAYER_ID": 2025928884,
+      "PLAYER_NAME": "Scottie Barnes",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.46326777262968544,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 17.7,
+      "PLAYER_ID": 129163494,
+      "PLAYER_NAME": "Jakob Poeltl",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.12377447688629833,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 17.566666666666666,
+      "PLAYER_ID": 143290610,
+      "PLAYER_NAME": "Ja'Kobe Walter",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.194865533760153,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 11.966666666666667,
+      "PLAYER_ID": 1234397056,
+      "PLAYER_NAME": "Immanuel Quickley",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.22248806996013754,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 20.083333333333332,
+      "PLAYER_ID": 1960642485,
+      "PLAYER_NAME": "Collin Murray-Boyles",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.19771817111743858,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 27.783333333333335,
+      "PLAYER_ID": 2089727421,
+      "PLAYER_NAME": "Jamal Shead",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.14894517134607943,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 30.583333333333332,
+      "PLAYER_ID": 988243148,
+      "PLAYER_NAME": "Malachi Smith",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.17261817883468566,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 19.516666666666666,
+      "PLAYER_ID": 558470614,
+      "PLAYER_NAME": "Jaden Bradley",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.11225319765435425,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 24.2,
+      "PLAYER_ID": 1722918462,
+      "PLAYER_NAME": "Nimari Burnett",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.233867270893636,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 25.366666666666667,
+      "PLAYER_ID": 675501585,
+      "PLAYER_NAME": "Chucky Hepburn",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.13974439337680214,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
+      "MIN": 15.6,
+      "PLAYER_ID": 605290474,
+      "PLAYER_NAME": "Tyreke Key",
+      "TEAM_ID": 1610612761,
+      "USG_PCT": 0.2652688040960624,
+      "source": "NBA_OFFICIAL_SCORERS_REPORT"
+    },
+    {
+      "GP": 1,
       "MIN": 13.716666666666667,
       "PLAYER_ID": 2086577380,
       "PLAYER_NAME": "Lauri Markkanen",
@@ -7117,7 +8203,7 @@
   "schema": "pulsar-nba-gamebook-stat-pack-v1",
   "season": "2026-27",
   "source": "NBA_OFFICIAL_SCORERS_REPORT",
-  "stat_pack_sha256": "ff84f5c7c46f541a0441dd22125242c02745e0bd59dd722e5a1a3f904966d0e9",
-  "teams_with_games": 12,
+  "stat_pack_sha256": "b31476c2e5fa467858cb25e3a01d0c039095a8ad3f602f37c55442f28340db02",
+  "teams_with_games": 14,
   "usage_scale": "fraction_0_to_1"
 }

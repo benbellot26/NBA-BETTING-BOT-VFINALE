@@ -4,7 +4,7 @@ Pulsar NBA is a standalone NBA probability, market, research and decision engine
 
 ## Current status
 
-**V1.8.12 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
+**V1.8.13 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
 
 ## End-to-end chain
 
@@ -636,3 +636,11 @@ dash in that column. Team minutes may also differ by a few extraction/rounding
 seconds from the legal 240-minute (plus overtime) total and are normalized only
 when within a strict five-second tolerance. Acceptance still requires exact
 player/team point reconciliation and reconciled total player minutes.
+
+
+## V1.8.13 — gamebook structural diagnostics
+
+When a scorer report contains parsed player rows but no acceptable team-total
+row, the failure now records only a bounded structural token window around
+minute-like rows. This makes format drift diagnosable from hosted-runner logs
+without persisting raw PDFs or weakening parser validation.

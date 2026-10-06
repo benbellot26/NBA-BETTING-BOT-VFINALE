@@ -36,7 +36,7 @@ ROLE = "ALTERNATE_PROVIDER_SHADOW"
 GENERATION = "pulsar-nba-gamebook-provider-shadow-v1"
 MIN_COMPLETED_TEAM_GAMES = 5
 MIN_GAMEBOOK_COMPLETENESS = 1.0
-SCHEDULE_CACHE_SCHEMA = "pulsar-nba-shadow-schedule-cache-v2"
+SCHEDULE_CACHE_SCHEMA = "pulsar-nba-shadow-schedule-cache-v3"
 SCHEDULE_CACHE_MAX_AGE_HOURS = 24.0
 
 
@@ -85,6 +85,7 @@ def _status(path: str | Path, payload: dict[str, Any]) -> None:
 def _reference_schedule_cached(
     *,
     season: str,
+    target_date: str,
     now: datetime,
     cache_path: str | Path,
 ) -> list[ReferenceScheduleGame]:
@@ -98,18 +99,20 @@ def _reference_schedule_cached(
             if (
                 payload.get("schema")==SCHEDULE_CACHE_SCHEMA
                 and payload.get("season")==season
+                and str(payload.get("coverage_through") or "") >= target_date
                 and -0.1 <= age_hours <= SCHEDULE_CACHE_MAX_AGE_HOURS
-                and len(rows)>=1000
+                and len(rows)>=1
             ):
                 return rows
         except (OSError,ValueError,TypeError,KeyError):
             pass
-    rows=resolve_gamebook_schedule(season=season)
-    if len(rows)<1000:
-        raise RuntimeError("NBA shadow schedule cache refresh too small")
+    rows=resolve_gamebook_schedule(season=season,target_date=target_date)
+    if not rows:
+        raise RuntimeError("NBA shadow schedule cache refresh empty")
     payload={
         "schema":SCHEDULE_CACHE_SCHEMA,
         "season":season,
+        "coverage_through":target_date,
         "generated_at":now.isoformat(),
         "games":[asdict(row) for row in rows],
     }
@@ -156,7 +159,8 @@ def run(
             list(reference_schedule)
             if reference_schedule is not None
             else _reference_schedule_cached(
-                season=season,now=current,cache_path=schedule_cache_path
+                season=season,target_date=target_date,
+                now=current,cache_path=schedule_cache_path
             )
         )
         schedule = as_pregame_schedule(reference, target_date=target_date)

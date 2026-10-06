@@ -4,7 +4,7 @@ Pulsar NBA is a standalone NBA probability, market, research and decision engine
 
 ## Current status
 
-**V1.8.6 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
+**V1.8.7 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
 
 ## End-to-end chain
 
@@ -568,3 +568,16 @@ workflow instead of racing it on the same push. This preserves the shared
 `nba-runtime-data` concurrency lock while preventing GitHub Actions from
 silently cancelling an older pending shadow run when several runtime writers
 are triggered together. Scheduled and manual shadow runs remain available.
+
+
+## V1.8.7 — official mobile schedule fallback
+
+Schedule acquisition now has a third official NBA route after the two static
+CDN variants: the public `data.nba.com` mobile full-season schedule. Its
+legacy JSON is normalized into the same ScheduleGame contract while preserving
+official GameIDs, local NBA game dates, UTC tip times, home/away identity,
+status and final scores.
+
+Provider diagnostics record which official schedule route supplied the data.
+The new route remains independent of betting-market data and does not change
+model features, certification gates or `NBA_LIVE_ENABLED`.

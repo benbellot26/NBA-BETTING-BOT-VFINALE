@@ -1,12 +1,22 @@
 import unittest
+from unittest.mock import patch
 from nba.injury_pdf import _report_dt, discover_report_links,parse_report_text
 from nba.rotation_projection import project_rotation
-from nba.schedule import parse_schedule,season_for_date
+from nba.schedule import fetch_schedule,parse_schedule,season_for_date
 from nba.schedule_context import build_game_context
 class LiveAcquisitionTests(unittest.TestCase):
     def test_schedule_parse_and_context(self):
         payload={"leagueSchedule":{"gameDates":[{"gameDate":"10/20/2026 12:00:00 AM","games":[{"gameId":"1","gameDateTimeUTC":"2026-10-20T23:00:00Z","gameStatus":3,"gameStatusText":"Final","homeTeam":{"teamCity":"Boston","teamName":"Celtics","score":"120"},"awayTeam":{"teamCity":"New York","teamName":"Knicks","score":"110"}}]},{"gameDate":"10/21/2026 12:00:00 AM","games":[{"gameId":"2","gameDateTimeUTC":"2026-10-21T23:00:00Z","gameStatus":1,"gameStatusText":"7:00 pm ET","homeTeam":{"teamCity":"Philadelphia","teamName":"76ers"},"awayTeam":{"teamCity":"Boston","teamName":"Celtics"}}]}]}}
         games=parse_schedule(payload);self.assertEqual(games[0].game_date,"2026-10-20");self.assertTrue(games[0].final);ctx=build_game_context(games[1],games,analyzed_at="2026-10-21T12:00:00Z");self.assertTrue(ctx.away_b2b);self.assertGreater(ctx.away_travel_km,0)
+    def test_schedule_fetch_falls_back_to_legacy_cdn_route(self):
+        payload={"leagueSchedule":{"gameDates":[{"gameDate":"10/06/2026 12:00:00 AM","games":[{"gameId":"0012600010","gameDateTimeUTC":"2026-10-07T02:00:00Z","gameStatus":1,"gameStatusText":"10:00 pm ET","homeTeam":{"teamCity":"Golden State","teamName":"Warriors"},"awayTeam":{"teamCity":"Los Angeles","teamName":"Lakers"}}]}]}}
+        with patch("nba.schedule.get_json",side_effect=[RuntimeError("HTTP 403"),payload]) as get_json:
+            games=fetch_schedule()
+        self.assertEqual(len(games),1)
+        self.assertEqual(games[0].game_id,"0012600010")
+        self.assertEqual(games[0].home,"Golden State Warriors")
+        self.assertEqual(get_json.call_count,2)
+
     def test_injury_parser(self):
         html='<a href="https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-10-20_05_15PM.pdf">x</a>';self.assertEqual(len(discover_report_links(html,"https://official.nba.com/x")),1);rows=parse_report_text("Boston Celtics\nTatum, Jayson Questionable Injury/Illness - Ankle; Sprain\nBrown, Jaylen Out Injury/Illness - Knee",reported_at="2026-10-20T17:15:00Z");self.assertEqual(len(rows),2);self.assertEqual(rows[1].status,"OUT")
     def test_injury_discovery_finds_escaped_embedded_pdf_url(self):

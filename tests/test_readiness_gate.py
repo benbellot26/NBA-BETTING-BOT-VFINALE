@@ -67,7 +67,7 @@ class ReadinessGateTests(unittest.TestCase):
             type("G", (), {"neutral_site": False})()
             for _ in range(1200)
         ]
-        with patch("nba.provider_smoke.fetch_schedule",side_effect=RuntimeError("HTTP 403")), patch(
+        with patch("nba.provider_smoke.fetch_schedule_with_source",side_effect=RuntimeError("HTTP 403")), patch(
             "nba.provider_smoke.fetch_reference_schedule",return_value=reference
         ), patch(
             "nba.provider_smoke.team_stats",return_value=[{"TEAM_NAME":"x"}]*30
@@ -83,7 +83,7 @@ class ReadinessGateTests(unittest.TestCase):
         self.assertFalse(schedule["outcome_authority"])
 
     def test_provider_smoke_marks_sparse_current_stats_historical_only(self):
-        with patch("nba.provider_smoke.fetch_schedule",return_value=[object()]*1000), patch(
+        with patch("nba.provider_smoke.fetch_schedule_with_source",return_value=([object()]*1000,"NBA_DATA_MOBILE")), patch(
             "nba.provider_smoke.team_stats",
             side_effect=[[{"TEAM_NAME":"x"}]*10,[{"TEAM_NAME":"x"}]*30]
         ), patch("nba.provider_smoke.fetch_reference_schedule",return_value=[]), patch("nba.provider_smoke.fetch_latest_report",

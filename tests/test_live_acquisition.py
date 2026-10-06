@@ -2,7 +2,8 @@ import unittest
 from unittest.mock import patch
 from nba.injury_pdf import _report_dt, discover_report_links,parse_report_text
 from nba.rotation_projection import project_rotation
-from nba.schedule import fetch_schedule,parse_schedule,season_for_date
+from nba.schedule import (fetch_schedule,parse_legacy_data_schedule,parse_schedule,
+                          season_for_date)
 from nba.schedule_context import build_game_context
 class LiveAcquisitionTests(unittest.TestCase):
     def test_schedule_parse_and_context(self):
@@ -16,6 +17,37 @@ class LiveAcquisitionTests(unittest.TestCase):
         self.assertEqual(games[0].game_id,"0012600010")
         self.assertEqual(games[0].home,"Golden State Warriors")
         self.assertEqual(get_json.call_count,2)
+
+    def test_legacy_data_schedule_parser_preserves_game_id_and_utc_tip(self):
+        payload={"lscd":[{"mscd":{"mon":"October","g":[{
+            "gid":"0012600010","gdte":"2026-10-06","gdtutc":"2026-10-07",
+            "utctm":"02:00","st":"1","stt":"10:00 pm ET",
+            "v":{"tc":"Los Angeles","tn":"Lakers","s":""},
+            "h":{"tc":"Golden State","tn":"Warriors","s":""}
+        }]}}]}
+        games=parse_legacy_data_schedule(payload)
+        self.assertEqual(len(games),1)
+        self.assertEqual(games[0].game_id,"0012600010")
+        self.assertEqual(games[0].game_date,"2026-10-06")
+        self.assertEqual(games[0].commence_time,"2026-10-07T02:00:00Z")
+        self.assertEqual(games[0].away,"Los Angeles Lakers")
+        self.assertEqual(games[0].home,"Golden State Warriors")
+
+    def test_schedule_fetch_falls_back_to_data_nba_after_both_cdns_fail(self):
+        payload={"lscd":[{"mscd":{"g":[{
+            "gid":"0012600010","gdte":"2026-10-06","gdtutc":"2026-10-07",
+            "utctm":"02:00","st":"1","stt":"Scheduled",
+            "v":{"tc":"Los Angeles","tn":"Lakers"},
+            "h":{"tc":"Golden State","tn":"Warriors"}
+        }]}}]}
+        with patch(
+            "nba.schedule.get_json",
+            side_effect=[RuntimeError("HTTP 403"),RuntimeError("HTTP 403"),payload],
+        ) as get_json:
+            games=fetch_schedule()
+        self.assertEqual(len(games),1)
+        self.assertEqual(games[0].game_id,"0012600010")
+        self.assertEqual(get_json.call_count,3)
 
     def test_injury_parser(self):
         html='<a href="https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-10-20_05_15PM.pdf">x</a>';self.assertEqual(len(discover_report_links(html,"https://official.nba.com/x")),1);rows=parse_report_text("Boston Celtics\nTatum, Jayson Questionable Injury/Illness - Ankle; Sprain\nBrown, Jaylen Out Injury/Illness - Knee",reported_at="2026-10-20T17:15:00Z");self.assertEqual(len(rows),2);self.assertEqual(rows[1].status,"OUT")

@@ -16,7 +16,8 @@ from .injury_pdf import injury_page_url
 from .nba_stats_api import team_stats
 from .provider_http import get_bytes, get_json, get_text
 from .provider_smoke import _classify_failure, _previous
-from .schedule import DEFAULT_SCHEDULE_URL, LEGACY_SCHEDULE_URL, season_for_date
+from .schedule import (DEFAULT_SCHEDULE_URL, LEGACY_SCHEDULE_URL,
+                       legacy_data_schedule_url, season_for_date)
 
 
 def _timed(name: str, source: str, call: Callable[[], Any]) -> dict[str, Any]:
@@ -45,6 +46,9 @@ def run() -> dict[str, Any]:
         "cdn_schedule_json_legacy": _timed(
             "cdn_schedule_json_legacy", "schedule",
             lambda: get_json(LEGACY_SCHEDULE_URL, timeout=10.0, retries=0)),
+        "data_nba_mobile_schedule": _timed(
+            "data_nba_mobile_schedule", "schedule",
+            lambda: get_json(legacy_data_schedule_url(now), timeout=10.0, retries=0)),
         "api_hub_schedule_page": _timed(
             "api_hub_schedule_page", "schedule",
             lambda: get_text("https://api-hub.nba.com/schedule",

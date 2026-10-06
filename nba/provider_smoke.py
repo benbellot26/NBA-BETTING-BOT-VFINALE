@@ -8,7 +8,7 @@ from typing import Any
 from .communications_schedule import fetch_reference_schedule
 from .injury_pdf import fetch_latest_report
 from .nba_stats_api import team_stats
-from .schedule import fetch_schedule, season_for_date
+from .schedule import fetch_schedule_with_source, season_for_date
 
 HARD_FAILURE_STATES = {"ACCESS_BLOCKED", "TIMEOUT", "UNAVAILABLE"}
 
@@ -49,12 +49,13 @@ def run() -> dict[str, Any]:
     providers: dict[str, dict[str, Any]] = {}
 
     try:
-        games = fetch_schedule()
+        games, schedule_source = fetch_schedule_with_source()
         if len(games) < 1000:
             raise RuntimeError(f"unexpected schedule size {len(games)}")
         providers["schedule"] = _provider_row(
             state="OK", operational_ready=True, reachable=True, games=len(games),
-            authority="NBA_CDN_SCHEDULE_AND_OUTCOMES")
+            authority="NBA_OFFICIAL_SCHEDULE_AND_OUTCOMES",
+            source=schedule_source)
     except Exception as exc:
         primary_state = _classify_failure(exc)
         try:

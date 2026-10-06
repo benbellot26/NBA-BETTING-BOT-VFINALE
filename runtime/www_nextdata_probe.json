@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-nextdata-reference-probe-v1",
-  "checked_at": "2026-10-06T08:46:05.342851+00:00",
+  "checked_at": "2026-10-06T18:53:33.925447+00:00",
   "season": "2025-26",
   "role": "REFERENCE_ONLY",
   "predictive_evidence_eligible": false,
@@ -65,8 +65,8 @@
   "pages": {
     "teams_advanced": {
       "ok": true,
-      "next_data_sha256": "b8496c428aceeb8d08de4efae8f0d8d6a83bde012a5d15335be385c9776257ef",
-      "node_count": 3974,
+      "next_data_sha256": "e96fc50d01224494aa09266d8148ecea504665963c4acb96264fd37dd1aeb46c",
+      "node_count": 3997,
       "max_depth": 11,
       "top_level_type": "dict",
       "top_level_keys": [
@@ -192,7 +192,7 @@
         },
         {
           "path": "props.countrySplits",
-          "length": 105
+          "length": 106
         },
         {
           "path": "props.clientConfigSettings.targetMarkets.prime",
@@ -313,8 +313,8 @@
     },
     "teams_traditional": {
       "ok": true,
-      "next_data_sha256": "94c7f82f4be87887ccd05cd1f4ac71b934ae40f9db0556bd0709204da914b58a",
-      "node_count": 3974,
+      "next_data_sha256": "4c291b52bf6dcad56bc4b047b4b2628cd36986a5cd6b7f7f9d286d0aa9cf4e60",
+      "node_count": 3997,
       "max_depth": 11,
       "top_level_type": "dict",
       "top_level_keys": [
@@ -440,7 +440,7 @@
         },
         {
           "path": "props.countrySplits",
-          "length": 105
+          "length": 106
         },
         {
           "path": "props.clientConfigSettings.targetMarkets.prime",
@@ -561,8 +561,8 @@
     },
     "players_advanced": {
       "ok": true,
-      "next_data_sha256": "8c37b524cd86a56d6a850c1b9486ec66229fc2c64e2e691d32c50236ea88da40",
-      "node_count": 4374,
+      "next_data_sha256": "17f802aff6b74e1e2d4a5b2533795062e6623aaaeebe2e9c750ff3aa44594b23",
+      "node_count": 4397,
       "max_depth": 11,
       "top_level_type": "dict",
       "top_level_keys": [
@@ -688,7 +688,7 @@
         },
         {
           "path": "props.countrySplits",
-          "length": 105
+          "length": 106
         },
         {
           "path": "props.clientConfigSettings.targetMarkets.prime",
@@ -809,8 +809,8 @@
     },
     "players_traditional": {
       "ok": true,
-      "next_data_sha256": "2ec7d9b385a9ac342d6da0f3bb6e9734988c225269e398aeda6b63b838fafda6",
-      "node_count": 4374,
+      "next_data_sha256": "66687127eb5f570d760e8744a22225a34fe538c5f967e0739cfcc2db1e7dcae9",
+      "node_count": 4397,
       "max_depth": 11,
       "top_level_type": "dict",
       "top_level_keys": [
@@ -936,7 +936,7 @@
         },
         {
           "path": "props.countrySplits",
-          "length": 105
+          "length": 106
         },
         {
           "path": "props.clientConfigSettings.targetMarkets.prime",

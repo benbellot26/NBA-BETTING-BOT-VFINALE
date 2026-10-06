@@ -251,8 +251,20 @@ def _parse_team_segment(
     ]
     if not reconciled:
         if not total_candidates:
-            raise ValueError(f"missing valid {side} team total row in gamebook")
-        raise ValueError(f"{side} team total does not reconcile to parsed players")
+            minute_samples = []
+            for index, token in enumerate(tokens):
+                if re.fullmatch(r"\d{2,3}:\d{1,2}", token):
+                    minute_samples.append(
+                        [token, *tokens[index + 1:index + 18]]
+                    )
+            raise ValueError(
+                f"missing valid {side} team total row in gamebook; "
+                f"minute_samples={minute_samples[-8:]}"
+            )
+        raise ValueError(
+            f"{side} team total does not reconcile to parsed players; "
+            f"candidates={[(token, minutes, totals.get('PTS')) for token, minutes, totals in total_candidates]}"
+        )
 
     team_minutes_token, team_minutes, totals = reconciled[0]
     return TeamBox(

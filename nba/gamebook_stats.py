@@ -16,10 +16,12 @@ import math
 from pathlib import Path
 from typing import Any, Callable
 
-from .communications_schedule import ReferenceScheduleGame, fetch_reference_schedule
+from .communications_schedule import (ReferenceScheduleGame,
+                                      fetch_reference_schedule as fetch_communications_schedule)
 from .gamebook import gamebook_url, parse_gamebook_pdf
 from .provider_http import get_bytes
 from .rotation_projection import normalized_player_name
+from .reference_schedule import fetch_reference_schedule as fetch_external_reference_schedule
 from .schedule import ScheduleGame, fetch_schedule, season_for_date
 from .teams import TEAMS, team_info
 
@@ -49,8 +51,16 @@ def reference_schedule_from_games(
     ]
 
 
-def resolve_gamebook_schedule(*, season: str) -> list[ReferenceScheduleGame]:
-    """Use the full official current-season schedule, then fail over to PR PDF."""
+def resolve_gamebook_schedule(
+    *, season: str, target_date: str | None = None
+) -> list[ReferenceScheduleGame]:
+    """Resolve research schedule without weakening the production provider.
+
+    Official NBA full-season data remains preferred. If hosted-runner egress
+    blocks every NBA JSON route, the gamebook research path may use ESPN only
+    for date/time/team discovery. Official scorer gamebooks remain the stats
+    authority. NBA Communications is the final regular-season fallback.
+    """
     try:
         live = [
             game for game in fetch_schedule()
@@ -62,7 +72,24 @@ def resolve_gamebook_schedule(*, season: str) -> list[ReferenceScheduleGame]:
             )
         return reference_schedule_from_games(live)
     except Exception:
-        return fetch_reference_schedule(season=season)
+        pass
+
+    end = date.fromisoformat(
+        target_date
+        or datetime.now(ZoneInfo("America/New_York")).date().isoformat()
+    )
+    start = date(int(season[:4]), 9, 1)
+    try:
+        external = fetch_external_reference_schedule(
+            start_date=start.isoformat(),
+            end_date=end.isoformat(),
+        )
+        if external:
+            return external
+    except Exception:
+        pass
+
+    return fetch_communications_schedule(season=season)
 
 
 def _safe_div(a: float, b: float, default: float = 0.0) -> float:
@@ -214,7 +241,9 @@ def collect_gamebooks(
     max_network_games: int | None = None,
 ) -> tuple[list[dict[str, Any]], list[dict[str, str]]]:
     cutoff = date.fromisoformat(target_date)
-    rows = schedule if schedule is not None else resolve_gamebook_schedule(season=season)
+    rows = schedule if schedule is not None else resolve_gamebook_schedule(
+        season=season, target_date=target_date
+    )
     eligible = sorted(
         (row for row in rows if date.fromisoformat(row.game_date) < cutoff),
         key=lambda row: (row.game_date, row.schedule_number),

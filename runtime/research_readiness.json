@@ -20,12 +20,20 @@
       "targeted_events": 46
     },
     "gamebook_provider_shadow": {
-      "blocker": "no_completed_gamebook_history",
-      "gamebooks": 0,
-      "next_action": "collect official scorer gamebooks after NBA games begin",
+      "blocker": "prospective_provider_shadow_evidence_incomplete",
+      "gamebooks": 6,
+      "next_action": "continue prospective gamebook-provider shadow collection",
       "ready": false,
-      "state": "WAITING_FOR_SEASON_DATA",
-      "teams_with_games": 0
+      "review_failures": [
+        "resolved_n<250",
+        "paired_v1_n<100",
+        "gamebook_completeness<1.0",
+        "margin_mae_paired_metric_missing",
+        "total_mae_paired_metric_missing",
+        "ml_brier_paired_metric_missing"
+      ],
+      "state": "NO_ELIGIBLE_FINAL_WINDOW",
+      "teams_with_games": 12
     },
     "historical_pinnacle_research": {
       "blocker": "HISTORICAL_UNAVAILABLE_ON_FREE_USAGE_PLAN",
@@ -47,7 +55,7 @@
   },
   "benchmark_bookmaker": "pinnacle",
   "betting_certified": false,
-  "generated_at": "2026-10-06T08:21:19.579807+00:00",
+  "generated_at": "2026-10-06T08:28:22.296301+00:00",
   "live_betting_authorized": false,
   "pinnacle_replacement_allowed": false,
   "primary_blockers": [

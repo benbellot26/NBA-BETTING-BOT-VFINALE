@@ -462,12 +462,14 @@ def run(
     cache_root: str = "runtime/gamebook_reference",
     output: str = "runtime/gamebook_reference/stat_pack.json",
     max_network_games: int | None = None,
+    schedule: list[ReferenceScheduleGame] | None = None,
 ) -> dict[str, Any]:
     gamebooks, missing = collect_gamebooks(
         season=season,
         target_date=target_date,
         cache_root=cache_root,
         max_network_games=max_network_games,
+        schedule=schedule,
     )
     pack = build_reference_stat_pack(
         season=season, target_date=target_date,

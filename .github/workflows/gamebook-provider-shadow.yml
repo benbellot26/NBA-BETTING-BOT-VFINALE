@@ -3,6 +3,14 @@ concurrency:
   group: nba-runtime-data
   cancel-in-progress: false
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'nba/schedule.py'
+      - 'nba/communications_schedule.py'
+      - 'nba/gamebook_stats.py'
+      - 'nba/gamebook_shadow_runtime.py'
+      - '.github/workflows/gamebook-provider-shadow.yml'
   workflow_dispatch:
     inputs:
       target_date:

@@ -10,6 +10,7 @@ on:
       - 'nba/provider_smoke.py'
       - 'nba/provider_http.py'
       - 'nba/schedule.py'
+      - 'nba/reference_schedule.py'
       - 'nba/communications_schedule.py'
       - 'nba/runner_probe.py'
       - 'nba/stats_page_probe.py'

@@ -4,7 +4,7 @@ Pulsar NBA is a standalone NBA probability, market, research and decision engine
 
 ## Current status
 
-**V1.8.5 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
+**V1.8.6 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
 
 ## End-to-end chain
 
@@ -559,3 +559,12 @@ Provider-smoke diagnostics are now persisted before the workflow emits its
 health failure signal, so a blocked upstream source cannot leave stale runtime
 state behind. These changes do not alter the frozen V1 basketball model,
 betting certification, or the `NBA_LIVE_ENABLED` gate.
+
+
+## V1.8.6 — serialized shadow orchestration
+
+The gamebook provider shadow now follows a successful Gamebook Reference
+workflow instead of racing it on the same push. This preserves the shared
+`nba-runtime-data` concurrency lock while preventing GitHub Actions from
+silently cancelling an older pending shadow run when several runtime writers
+are triggered together. Scheduled and manual shadow runs remain available.

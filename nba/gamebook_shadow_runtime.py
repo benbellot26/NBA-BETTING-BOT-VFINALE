@@ -20,7 +20,7 @@ from .communications_schedule import (
     as_pregame_schedule,
     fetch_reference_schedule,
 )
-from .gamebook_stats import run as build_gamebook_pack
+from .gamebook_stats import resolve_gamebook_schedule, run as build_gamebook_pack
 from .injury_pdf import fetch_latest_report, game_report_ready
 from .lineage import build_input_manifest
 from .live_inputs import team_id, team_metric_from_pack
@@ -37,7 +37,7 @@ ROLE = "ALTERNATE_PROVIDER_SHADOW"
 GENERATION = "pulsar-nba-gamebook-provider-shadow-v1"
 MIN_COMPLETED_TEAM_GAMES = 5
 MIN_GAMEBOOK_COMPLETENESS = 1.0
-SCHEDULE_CACHE_SCHEMA = "pulsar-nba-communications-cache-v1"
+SCHEDULE_CACHE_SCHEMA = "pulsar-nba-shadow-schedule-cache-v2"
 SCHEDULE_CACHE_MAX_AGE_HOURS = 24.0
 
 
@@ -105,9 +105,9 @@ def _reference_schedule_cached(
                 return rows
         except (OSError,ValueError,TypeError,KeyError):
             pass
-    rows=fetch_reference_schedule(season=season)
+    rows=resolve_gamebook_schedule(season=season)
     if len(rows)<1000:
-        raise RuntimeError("NBA Communications schedule cache refresh too small")
+        raise RuntimeError("NBA shadow schedule cache refresh too small")
     payload={
         "schema":SCHEDULE_CACHE_SCHEMA,
         "season":season,

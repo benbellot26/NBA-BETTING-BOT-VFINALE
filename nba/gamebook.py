@@ -22,8 +22,8 @@ POSITION_CODES = {
 }
 TIME_RE = re.compile(r"^\d{2}:\d{2}$")
 HEADER_RE = {
-    "away": re.compile(r"VISITOR:\s*([^\n(]+)", re.I),
-    "home": re.compile(r"HOME:\s*([^\n(]+)", re.I),
+    "away": re.compile(r"VISITOR\s*:\s*([^\n(]+)", re.I),
+    "home": re.compile(r"HOME\s*:\s*([^\n(]+)", re.I),
 }
 TEAM_MINUTES_RE = re.compile(r"^\d{3}:\d{2}$")
 INTEGER_RE = re.compile(r"^-?\d+$")
@@ -228,17 +228,25 @@ def parse_final_box_text(
     text: str, *, expected_away: str, expected_home: str,
 ) -> dict[str, Any]:
     normalized = str(text).replace("\r", "")
-    if "FINAL BOX" not in normalized.upper():
-        raise ValueError("gamebook does not contain FINAL BOX")
-    visitor_at = re.search(r"VISITOR:", normalized, re.I)
-    home_at = re.search(r"HOME:", normalized, re.I)
-    score_at = re.search(r"SCORE\s+BY", normalized, re.I)
-    if visitor_at is None or home_at is None or score_at is None:
-        raise ValueError("gamebook final-box sections are incomplete")
-    if not (visitor_at.start() < home_at.start() < score_at.start()):
-        raise ValueError("gamebook final-box sections are out of order")
+    visitor_at = re.search(r"VISITOR\s*:", normalized, re.I)
+    home_at = re.search(r"HOME\s*:", normalized, re.I)
+    if visitor_at is None or home_at is None:
+        raise ValueError("gamebook final-box team sections are incomplete")
+    if visitor_at.start() >= home_at.start():
+        raise ValueError("gamebook final-box team sections are out of order")
+
+    # Some preseason scorer PDFs omit or extract the decorative FINAL BOX /
+    # SCORE BY labels differently. Those labels are not evidence: the strict
+    # team identity, 16-column width, points and minutes reconciliation below
+    # are. Use SCORE BY only as an optional end delimiter for the home table.
+    score_at = re.search(r"SCORE\s+BY", normalized[home_at.end():], re.I)
+    home_end = (
+        home_at.end() + score_at.start()
+        if score_at is not None
+        else len(normalized)
+    )
     away_text = normalized[visitor_at.start():home_at.start()]
-    home_text = normalized[home_at.start():score_at.start()]
+    home_text = normalized[home_at.start():home_end]
     away_box = _parse_team_segment(
         text=away_text, side="away", expected_name=expected_away
     )

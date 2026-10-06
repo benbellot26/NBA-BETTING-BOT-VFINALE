@@ -4,7 +4,7 @@ Pulsar NBA is a standalone NBA probability, market, research and decision engine
 
 ## Current status
 
-**V1.8.9 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
+**V1.8.10 — RESEARCH ONLY.** Software readiness does not imply betting certification. The authoritative source state in `data/nba_betting_certification.json` starts uncertified, and runtime evidence can only produce a certification candidate after the prospective gates are satisfied.
 
 ## End-to-end chain
 
@@ -605,3 +605,14 @@ the pypdf extraction mode that preserves the required table markers, skips
 cover pages, and joins consecutive pages until FINAL BOX, VISITOR, HOME and
 SCORE BY are all present. The existing strict score/minute/stat reconciliation
 still applies after extraction.
+
+
+## V1.8.10 — tolerant scorer-report labels
+
+The official scorer parser no longer treats decorative `FINAL BOX` and
+`SCORE BY` labels as mandatory evidence, and it accepts whitespace before
+the VISITOR/HOME colons. Correctness still depends on the stronger checks:
+expected team identity, exact 16-column stat rows, reconciled player/team
+points and reconciled player/team minutes. This targets preseason PDFs whose
+text extraction differs from the regular-season template without weakening
+the numerical validation.

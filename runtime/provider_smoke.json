@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-provider-smoke-v2",
-  "checked_at": "2026-10-04T17:32:56.945827+00:00",
+  "checked_at": "2026-10-06T08:01:44.238032+00:00",
   "season": "2026-27",
   "state": "BLOCKED",
   "transport_ok": false,
@@ -16,7 +16,7 @@
       "authority": "NBA_COMMUNICATIONS_PREGAME_ONLY",
       "outcome_authority": false,
       "primary_state": "ACCESS_BLOCKED",
-      "primary_error": "GET https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_1.json failed: HTTP 403"
+      "primary_error": "NBA schedule unavailable across official CDN routes: https://cdn.nba.com/static/json/staticData/scheduleLeagueV2.json:ProviderError:GET https://cdn.nba.com/static/json/staticData/scheduleLeagueV2.json failed: HTTP 403 | https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_1.json:ProviderError:GET https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_1.json failed: HTTP 403"
     },
     "stats": {
       "state": "TIMEOUT",

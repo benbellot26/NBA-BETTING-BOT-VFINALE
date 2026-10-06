@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-official-report-probe-v1",
-  "checked_at": "2026-10-04T17:32:53.175348+00:00",
+  "checked_at": "2026-10-06T08:01:39.646038+00:00",
   "role": "NETWORK_DIAGNOSTIC_ONLY",
   "predictive_evidence_eligible": false,
   "production_provider_authorized": false,
@@ -82,8 +82,8 @@
   "gamebook_samples_total": 3,
   "media_central": {
     "ok": true,
-    "bytes": 273289,
-    "sha256": "5f8cff109eb7bc797e0ef32c373e5c4905c7079070fcb80bb445e734c94118c5",
+    "bytes": 273240,
+    "sha256": "fa23e9e1cbd26b38f4e186d1172ce87deaedcf75522059d537ee1b9b07ea8cae",
     "term_hits": {
       "Latest Boxscore Lines": false,
       "Game-by-Game": false,
@@ -155,8 +155,8 @@
   "historical_injury_page": {
     "ok": true,
     "season": "2025-26",
-    "bytes": 116656,
-    "sha256": "2a938ceb494865e50db9d295bd6778caa0ce290450a95a3ba7e3ae5749bfdf99",
+    "bytes": 116659,
+    "sha256": "8579ad3eb27f11c68647437f49863961ca16e13edec2088f4c5f66d7167eadee",
     "marker_counts": {
       "Injury-Report_": 0,
       "ak-static.cms.nba.com": 23,
@@ -218,7 +218,7 @@
       },
       {
         "id": null,
-        "src": "https://official.nba.com/-6Kj4s/E/0/bD_1xwhKt6CU/Q5iuNVEG3DYu5h/ekt7IT0/AHhfY/ioGLQQB"
+        "src": "https://official.nba.com/9tlqKGuiW/q-sH/2w37A/ak3hkba5iS1QJuSYaL/VjtXHEtQXw/XE5nH3U/TKw4"
       }
     ],
     "iframe_sources": [],
@@ -234,8 +234,8 @@
       "https://ak-static.cms.nba.com/wp-content/themes/nba-official/js/nba-official.min.js",
       "https://ak-static.cms.nba.com/wp-content/themes/nba-official/js/pulse-insights.js",
       "https://ak-static.cms.nba.com/wp-content/uploads/sites/4/2024/06/2023-NBA-Collective-Bargaining-Agreement-Final.pdf",
-      "https://ak-static.cms.nba.com/wp-content/uploads/sites/4/2025/10/Official-2025-26-NBA-Playing-Rules.pdf",
       "https://ak-static.cms.nba.com/wp-content/uploads/sites/4/2026/03/2026-NBA-Undergraduate-Advisory-Committee-Brochure.pdf",
+      "https://ak-static.cms.nba.com/wp-content/uploads/sites/4/2026/10/2026-27-Official-NBA-Playing-Rules.pdf",
       "https://ak-static.cms.nba.com/wp-includes/css/classic-themes.min.css",
       "https://ak-static.cms.nba.com/wp-includes/js/jquery/jquery-migrate.min.js",
       "https://ak-static.cms.nba.com/wp-includes/js/jquery/jquery.min.js",

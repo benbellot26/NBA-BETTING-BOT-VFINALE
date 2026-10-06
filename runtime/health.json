@@ -1,12 +1,12 @@
 {
   "schema": "pulsar-nba-health-v1",
-  "generated_at": "2026-10-06T08:21:19.644878+00:00",
+  "generated_at": "2026-10-06T08:27:05.605713+00:00",
   "state": "PROVIDER_DEGRADED",
   "live_operational": false,
   "real_betting_authorized": false,
   "research_readiness": {
     "schema": "pulsar-nba-research-readiness-v1",
-    "generated_at": "2026-10-06T08:21:19.647152+00:00",
+    "generated_at": "2026-10-06T08:27:05.612157+00:00",
     "role": "RESEARCH_STATUS_ONLY",
     "live_betting_authorized": false,
     "betting_certified": false,
@@ -42,12 +42,20 @@
         "requests_should_be_skipped": true
       },
       "gamebook_provider_shadow": {
-        "state": "WAITING_FOR_SEASON_DATA",
+        "state": "NO_UPCOMING_GAMES",
         "ready": false,
-        "blocker": "no_completed_gamebook_history",
-        "next_action": "collect official scorer gamebooks after NBA games begin",
-        "gamebooks": 0,
-        "teams_with_games": 0
+        "blocker": "prospective_provider_shadow_evidence_incomplete",
+        "next_action": "continue prospective gamebook-provider shadow collection",
+        "gamebooks": 6,
+        "teams_with_games": 12,
+        "review_failures": [
+          "resolved_n<250",
+          "paired_v1_n<100",
+          "gamebook_completeness<1.0",
+          "margin_mae_paired_metric_missing",
+          "total_mae_paired_metric_missing",
+          "ml_brier_paired_metric_missing"
+        ]
       },
       "learned_v2": {
         "state": "COLLECTING_TRAINING_DATA",
@@ -73,9 +81,9 @@
   "provider_ok": false,
   "provider_state": "BLOCKED",
   "diagnostics": {
-    "provider_age_hours": 0.016514800555555556,
+    "provider_age_hours": 0.11261503249999999,
     "provider_fresh": true,
-    "market_age_hours": 10.866762973611111,
+    "market_age_hours": 10.962863205555555,
     "market_fresh": true
   },
   "provider_details": {
@@ -532,12 +540,12 @@
     "role": "ALTERNATE_REFERENCE_ONLY",
     "season": "2026-27",
     "date_to": "10/05/2026",
-    "gamebooks": 0,
-    "expected_gamebooks": 0,
-    "missing_gamebooks": 0,
-    "gamebook_completeness": 1.0,
-    "collection_complete": true,
-    "teams_with_games": 0,
+    "gamebooks": 6,
+    "expected_gamebooks": 8,
+    "missing_gamebooks": 2,
+    "gamebook_completeness": 0.75,
+    "collection_complete": false,
+    "teams_with_games": 12,
     "production_provider_authorized": false
   },
   "provider_shadow": {

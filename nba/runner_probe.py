@@ -42,7 +42,10 @@ def run() -> dict[str, Any]:
         "cdn_schedule_json": _timed(
             "cdn_schedule_json", "schedule",
             lambda: get_json(DEFAULT_SCHEDULE_URL, timeout=10.0, retries=0)),
-        "cdn_schedule_json_legacy": _timed(\n            "cdn_schedule_json_legacy", "schedule",\n            lambda: get_json(LEGACY_SCHEDULE_URL, timeout=10.0, retries=0)),\n        "api_hub_schedule_page": _timed(
+        "cdn_schedule_json_legacy": _timed(
+            "cdn_schedule_json_legacy", "schedule",
+            lambda: get_json(LEGACY_SCHEDULE_URL, timeout=10.0, retries=0)),
+        "api_hub_schedule_page": _timed(
             "api_hub_schedule_page", "schedule",
             lambda: get_text("https://api-hub.nba.com/schedule",
                              timeout=10.0, retries=0)),

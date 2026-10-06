@@ -71,10 +71,7 @@ def _expected_team_match(text: str, expected_name: str) -> re.Match[str] | None:
 
 
 def _valid_team_minutes(value: str) -> bool:
-    seconds = _minutes(value)
-    regulation = 240 * 60
-    overtime_increment = 25 * 60
-    return seconds >= regulation and (seconds - regulation) % overtime_increment == 0
+    return _normalized_team_minutes(value) is not None
 
 
 def _minutes(value: str) -> int:
@@ -90,6 +87,32 @@ def _stats(values: list[str]) -> dict[str, int]:
     except ValueError:
         raise ValueError("non-integer value in gamebook stat row") from None
     return dict(zip(STAT_KEYS, parsed))
+
+
+def _team_stats(values: list[str]) -> dict[str, int]:
+    """Parse team totals where team +/- may be omitted or rendered as --."""
+    raw = list(values)
+    if len(raw) == len(STAT_KEYS) - 1:
+        raw.insert(STAT_KEYS.index("PLUS_MINUS"), "0")
+    if len(raw) != len(STAT_KEYS):
+        raise ValueError("unexpected gamebook team stat width")
+    plus_index = STAT_KEYS.index("PLUS_MINUS")
+    if raw[plus_index].upper() in {"--", "N/A", "NA", "—", "–", "-"}:
+        raw[plus_index] = "0"
+    return _stats(raw)
+
+
+def _normalized_team_minutes(value: str, *, tolerance_seconds: int = 5) -> int | None:
+    seconds = _minutes(value)
+    regulation = 240 * 60
+    overtime_increment = 25 * 60
+    if seconds < regulation - tolerance_seconds:
+        return None
+    overtime_count = max(
+        0, round((seconds - regulation) / overtime_increment)
+    )
+    legal = regulation + overtime_count * overtime_increment
+    return legal if abs(seconds - legal) <= tolerance_seconds else None
 
 
 def _player_line(line: str) -> PlayerBox | None:
@@ -202,36 +225,41 @@ def _parse_team_segment(
     player_points = sum(player.stats["PTS"] for player in players)
     player_minutes = sum(player.minutes_seconds for player in players)
     tokens = text.split()
-    total_candidates: list[tuple[str, dict[str, int]]] = []
+    total_candidates: list[tuple[str, int, dict[str, int]]] = []
     for index, token in enumerate(tokens):
         if not TEAM_MINUTES_RE.fullmatch(token):
             continue
-        raw_stats = tokens[index + 1:index + 1 + len(STAT_KEYS)]
-        if len(raw_stats) != len(STAT_KEYS) or not all(
-            INTEGER_RE.fullmatch(value) for value in raw_stats
-        ):
+        normalized_minutes = _normalized_team_minutes(token)
+        if normalized_minutes is None:
             continue
-        if not _valid_team_minutes(token):
-            continue
-        total_candidates.append((token, _stats(raw_stats)))
+        parsed_totals = None
+        for width in (len(STAT_KEYS), len(STAT_KEYS) - 1):
+            raw_stats = tokens[index + 1:index + 1 + width]
+            try:
+                parsed_totals = _team_stats(raw_stats)
+                break
+            except ValueError:
+                continue
+        if parsed_totals is not None:
+            total_candidates.append((token, normalized_minutes, parsed_totals))
 
     reconciled = [
-        (token, totals)
-        for token, totals in total_candidates
+        (token, normalized_minutes, totals)
+        for token, normalized_minutes, totals in total_candidates
         if totals["PTS"] == player_points
-        and abs(player_minutes - _minutes(token)) <= 5
+        and abs(player_minutes - normalized_minutes) <= 5
     ]
     if not reconciled:
         if not total_candidates:
             raise ValueError(f"missing valid {side} team total row in gamebook")
         raise ValueError(f"{side} team total does not reconcile to parsed players")
 
-    team_minutes_token, totals = reconciled[0]
+    team_minutes_token, team_minutes, totals = reconciled[0]
     return TeamBox(
         side=side,
         observed_name=observed,
         expected_name=expected_name,
-        minutes_seconds=_minutes(team_minutes_token),
+        minutes_seconds=team_minutes,
         totals=totals,
         players=players,
     )

@@ -1370,11 +1370,11 @@
   "missing_gamebooks": [
     {
       "game_date": "2026-10-05",
-      "reason": "RuntimeError:official gamebook unavailable for espn-401898716: Los Angeles Lakers@Sacramento Kings:ValueError:missing valid away team total row in gamebook",
+      "reason": "RuntimeError:official gamebook unavailable for espn-401898716: Los Angeles Lakers@Sacramento Kings:ValueError:missing valid away team total row in gamebook; minute_samples=[['15:58', '5', '12', '3', '9', '8', '9', '0', '2', '2', '3', '1', '2', '5', '0', '12', '21', '54'], ['19:08', '3', '8', '2', '4', '0', '0', '0', '3', '3', '5', '2', '2', '3', '0', '9', '8', '12'], ['18:15', '5', '6', '2', '3', '0', '3', '2', '1', '3', '0', '3', '1', '1', '1', '25', '12', '1'], ['17:07', '1', '2', '0', '1', '1', '2', '0', '4', '4', '4', '2', '1', '1', '0', '21', '3', '9'], ['15:53', '1', '5', '1', '2', '0', '0', '0', '5', '5', '2', '4', '0', '1', '1', '7', '3', '43'], ['13:38', '5', '9', '2', '5', '0', '0', '0', '1', '1', '2', '2', '1', '0', '0', '4', '12', '7'], ['04:09', '1', '1', '1', '1', '0', '0', '0', '0', '0', '1', '2', '0', '0', '0', '3', '3', '4'], ['180:00', '33', '65', '18', '35', '15', '20', '7', '21', '28', '23', '22', '11', '12', '2', '22', '99', '50.8%']]",
       "reference_id": "espn-401898716"
     }
   ],
-  "observed_at": "2026-10-06T08:43:32.826652+00:00",
+  "observed_at": "2026-10-06T08:47:02.294931+00:00",
   "player_advanced": [
     {
       "DEF_RATING": 123.50198921188158,
@@ -8203,7 +8203,7 @@
   "schema": "pulsar-nba-gamebook-stat-pack-v1",
   "season": "2026-27",
   "source": "NBA_OFFICIAL_SCORERS_REPORT",
-  "stat_pack_sha256": "cad78a80b6fd0713f2eb35a4c108b22f49c3d9ada23f6f603558a9ad8f08085b",
+  "stat_pack_sha256": "5fb074f20d79b6ecb1304b44e358f459c8765f42e6cbe81ae72d47406dd63dbf",
   "teams_with_games": 14,
   "usage_scale": "fraction_0_to_1"
 }

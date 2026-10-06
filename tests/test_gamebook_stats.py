@@ -1,9 +1,11 @@
 import unittest
+from unittest.mock import patch
 
 from nba.communications_schedule import ReferenceScheduleGame
 from nba.gamebook import parse_final_box_text
-from nba.gamebook_stats import _json_sha256, _validate_cached, build_reference_stat_pack
+from nba.gamebook_stats import (_json_sha256, _validate_cached, build_reference_stat_pack,\n                                reference_schedule_from_games, resolve_gamebook_schedule)
 from nba.rotation_projection import project_rotation
+from nba.schedule import ScheduleGame
 from nba.teams import team_info
 from test_gamebook import FINAL_BOX
 
@@ -27,6 +29,31 @@ class GamebookStatPackTests(unittest.TestCase):
             "parsed_sha256": _json_sha256(parsed),
             "parsed": parsed,
         }
+
+    def test_current_schedule_reference_preserves_preseason_game_id(self):
+        game = ScheduleGame(
+            "0012600010", "2026-10-06", "2026-10-07T02:00:00Z",
+            "Golden State Warriors", "Los Angeles Lakers", 1, "10:00 pm ET",
+        )
+        rows = reference_schedule_from_games([game])
+        self.assertEqual(rows[0].reference_id, "0012600010")
+        self.assertEqual(rows[0].away, "Los Angeles Lakers")
+        self.assertEqual(rows[0].home, "Golden State Warriors")
+
+    def test_gamebook_schedule_prefers_full_current_schedule(self):
+        games = [
+            ScheduleGame(
+                str(index), "2026-10-06", "2026-10-07T02:00:00Z",
+                "Golden State Warriors", "Los Angeles Lakers", 1, "Scheduled",
+            )
+            for index in range(1000)
+        ]
+        with patch("nba.gamebook_stats.fetch_schedule", return_value=games), patch(
+            "nba.gamebook_stats.fetch_reference_schedule"
+        ) as fallback:
+            rows = resolve_gamebook_schedule(season="2026-27")
+        self.assertEqual(len(rows), 1000)
+        fallback.assert_not_called()
 
     def test_empty_preseason_history_is_complete_not_missing(self):
         pack = build_reference_stat_pack(

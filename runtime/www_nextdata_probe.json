@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-nextdata-reference-probe-v1",
-  "checked_at": "2026-10-06T18:53:33.925447+00:00",
+  "checked_at": "2026-10-07T19:19:05.174024+00:00",
   "season": "2025-26",
   "role": "REFERENCE_ONLY",
   "predictive_evidence_eligible": false,
@@ -65,7 +65,7 @@
   "pages": {
     "teams_advanced": {
       "ok": true,
-      "next_data_sha256": "e96fc50d01224494aa09266d8148ecea504665963c4acb96264fd37dd1aeb46c",
+      "next_data_sha256": "7d182b4387d6db9fd60dea60027d7ddd285518882d4f5de64950c742016cb083",
       "node_count": 3997,
       "max_depth": 11,
       "top_level_type": "dict",
@@ -236,10 +236,6 @@
         },
         {
           "path": "props.clientConfigSettings.validRedirectUrls",
-          "length": 11
-        },
-        {
-          "path": "props.pageProps.layout.header.links[3].children",
           "length": 11
         },
         {
@@ -313,7 +309,7 @@
     },
     "teams_traditional": {
       "ok": true,
-      "next_data_sha256": "4c291b52bf6dcad56bc4b047b4b2628cd36986a5cd6b7f7f9d286d0aa9cf4e60",
+      "next_data_sha256": "e1bdd02ba4c1f1c96b5b1eb55a402d4b8648c802d538b4a03389f5b51b22a3b2",
       "node_count": 3997,
       "max_depth": 11,
       "top_level_type": "dict",
@@ -487,10 +483,6 @@
           "length": 11
         },
         {
-          "path": "props.pageProps.layout.header.links[3].children",
-          "length": 11
-        },
-        {
           "path": "props.pageProps.layout.header.links[6].children[6].children",
           "length": 11
         },
@@ -561,7 +553,7 @@
     },
     "players_advanced": {
       "ok": true,
-      "next_data_sha256": "17f802aff6b74e1e2d4a5b2533795062e6623aaaeebe2e9c750ff3aa44594b23",
+      "next_data_sha256": "34fdc3796e5f4fad5f491d5b760afe2d78dfcaaf67b8493f4f90b58b63fb3013",
       "node_count": 4397,
       "max_depth": 11,
       "top_level_type": "dict",
@@ -732,10 +724,6 @@
         },
         {
           "path": "props.clientConfigSettings.validRedirectUrls",
-          "length": 11
-        },
-        {
-          "path": "props.pageProps.layout.header.links[3].children",
           "length": 11
         },
         {
@@ -809,7 +797,7 @@
     },
     "players_traditional": {
       "ok": true,
-      "next_data_sha256": "66687127eb5f570d760e8744a22225a34fe538c5f967e0739cfcc2db1e7dcae9",
+      "next_data_sha256": "f70cfe93b8cb076827b0dc8f9e381ca81ffd3617c7182ed04ba0f19dc270f858",
       "node_count": 4397,
       "max_depth": 11,
       "top_level_type": "dict",
@@ -980,10 +968,6 @@
         },
         {
           "path": "props.clientConfigSettings.validRedirectUrls",
-          "length": 11
-        },
-        {
-          "path": "props.pageProps.layout.header.links[3].children",
           "length": 11
         },
         {

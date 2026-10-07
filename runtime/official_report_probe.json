@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-official-report-probe-v1",
-  "checked_at": "2026-10-06T18:53:35.486195+00:00",
+  "checked_at": "2026-10-07T19:19:07.275725+00:00",
   "role": "NETWORK_DIAGNOSTIC_ONLY",
   "predictive_evidence_eligible": false,
   "production_provider_authorized": false,
@@ -82,8 +82,8 @@
   "gamebook_samples_total": 3,
   "media_central": {
     "ok": true,
-    "bytes": 275590,
-    "sha256": "f0fc0533f83d7d97d0c56177ba92bfb07c244ec9bffc40920d650a2e8d307663",
+    "bytes": 274838,
+    "sha256": "6f692b86afa100a57fceb05926c6431bab2d1849644aaf9c0ed2a17f743f640f",
     "term_hits": {
       "Latest Boxscore Lines": false,
       "Game-by-Game": false,
@@ -155,12 +155,12 @@
   "historical_injury_page": {
     "ok": true,
     "season": "2025-26",
-    "bytes": 116660,
-    "sha256": "ae32ae6ea0aba7c193184bc882f25509e0edee255deb316edbe04cb228a3c931",
+    "bytes": 116938,
+    "sha256": "47e6d39d892489110928b0f8ca61ab61c9cfe2a77cc18631f0b89d8de237379d",
     "marker_counts": {
-      "Injury-Report_": 0,
-      "ak-static.cms.nba.com": 23,
-      "referee/injury": 0,
+      "Injury-Report_": 2,
+      "ak-static.cms.nba.com": 25,
+      "referee/injury": 2,
       "wp-json": 1,
       "admin-ajax": 0,
       "ajaxurl": 0,
@@ -170,6 +170,8 @@
       "http://official.nba.com/nba-last-two-minute-reports-frequently-asked-questions/",
       "http://official.nba.com/referee-assignments/",
       "http://www.nba.com/news/referee.html",
+      "https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-10-07_09_45AM.pdf",
+      "https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-10-07_10_45AM.pdf",
       "https://official.nba.com/2019-20-nba-referees-by-the-numbers/",
       "https://official.nba.com/2025-26-nba-officiating-last-two-minute-reports/",
       "https://official.nba.com/nba-injury-report-2022-23-season/",
@@ -218,11 +220,13 @@
       },
       {
         "id": null,
-        "src": "https://official.nba.com/9tlqKGuiW/q-sH/2w37A/ak3hkba5iS1QJuSYaL/VjtXHEtQXw/XE5nH3U/TKw4"
+        "src": "https://official.nba.com/WnT-AzGwfJ55RWOlU1aHf2_n/3w7V0zNu1mX3XEia/KSsCAQ/XBJJ/dVILPCk"
       }
     ],
     "iframe_sources": [],
     "cms_asset_hints": [
+      "https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-10-07_09_45AM.pdf",
+      "https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-10-07_10_45AM.pdf",
       "https://ak-static.cms.nba.com/wp-content/plugins/video-embed-thumbnail-generator/css/kgvid_styles.css",
       "https://ak-static.cms.nba.com/wp-content/plugins/video-embed-thumbnail-generator/video-js/kg-video-js-skin.css",
       "https://ak-static.cms.nba.com/wp-content/plugins/video-embed-thumbnail-generator/video-js/video-js.css",

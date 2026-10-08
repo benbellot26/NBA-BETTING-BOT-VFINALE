@@ -21,7 +21,7 @@
     },
     "gamebook_provider_shadow": {
       "blocker": "prospective_provider_shadow_evidence_incomplete",
-      "gamebooks": 12,
+      "gamebooks": 17,
       "next_action": "continue prospective gamebook-provider shadow collection",
       "ready": false,
       "review_failures": [
@@ -33,7 +33,7 @@
         "ml_brier_paired_metric_missing"
       ],
       "state": "NO_ELIGIBLE_FINAL_WINDOW",
-      "teams_with_games": 20
+      "teams_with_games": 24
     },
     "historical_pinnacle_research": {
       "blocker": "HISTORICAL_UNAVAILABLE_ON_FREE_USAGE_PLAN",
@@ -55,7 +55,7 @@
   },
   "benchmark_bookmaker": "pinnacle",
   "betting_certified": false,
-  "generated_at": "2026-10-08T11:26:58.531808+00:00",
+  "generated_at": "2026-10-08T18:00:10.109393+00:00",
   "live_betting_authorized": false,
   "pinnacle_replacement_allowed": false,
   "primary_blockers": [

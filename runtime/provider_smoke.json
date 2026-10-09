@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-provider-smoke-v2",
-  "checked_at": "2026-10-08T19:15:45.917352+00:00",
+  "checked_at": "2026-10-09T18:46:55.483455+00:00",
   "season": "2026-27",
   "state": "BLOCKED",
   "transport_ok": false,
@@ -33,7 +33,7 @@
       "historical_probe": {
         "ok": false,
         "season": "2025-26",
-        "records": 0
+        "state": "NOT_PUBLISHED"
       }
     }
   }

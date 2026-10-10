@@ -1,7 +1,7 @@
 {
   "betting_certified": false,
   "canonical_pack_available": false,
-  "checked_at": "2026-10-09T18:51:53.255289+00:00",
+  "checked_at": "2026-10-10T17:54:26.771300+00:00",
   "error": "GET https://stats.nba.com/stats/leaguedashteamstats failed: TimeoutError",
   "error_type": "ProviderError",
   "odds_api_requests": 0,
@@ -13,5 +13,5 @@
   "schema": "pulsar-nba-canonical-stats-reference-status-v1",
   "season": "2026-27",
   "state": "TIMEOUT",
-  "target_date": "2026-10-09"
+  "target_date": "2026-10-10"
 }

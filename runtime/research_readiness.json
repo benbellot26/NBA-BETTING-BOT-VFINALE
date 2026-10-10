@@ -32,7 +32,7 @@
         "total_mae_paired_metric_missing",
         "ml_brier_paired_metric_missing"
       ],
-      "state": "NO_UPCOMING_GAMES",
+      "state": "NO_ELIGIBLE_FINAL_WINDOW",
       "teams_with_games": 28
     },
     "historical_pinnacle_research": {
@@ -55,7 +55,7 @@
   },
   "benchmark_bookmaker": "pinnacle",
   "betting_certified": false,
-  "generated_at": "2026-10-10T00:18:34.031812+00:00",
+  "generated_at": "2026-10-10T04:07:21.820465+00:00",
   "live_betting_authorized": false,
   "pinnacle_replacement_allowed": false,
   "primary_blockers": [

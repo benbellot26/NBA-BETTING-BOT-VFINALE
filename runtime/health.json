@@ -1,12 +1,12 @@
 {
   "schema": "pulsar-nba-health-v1",
-  "generated_at": "2026-10-11T18:53:56.138684+00:00",
+  "generated_at": "2026-10-11T19:55:07.201423+00:00",
   "state": "PROVIDER_DEGRADED",
   "live_operational": false,
   "real_betting_authorized": false,
   "research_readiness": {
     "schema": "pulsar-nba-research-readiness-v1",
-    "generated_at": "2026-10-11T18:53:56.147181+00:00",
+    "generated_at": "2026-10-11T19:55:07.211346+00:00",
     "role": "RESEARCH_STATUS_ONLY",
     "live_betting_authorized": false,
     "betting_certified": false,
@@ -81,9 +81,9 @@
   "provider_ok": false,
   "provider_state": "BLOCKED",
   "diagnostics": {
-    "provider_age_hours": 0.8660211877777778,
+    "provider_age_hours": 1.8857608375000001,
     "provider_fresh": true,
-    "market_age_hours": 4.659805555555556e-05,
+    "market_age_hours": 1.0197862477777777,
     "market_fresh": true
   },
   "provider_details": {
@@ -561,7 +561,7 @@
     "generation": "pulsar-nba-gamebook-provider-shadow-v1",
     "status": "NO_ELIGIBLE_FINAL_WINDOW",
     "target_date": "2026-10-11",
-    "checked_at": "2026-10-11T16:46:38.152959+00:00",
+    "checked_at": "2026-10-11T19:55:06.908797+00:00",
     "forecasts": 0,
     "last_added": 0,
     "gamebook_completeness": null,

@@ -2904,7 +2904,7 @@
     "production_requires_parity_gate": true
   },
   "missing_gamebooks": [],
-  "observed_at": "2026-10-12T20:25:21.275436+00:00",
+  "observed_at": "2026-10-12T22:43:49.629005+00:00",
   "player_advanced": [
     {
       "DEF_RATING": 116.96549801688431,
@@ -18462,7 +18462,7 @@
   "schema": "pulsar-nba-gamebook-stat-pack-v1",
   "season": "2026-27",
   "source": "NBA_OFFICIAL_SCORERS_REPORT",
-  "stat_pack_sha256": "3f4650ec2ae986449139e94cbb5d8bec7ba4c71cdb762ccd63819e368943cbe5",
+  "stat_pack_sha256": "d2a074171fa8d4e412c3e909007b649fe5fee900402198082414bd1b0974aae1",
   "teams_with_games": 30,
   "usage_scale": "fraction_0_to_1"
 }

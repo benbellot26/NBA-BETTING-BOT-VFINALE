@@ -1,19 +1,18 @@
 {
   "schema": "pulsar-nba-operational-readiness-v1",
   "role": "PRESEASON_OPERATIONAL_GATE_ONLY",
-  "checked_at": "2026-10-12T21:43:16.269859+00:00",
+  "checked_at": "2026-10-12T22:08:20.613607+00:00",
   "max_age_hours": 24.0,
   "diagnostic_age_hours": {
-    "provider": 0.005871141388888889,
-    "market": 26.822305257777778
+    "provider": 0.42374440472222225,
+    "market": 4.559416666666667e-05
   },
   "ready_for_real_rehearsal": false,
   "live_operational": false,
   "real_betting_authorized": false,
   "betting_certified": false,
   "failures": [
-    "provider_not_operational:BLOCKED",
-    "market_smoke_stale>24h"
+    "provider_not_operational:BLOCKED"
   ],
   "warnings": [
     "provider:schedule:OFFICIAL_PREGAME_FALLBACK",

@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-official-report-probe-v1",
-  "checked_at": "2026-10-13T19:51:14.422339+00:00",
+  "checked_at": "2026-10-14T17:58:39.656427+00:00",
   "role": "NETWORK_DIAGNOSTIC_ONLY",
   "predictive_evidence_eligible": false,
   "production_provider_authorized": false,
@@ -82,8 +82,8 @@
   "gamebook_samples_total": 3,
   "media_central": {
     "ok": true,
-    "bytes": 274504,
-    "sha256": "ee1e10392b3c053ed8ab89d3665370a7f702fb7747cdfcd46c49be1db7271a35",
+    "bytes": 274443,
+    "sha256": "ef714fc8ee4ee8505d5d39653acec756c150233300450a5576cb42402ee486bb",
     "term_hits": {
       "Latest Boxscore Lines": false,
       "Game-by-Game": false,
@@ -155,11 +155,11 @@
   "historical_injury_page": {
     "ok": true,
     "season": "2025-26",
-    "bytes": 116772,
-    "sha256": "b08dfb430f1014eed7a952ecff7898074191b5b4dd1c220e46b4fe0c1c4ab56a",
+    "bytes": 117141,
+    "sha256": "c7de6f920e8a5b8f538992aa50a9c6e9e0ec269d45c4325bf72e8cd87e2adf22",
     "marker_counts": {
       "Injury-Report_": 0,
-      "ak-static.cms.nba.com": 22,
+      "ak-static.cms.nba.com": 29,
       "referee/injury": 0,
       "wp-json": 1,
       "admin-ajax": 0,
@@ -176,7 +176,6 @@
       "https://official.nba.com/nba-injury-report-2025-26-season/",
       "https://official.nba.com/nba-last-two-minute-reports-frequently-asked-questions/",
       "https://official.nba.com/referee-assignments/",
-      "https://official.nba.com/wp-content/uploads/sites/4/2025/10/2025-26-NBA-Referee-Headshots.pdf",
       "https://official.nba.com/wp-json/"
     ],
     "script_sources": [
@@ -218,7 +217,7 @@
       },
       {
         "id": null,
-        "src": "https://official.nba.com/ILprv7/x_ev5X/sdj/dKq/Y5O6MKXi4/t7S94raNV1YEk9Oif3/MB5SExxp/PE/I9aCR3T1c"
+        "src": "https://official.nba.com/kV72/LXV-/jlH/Q58/8t8g/XYb90NaEGi1zr9S1/C0FERU8/amNgbmR0/cEg"
       }
     ],
     "iframe_sources": [],
@@ -235,6 +234,10 @@
       "https://ak-static.cms.nba.com/wp-content/themes/nba-official/js/pulse-insights.js",
       "https://ak-static.cms.nba.com/wp-content/uploads/sites/4/2024/06/2023-NBA-Collective-Bargaining-Agreement-Final.pdf",
       "https://ak-static.cms.nba.com/wp-content/uploads/sites/4/2026/03/2026-NBA-Undergraduate-Advisory-Committee-Brochure.pdf",
+      "https://ak-static.cms.nba.com/wp-content/uploads/sites/4/2026/10/2026-27-NBA-Concussion-Policy-Summary.pdf",
+      "https://ak-static.cms.nba.com/wp-content/uploads/sites/4/2026/10/2026-27-NBA-Officials-Guide-10-14-26.pdf",
+      "https://ak-static.cms.nba.com/wp-content/uploads/sites/4/2026/10/2026-27-NBA-Officials-Headshots.pdf",
+      "https://ak-static.cms.nba.com/wp-content/uploads/sites/4/2026/10/2026-27-NBA-Officiating-Staff.pdf",
       "https://ak-static.cms.nba.com/wp-content/uploads/sites/4/2026/10/2026-27-Official-NBA-Playing-Rules.pdf",
       "https://ak-static.cms.nba.com/wp-includes/js/jquery/jquery-migrate.min.js",
       "https://ak-static.cms.nba.com/wp-includes/js/jquery/jquery.min.js",

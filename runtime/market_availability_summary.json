@@ -2,12 +2,12 @@
   "benchmark_bookmaker": "pinnacle",
   "betting_certified": false,
   "consecutive_not_ready": 0,
-  "generated_at": "2026-10-18T17:23:16.635391+00:00",
+  "generated_at": "2026-10-19T19:56:14.687085+00:00",
   "latest_discovery_pinnacle_present": true,
   "latest_state": "PINNACLE_READY",
   "latest_targeted_events": 46,
   "latest_targeted_pinnacle_events": 14,
-  "observations": 22,
+  "observations": 23,
   "replacement_allowed": false,
   "schema": "pulsar-nba-market-availability-summary-v1"
 }

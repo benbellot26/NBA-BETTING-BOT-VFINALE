@@ -10,7 +10,7 @@
       "stats_state": "TIMEOUT"
     },
     "current_pinnacle": {
-      "complete_consensus_events": 19,
+      "complete_consensus_events": 17,
       "next_action": "capture prospective Pinnacle entry/close evidence",
       "pinnacle_events": 14,
       "ready": true,
@@ -55,7 +55,7 @@
   },
   "benchmark_bookmaker": "pinnacle",
   "betting_certified": false,
-  "generated_at": "2026-10-19T19:30:23.866393+00:00",
+  "generated_at": "2026-10-19T20:52:55.798079+00:00",
   "live_betting_authorized": false,
   "pinnacle_replacement_allowed": false,
   "primary_blockers": [

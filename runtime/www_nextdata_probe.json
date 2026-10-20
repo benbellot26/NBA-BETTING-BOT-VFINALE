@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-nextdata-reference-probe-v1",
-  "checked_at": "2026-10-19T19:16:10.511988+00:00",
+  "checked_at": "2026-10-20T17:57:01.686496+00:00",
   "season": "2025-26",
   "role": "REFERENCE_ONLY",
   "predictive_evidence_eligible": false,
@@ -65,8 +65,8 @@
   "pages": {
     "teams_advanced": {
       "ok": true,
-      "next_data_sha256": "7e91dd0eb22120c80a92181fdf11e482db32c77ca2e02c157a626dd3a3e80590",
-      "node_count": 3995,
+      "next_data_sha256": "0b538098f30e05148d61375976e22687503f050aede05e76b3d4c0b67917bdf3",
+      "node_count": 4003,
       "max_depth": 11,
       "top_level_type": "dict",
       "top_level_keys": [
@@ -207,19 +207,19 @@
           "length": 17
         },
         {
-          "path": "props.pageProps.layout.header.links[6].children[3].children",
+          "path": "props.pageProps.layout.header.links[4].children[1].children",
           "length": 16
         },
         {
-          "path": "props.pageProps.layout.subNav.links[3].children",
+          "path": "props.pageProps.layout.subNav.links[1].children",
           "length": 16
         },
         {
-          "path": "props.pageProps.layout.header.links[6].children[4].children",
+          "path": "props.pageProps.layout.header.links[4].children[2].children",
           "length": 15
         },
         {
-          "path": "props.pageProps.layout.subNav.links[4].children",
+          "path": "props.pageProps.layout.subNav.links[2].children",
           "length": 15
         },
         {
@@ -227,7 +227,7 @@
           "length": 14
         },
         {
-          "path": "props.pageProps.layout.header.links[6].children",
+          "path": "props.pageProps.layout.header.links[4].children",
           "length": 13
         },
         {
@@ -239,11 +239,11 @@
           "length": 11
         },
         {
-          "path": "props.pageProps.layout.header.links[6].children[6].children",
+          "path": "props.pageProps.layout.header.links[4].children[4].children",
           "length": 11
         },
         {
-          "path": "props.pageProps.layout.subNav.links[6].children",
+          "path": "props.pageProps.layout.subNav.links[4].children",
           "length": 11
         },
         {
@@ -309,8 +309,8 @@
     },
     "teams_traditional": {
       "ok": true,
-      "next_data_sha256": "82a5928aa8cd057f73f46463fe309a0da7f551ec5203ad4613e0ca63112d13ed",
-      "node_count": 3995,
+      "next_data_sha256": "6c4a95fccad1f9047668dd660598a22624ae6987c3050cc7c94bcc977cd05abc",
+      "node_count": 4003,
       "max_depth": 11,
       "top_level_type": "dict",
       "top_level_keys": [
@@ -451,19 +451,19 @@
           "length": 17
         },
         {
-          "path": "props.pageProps.layout.header.links[6].children[3].children",
+          "path": "props.pageProps.layout.header.links[4].children[1].children",
           "length": 16
         },
         {
-          "path": "props.pageProps.layout.subNav.links[3].children",
+          "path": "props.pageProps.layout.subNav.links[1].children",
           "length": 16
         },
         {
-          "path": "props.pageProps.layout.header.links[6].children[4].children",
+          "path": "props.pageProps.layout.header.links[4].children[2].children",
           "length": 15
         },
         {
-          "path": "props.pageProps.layout.subNav.links[4].children",
+          "path": "props.pageProps.layout.subNav.links[2].children",
           "length": 15
         },
         {
@@ -471,7 +471,7 @@
           "length": 14
         },
         {
-          "path": "props.pageProps.layout.header.links[6].children",
+          "path": "props.pageProps.layout.header.links[4].children",
           "length": 13
         },
         {
@@ -483,11 +483,11 @@
           "length": 11
         },
         {
-          "path": "props.pageProps.layout.header.links[6].children[6].children",
+          "path": "props.pageProps.layout.header.links[4].children[4].children",
           "length": 11
         },
         {
-          "path": "props.pageProps.layout.subNav.links[6].children",
+          "path": "props.pageProps.layout.subNav.links[4].children",
           "length": 11
         },
         {
@@ -553,8 +553,8 @@
     },
     "players_advanced": {
       "ok": true,
-      "next_data_sha256": "fa24503614baef725136227176fec69c6b08642e76cebc9e55706ed440facc0c",
-      "node_count": 4395,
+      "next_data_sha256": "c46f1f9f678f46ebdac0667366d9b56bc8bd8f08673903d50d71dae58a760351",
+      "node_count": 4403,
       "max_depth": 11,
       "top_level_type": "dict",
       "top_level_keys": [
@@ -695,19 +695,19 @@
           "length": 17
         },
         {
-          "path": "props.pageProps.layout.header.links[6].children[3].children",
+          "path": "props.pageProps.layout.header.links[4].children[1].children",
           "length": 16
         },
         {
-          "path": "props.pageProps.layout.subNav.links[3].children",
+          "path": "props.pageProps.layout.subNav.links[1].children",
           "length": 16
         },
         {
-          "path": "props.pageProps.layout.header.links[6].children[4].children",
+          "path": "props.pageProps.layout.header.links[4].children[2].children",
           "length": 15
         },
         {
-          "path": "props.pageProps.layout.subNav.links[4].children",
+          "path": "props.pageProps.layout.subNav.links[2].children",
           "length": 15
         },
         {
@@ -715,7 +715,7 @@
           "length": 14
         },
         {
-          "path": "props.pageProps.layout.header.links[6].children",
+          "path": "props.pageProps.layout.header.links[4].children",
           "length": 13
         },
         {
@@ -727,11 +727,11 @@
           "length": 11
         },
         {
-          "path": "props.pageProps.layout.header.links[6].children[6].children",
+          "path": "props.pageProps.layout.header.links[4].children[4].children",
           "length": 11
         },
         {
-          "path": "props.pageProps.layout.subNav.links[6].children",
+          "path": "props.pageProps.layout.subNav.links[4].children",
           "length": 11
         },
         {
@@ -797,8 +797,8 @@
     },
     "players_traditional": {
       "ok": true,
-      "next_data_sha256": "c92d7d5828864c3e74f7a07b2310b74efe565d6ffaa6735fdd570d5a938e4d86",
-      "node_count": 4395,
+      "next_data_sha256": "20eabe6f1fb40d59ab9eda0c36895ebabfa2b21f607a3e5b544374830f2a0edc",
+      "node_count": 4403,
       "max_depth": 11,
       "top_level_type": "dict",
       "top_level_keys": [
@@ -939,19 +939,19 @@
           "length": 17
         },
         {
-          "path": "props.pageProps.layout.header.links[6].children[3].children",
+          "path": "props.pageProps.layout.header.links[4].children[1].children",
           "length": 16
         },
         {
-          "path": "props.pageProps.layout.subNav.links[3].children",
+          "path": "props.pageProps.layout.subNav.links[1].children",
           "length": 16
         },
         {
-          "path": "props.pageProps.layout.header.links[6].children[4].children",
+          "path": "props.pageProps.layout.header.links[4].children[2].children",
           "length": 15
         },
         {
-          "path": "props.pageProps.layout.subNav.links[4].children",
+          "path": "props.pageProps.layout.subNav.links[2].children",
           "length": 15
         },
         {
@@ -959,7 +959,7 @@
           "length": 14
         },
         {
-          "path": "props.pageProps.layout.header.links[6].children",
+          "path": "props.pageProps.layout.header.links[4].children",
           "length": 13
         },
         {
@@ -971,11 +971,11 @@
           "length": 11
         },
         {
-          "path": "props.pageProps.layout.header.links[6].children[6].children",
+          "path": "props.pageProps.layout.header.links[4].children[4].children",
           "length": 11
         },
         {
-          "path": "props.pageProps.layout.subNav.links[6].children",
+          "path": "props.pageProps.layout.subNav.links[4].children",
           "length": 11
         },
         {

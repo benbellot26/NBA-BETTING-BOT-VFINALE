@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-provider-smoke-v2",
-  "checked_at": "2026-10-19T19:16:17.748962+00:00",
+  "checked_at": "2026-10-20T17:57:09.155948+00:00",
   "season": "2026-27",
   "state": "BLOCKED",
   "transport_ok": false,
@@ -25,16 +25,11 @@
       "error": "GET https://stats.nba.com/stats/leaguedashteamstats failed: TimeoutError"
     },
     "injuries": {
-      "state": "NOT_PUBLISHED",
+      "state": "UNAVAILABLE",
       "operational_ready": false,
-      "reachable": true,
+      "reachable": false,
       "season": "2026-27",
-      "error": "GET https://official.nba.com/nba-injury-report-2026-27-season/ failed: HTTP 404",
-      "historical_probe": {
-        "ok": false,
-        "season": "2025-26",
-        "records": 0
-      }
+      "error": "injury report parsed no team submission state"
     }
   }
 }

@@ -2,7 +2,7 @@
   "areas": {
     "canonical_provider": {
       "blocker": "canonical_provider_not_operational",
-      "injury_state": "NOT_PUBLISHED",
+      "injury_state": "UNAVAILABLE",
       "next_action": "wait for/currently repair official stats + injury availability",
       "ready": false,
       "schedule_state": "OFFICIAL_PREGAME_FALLBACK",
@@ -55,7 +55,7 @@
   },
   "benchmark_bookmaker": "pinnacle",
   "betting_certified": false,
-  "generated_at": "2026-10-20T15:50:28.277057+00:00",
+  "generated_at": "2026-10-20T18:07:38.340216+00:00",
   "live_betting_authorized": false,
   "pinnacle_replacement_allowed": false,
   "primary_blockers": [

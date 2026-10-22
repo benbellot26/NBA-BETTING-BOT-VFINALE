@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-nextdata-reference-probe-v1",
-  "checked_at": "2026-10-21T17:59:53.980084+00:00",
+  "checked_at": "2026-10-22T17:57:13.644091+00:00",
   "season": "2025-26",
   "role": "REFERENCE_ONLY",
   "predictive_evidence_eligible": false,
@@ -14,6 +14,7 @@
     "/stats/teams/advanced",
     "/stats/teams/traditional",
     "http://cares.nba.com",
+    "http://nba.com/calendar",
     "http://totalhealth.nba.com",
     "http://www.sothebys.com/en/series/nba-auctions",
     "https://app.link.nba.com/games",
@@ -59,14 +60,13 @@
     "https://pr.nba.com",
     "https://snapchat.com/add/nba",
     "https://sorare.com/nba",
-    "https://stats.gleague.nba.com/game",
-    "https://stats.wnba.com/game"
+    "https://stats.gleague.nba.com/game"
   ],
   "pages": {
     "teams_advanced": {
       "ok": true,
-      "next_data_sha256": "6a006507d3f064b5554e4bfef7f03e9fe91a9a74e825b1d8b3af119f67e51412",
-      "node_count": 4003,
+      "next_data_sha256": "edd8fa2174ab5d348860ef9dc3f34d418da1ee2ad95d7ba6aaf7c1d3c4f0fc5e",
+      "node_count": 4006,
       "max_depth": 11,
       "top_level_type": "dict",
       "top_level_keys": [
@@ -257,6 +257,7 @@
         "/stats/gamebooks",
         "/stats/teams/advanced",
         "http://cares.nba.com",
+        "http://nba.com/calendar",
         "http://totalhealth.nba.com",
         "http://www.sothebys.com/en/series/nba-auctions",
         "https://app.link.nba.com/games",
@@ -302,15 +303,14 @@
         "https://pr.nba.com",
         "https://snapchat.com/add/nba",
         "https://sorare.com/nba",
-        "https://stats.gleague.nba.com/game",
-        "https://stats.wnba.com/game"
+        "https://stats.gleague.nba.com/game"
       ],
       "reference_data_candidate": false
     },
     "teams_traditional": {
       "ok": true,
-      "next_data_sha256": "4bdddc1b5ff0f943e82714d1f37df5b58cc0b0f5e564f2f14b40ad9f614ba241",
-      "node_count": 4003,
+      "next_data_sha256": "08529f5d58783e3b3b286d46d5363358b4ea8d9c463cd61d394550f06459026f",
+      "node_count": 4006,
       "max_depth": 11,
       "top_level_type": "dict",
       "top_level_keys": [
@@ -501,6 +501,7 @@
         "/stats/gamebooks",
         "/stats/teams/traditional",
         "http://cares.nba.com",
+        "http://nba.com/calendar",
         "http://totalhealth.nba.com",
         "http://www.sothebys.com/en/series/nba-auctions",
         "https://app.link.nba.com/games",
@@ -546,15 +547,14 @@
         "https://pr.nba.com",
         "https://snapchat.com/add/nba",
         "https://sorare.com/nba",
-        "https://stats.gleague.nba.com/game",
-        "https://stats.wnba.com/game"
+        "https://stats.gleague.nba.com/game"
       ],
       "reference_data_candidate": false
     },
     "players_advanced": {
       "ok": true,
-      "next_data_sha256": "70620043e0eb8b3639e8104f353e91080279d03718019a81e86cd3e23d2d20ac",
-      "node_count": 4403,
+      "next_data_sha256": "08fdd1e4c6bfa3462f2cb5b44bbfc91b1b448512cb19afffe05d15ab62270c1c",
+      "node_count": 4406,
       "max_depth": 11,
       "top_level_type": "dict",
       "top_level_keys": [
@@ -745,6 +745,7 @@
         "/stats/gamebooks",
         "/stats/players/advanced",
         "http://cares.nba.com",
+        "http://nba.com/calendar",
         "http://totalhealth.nba.com",
         "http://www.sothebys.com/en/series/nba-auctions",
         "https://app.link.nba.com/games",
@@ -790,15 +791,14 @@
         "https://pr.nba.com",
         "https://snapchat.com/add/nba",
         "https://sorare.com/nba",
-        "https://stats.gleague.nba.com/game",
-        "https://stats.wnba.com/game"
+        "https://stats.gleague.nba.com/game"
       ],
       "reference_data_candidate": false
     },
     "players_traditional": {
       "ok": true,
-      "next_data_sha256": "c3abb4454217ac602a0bf8e3122263c27ede39e13d8bf7721023b83175cae992",
-      "node_count": 4403,
+      "next_data_sha256": "4d6db162acceb86a5d90e11e16d3fa6d26951b4882c79d81d0590f324a63f77b",
+      "node_count": 4406,
       "max_depth": 11,
       "top_level_type": "dict",
       "top_level_keys": [
@@ -989,6 +989,7 @@
         "/stats/gamebooks",
         "/stats/players/traditional",
         "http://cares.nba.com",
+        "http://nba.com/calendar",
         "http://totalhealth.nba.com",
         "http://www.sothebys.com/en/series/nba-auctions",
         "https://app.link.nba.com/games",
@@ -1034,8 +1035,7 @@
         "https://pr.nba.com",
         "https://snapchat.com/add/nba",
         "https://sorare.com/nba",
-        "https://stats.gleague.nba.com/game",
-        "https://stats.wnba.com/game"
+        "https://stats.gleague.nba.com/game"
       ],
       "reference_data_candidate": false
     }

@@ -2910,7 +2910,7 @@
       "reference_id": "espn-401914130"
     }
   ],
-  "observed_at": "2026-10-23T15:55:04.636987+00:00",
+  "observed_at": "2026-10-23T19:47:16.289135+00:00",
   "player_advanced": [
     {
       "DEF_RATING": 114.07553482220703,
@@ -19831,7 +19831,7 @@
   "schema": "pulsar-nba-gamebook-stat-pack-v1",
   "season": "2026-27",
   "source": "NBA_OFFICIAL_SCORERS_REPORT",
-  "stat_pack_sha256": "41e9bfee84c96d821400c4e39e200dc4380f70c61fd611c6f08d63697724a3dd",
+  "stat_pack_sha256": "ef3d03e96ccc0eb1a37721d27612ca7d3e2d58b9348d1ca0d7f64fca80b126e4",
   "teams_with_games": 30,
   "usage_scale": "fraction_0_to_1"
 }

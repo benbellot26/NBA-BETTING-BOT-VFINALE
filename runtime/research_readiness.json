@@ -12,12 +12,12 @@
     "current_pinnacle": {
       "complete_consensus_events": 17,
       "next_action": "capture prospective Pinnacle entry/close evidence",
-      "pinnacle_events": 14,
+      "pinnacle_events": 12,
       "ready": true,
       "regional_pinnacle_present": true,
       "replacement_allowed": false,
       "state": "PINNACLE_READY",
-      "targeted_events": 41
+      "targeted_events": 17
     },
     "gamebook_provider_shadow": {
       "blocker": "prospective_provider_shadow_evidence_incomplete",
@@ -32,7 +32,7 @@
         "total_mae_paired_metric_missing",
         "ml_brier_paired_metric_missing"
       ],
-      "state": "NO_ELIGIBLE_FINAL_WINDOW",
+      "state": "INCOMPLETE_GAMEBOOK_HISTORY",
       "teams_with_games": 30
     },
     "historical_pinnacle_research": {
@@ -55,7 +55,7 @@
   },
   "benchmark_bookmaker": "pinnacle",
   "betting_certified": false,
-  "generated_at": "2026-10-23T17:57:56.450541+00:00",
+  "generated_at": "2026-10-23T19:47:16.565845+00:00",
   "live_betting_authorized": false,
   "pinnacle_replacement_allowed": false,
   "primary_blockers": [

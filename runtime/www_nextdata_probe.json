@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-nextdata-reference-probe-v1",
-  "checked_at": "2026-10-23T17:51:40.980376+00:00",
+  "checked_at": "2026-10-24T16:33:27.465446+00:00",
   "season": "2025-26",
   "role": "REFERENCE_ONLY",
   "predictive_evidence_eligible": false,
@@ -65,7 +65,7 @@
   "pages": {
     "teams_advanced": {
       "ok": true,
-      "next_data_sha256": "0d09a4b368580eb99e64c3224fe9ef46d6612b88d062f901bb5caf1bd9e8743e",
+      "next_data_sha256": "28de9c0fd9f0ab67e16870123907ea9ff6f7faf76046063ecd5cb7139a77aaa4",
       "node_count": 4006,
       "max_depth": 11,
       "top_level_type": "dict",
@@ -204,7 +204,7 @@
         },
         {
           "path": "props.pageProps.layout.header.links",
-          "length": 17
+          "length": 16
         },
         {
           "path": "props.pageProps.layout.header.links[4].children[1].children",
@@ -223,7 +223,7 @@
           "length": 15
         },
         {
-          "path": "props.pageProps.layout.header.links[14].children",
+          "path": "props.pageProps.layout.header.links[13].children",
           "length": 14
         },
         {
@@ -248,6 +248,10 @@
         },
         {
           "path": "props.pageProps.layout.footer.legal",
+          "length": 10
+        },
+        {
+          "path": "props.pageProps.layout.header.links[3].children",
           "length": 10
         }
       ],
@@ -309,7 +313,7 @@
     },
     "teams_traditional": {
       "ok": true,
-      "next_data_sha256": "3ef1d4c04c4ed1db2f67397cc9f94c1012bb074a6f7e5f8e85551a21b33f9c7b",
+      "next_data_sha256": "5fdb39ee5fee2ca1f7ca14a4840ebde7841fa05b6db06492ac0e10f9f9cab985",
       "node_count": 4006,
       "max_depth": 11,
       "top_level_type": "dict",
@@ -448,7 +452,7 @@
         },
         {
           "path": "props.pageProps.layout.header.links",
-          "length": 17
+          "length": 16
         },
         {
           "path": "props.pageProps.layout.header.links[4].children[1].children",
@@ -467,7 +471,7 @@
           "length": 15
         },
         {
-          "path": "props.pageProps.layout.header.links[14].children",
+          "path": "props.pageProps.layout.header.links[13].children",
           "length": 14
         },
         {
@@ -492,6 +496,10 @@
         },
         {
           "path": "props.pageProps.layout.footer.legal",
+          "length": 10
+        },
+        {
+          "path": "props.pageProps.layout.header.links[3].children",
           "length": 10
         }
       ],
@@ -553,7 +561,7 @@
     },
     "players_advanced": {
       "ok": true,
-      "next_data_sha256": "ca7ea54199f5e241e4653d0e5663712ce704cf115c61390a109304e1171298cf",
+      "next_data_sha256": "e05bb930ef73cc1ca096277334340ab66a4b506fc2de29243394d04e7bb0b65f",
       "node_count": 4406,
       "max_depth": 11,
       "top_level_type": "dict",
@@ -692,7 +700,7 @@
         },
         {
           "path": "props.pageProps.layout.header.links",
-          "length": 17
+          "length": 16
         },
         {
           "path": "props.pageProps.layout.header.links[4].children[1].children",
@@ -711,7 +719,7 @@
           "length": 15
         },
         {
-          "path": "props.pageProps.layout.header.links[14].children",
+          "path": "props.pageProps.layout.header.links[13].children",
           "length": 14
         },
         {
@@ -736,6 +744,10 @@
         },
         {
           "path": "props.pageProps.layout.footer.legal",
+          "length": 10
+        },
+        {
+          "path": "props.pageProps.layout.header.links[3].children",
           "length": 10
         }
       ],
@@ -797,7 +809,7 @@
     },
     "players_traditional": {
       "ok": true,
-      "next_data_sha256": "b89232173c707689f0947fb0fd85138502256391f8cb9d4bb77ff3cef6e5e96d",
+      "next_data_sha256": "ab90544fece43996f00f5e96e23c37c755ee5558a0f8c1e92e8ad2186d682b83",
       "node_count": 4406,
       "max_depth": 11,
       "top_level_type": "dict",
@@ -936,7 +948,7 @@
         },
         {
           "path": "props.pageProps.layout.header.links",
-          "length": 17
+          "length": 16
         },
         {
           "path": "props.pageProps.layout.header.links[4].children[1].children",
@@ -955,7 +967,7 @@
           "length": 15
         },
         {
-          "path": "props.pageProps.layout.header.links[14].children",
+          "path": "props.pageProps.layout.header.links[13].children",
           "length": 14
         },
         {
@@ -980,6 +992,10 @@
         },
         {
           "path": "props.pageProps.layout.footer.legal",
+          "length": 10
+        },
+        {
+          "path": "props.pageProps.layout.header.links[3].children",
           "length": 10
         }
       ],

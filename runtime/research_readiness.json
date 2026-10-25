@@ -12,12 +12,12 @@
     "current_pinnacle": {
       "complete_consensus_events": 17,
       "next_action": "capture prospective Pinnacle entry/close evidence",
-      "pinnacle_events": 8,
+      "pinnacle_events": 7,
       "ready": true,
       "regional_pinnacle_present": true,
       "replacement_allowed": false,
       "state": "PINNACLE_READY",
-      "targeted_events": 13
+      "targeted_events": 12
     },
     "gamebook_provider_shadow": {
       "blocker": "prospective_provider_shadow_evidence_incomplete",
@@ -55,7 +55,7 @@
   },
   "benchmark_bookmaker": "pinnacle",
   "betting_certified": false,
-  "generated_at": "2026-10-25T17:14:52.013714+00:00",
+  "generated_at": "2026-10-25T18:44:01.043573+00:00",
   "live_betting_authorized": false,
   "pinnacle_replacement_allowed": false,
   "primary_blockers": [

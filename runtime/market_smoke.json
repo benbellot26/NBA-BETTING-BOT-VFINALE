@@ -1,38 +1,38 @@
 {
   "schema": "pulsar-nba-market-smoke-v2",
-  "checked_at": "2026-10-24T17:27:20.712785+00:00",
+  "checked_at": "2026-10-25T17:38:39.035311+00:00",
   "request_count": 1,
-  "events": 13,
-  "pinnacle_events": 8,
+  "events": 12,
+  "pinnacle_events": 7,
   "query_mode": "TARGETED_BOOKMAKER",
   "requested_bookmakers": [
     "pinnacle"
   ],
-  "raw_events_with_any_bookmaker": 8,
-  "raw_events_with_pinnacle": 8,
+  "raw_events_with_any_bookmaker": 7,
+  "raw_events_with_pinnacle": 7,
   "raw_empty_bookmaker_events": 5,
   "market_book_counts": {
-    "ML": 8,
-    "SPREAD": 8,
-    "TOTAL": 8
+    "ML": 7,
+    "SPREAD": 7,
+    "TOTAL": 7
   },
   "paired_pinnacle_market_events": {
-    "ML": 8,
-    "SPREAD": 8,
-    "TOTAL": 8
+    "ML": 7,
+    "SPREAD": 7,
+    "TOTAL": 7
   },
   "fresh_pinnacle_market_events": {
-    "ML": 8,
-    "SPREAD": 8,
-    "TOTAL": 8
+    "ML": 7,
+    "SPREAD": 7,
+    "TOTAL": 7
   },
-  "complete_pinnacle_events": 8,
+  "complete_pinnacle_events": 7,
   "availability_state": "PINNACLE_READY",
   "benchmark_bookmaker": "pinnacle",
   "pinnacle_replacement_allowed": false,
   "quota": {
-    "remaining": 410,
-    "used": 90,
+    "remaining": 407,
+    "used": 93,
     "last_cost": 3
   },
   "coverage_ready": true,

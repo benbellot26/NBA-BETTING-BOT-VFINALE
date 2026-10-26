@@ -21,7 +21,7 @@
     },
     "gamebook_provider_shadow": {
       "blocker": "prospective_provider_shadow_evidence_incomplete",
-      "gamebooks": 102,
+      "gamebooks": 109,
       "next_action": "continue prospective gamebook-provider shadow collection",
       "ready": false,
       "review_failures": [
@@ -55,7 +55,7 @@
   },
   "benchmark_bookmaker": "pinnacle",
   "betting_certified": false,
-  "generated_at": "2026-10-26T08:46:27.299080+00:00",
+  "generated_at": "2026-10-26T17:39:02.040857+00:00",
   "live_betting_authorized": false,
   "pinnacle_replacement_allowed": false,
   "primary_blockers": [

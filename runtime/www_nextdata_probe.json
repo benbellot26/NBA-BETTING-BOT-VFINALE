@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-nextdata-reference-probe-v1",
-  "checked_at": "2026-10-26T19:13:39.176844+00:00",
+  "checked_at": "2026-10-27T18:39:36.247677+00:00",
   "season": "2025-26",
   "role": "REFERENCE_ONLY",
   "predictive_evidence_eligible": false,
@@ -51,22 +51,22 @@
     "https://photostore.nba.com",
     "https://picks.nba.com/pickem",
     "https://play.nba.com",
-    "https://play.nba.com/nba-full-court-guess",
-    "https://play.nba.com/nba-hoop-connect",
     "https://play.nba.com/nba-iq",
-    "https://play.nba.com/nba-player-path",
-    "https://play.nba.com/nba-rank",
     "https://play.nba.com/nba-trivia",
     "https://pr.nba.com",
     "https://snapchat.com/add/nba",
     "https://sorare.com/nba",
-    "https://stats.gleague.nba.com/game"
+    "https://stats.gleague.nba.com/game",
+    "https://stats.wnba.com/game",
+    "https://store.nba.com",
+    "https://store.nba.com/Nike/br-76+",
+    "https://store.nba.com/custom-shop/c-2642"
   ],
   "pages": {
     "teams_advanced": {
       "ok": true,
-      "next_data_sha256": "5d6391b07e75687fd7a62949f16556a835a1092004732504610919d65be63373",
-      "node_count": 4006,
+      "next_data_sha256": "863142a82e91ad8dba16f50055ad8f50a76f08a63c27eb8816d14649a5383e30",
+      "node_count": 3982,
       "max_depth": 11,
       "top_level_type": "dict",
       "top_level_keys": [
@@ -192,7 +192,7 @@
         },
         {
           "path": "props.countrySplits",
-          "length": 106
+          "length": 107
         },
         {
           "path": "props.clientConfigSettings.targetMarkets.prime",
@@ -298,23 +298,23 @@
         "https://photostore.nba.com",
         "https://picks.nba.com/pickem",
         "https://play.nba.com",
-        "https://play.nba.com/nba-full-court-guess",
-        "https://play.nba.com/nba-hoop-connect",
         "https://play.nba.com/nba-iq",
-        "https://play.nba.com/nba-player-path",
-        "https://play.nba.com/nba-rank",
         "https://play.nba.com/nba-trivia",
         "https://pr.nba.com",
         "https://snapchat.com/add/nba",
         "https://sorare.com/nba",
-        "https://stats.gleague.nba.com/game"
+        "https://stats.gleague.nba.com/game",
+        "https://stats.wnba.com/game",
+        "https://store.nba.com",
+        "https://store.nba.com/Nike/br-76+",
+        "https://store.nba.com/custom-shop/c-2642"
       ],
       "reference_data_candidate": false
     },
     "teams_traditional": {
       "ok": true,
-      "next_data_sha256": "e1631fe20d9f1d50c829830afd82abf72abf1db28ce5cd67e3d24ed74782edf5",
-      "node_count": 4006,
+      "next_data_sha256": "741048dd037bd81d734903686cf0e3cc8b96b64fb9b89201a163ede580a25df1",
+      "node_count": 3982,
       "max_depth": 11,
       "top_level_type": "dict",
       "top_level_keys": [
@@ -440,7 +440,7 @@
         },
         {
           "path": "props.countrySplits",
-          "length": 106
+          "length": 107
         },
         {
           "path": "props.clientConfigSettings.targetMarkets.prime",
@@ -546,23 +546,23 @@
         "https://photostore.nba.com",
         "https://picks.nba.com/pickem",
         "https://play.nba.com",
-        "https://play.nba.com/nba-full-court-guess",
-        "https://play.nba.com/nba-hoop-connect",
         "https://play.nba.com/nba-iq",
-        "https://play.nba.com/nba-player-path",
-        "https://play.nba.com/nba-rank",
         "https://play.nba.com/nba-trivia",
         "https://pr.nba.com",
         "https://snapchat.com/add/nba",
         "https://sorare.com/nba",
-        "https://stats.gleague.nba.com/game"
+        "https://stats.gleague.nba.com/game",
+        "https://stats.wnba.com/game",
+        "https://store.nba.com",
+        "https://store.nba.com/Nike/br-76+",
+        "https://store.nba.com/custom-shop/c-2642"
       ],
       "reference_data_candidate": false
     },
     "players_advanced": {
       "ok": true,
-      "next_data_sha256": "194cc6e0f3275eeeb8312d8237ea592a09bdb2e9bfd06f216c1fedebb437bc48",
-      "node_count": 4406,
+      "next_data_sha256": "674e98989a4985fd3c7c62eec02397e4aa0015d0f3d1cfa0d453b5ffd8a020f4",
+      "node_count": 4382,
       "max_depth": 11,
       "top_level_type": "dict",
       "top_level_keys": [
@@ -688,7 +688,7 @@
         },
         {
           "path": "props.countrySplits",
-          "length": 106
+          "length": 107
         },
         {
           "path": "props.clientConfigSettings.targetMarkets.prime",
@@ -794,23 +794,23 @@
         "https://photostore.nba.com",
         "https://picks.nba.com/pickem",
         "https://play.nba.com",
-        "https://play.nba.com/nba-full-court-guess",
-        "https://play.nba.com/nba-hoop-connect",
         "https://play.nba.com/nba-iq",
-        "https://play.nba.com/nba-player-path",
-        "https://play.nba.com/nba-rank",
         "https://play.nba.com/nba-trivia",
         "https://pr.nba.com",
         "https://snapchat.com/add/nba",
         "https://sorare.com/nba",
-        "https://stats.gleague.nba.com/game"
+        "https://stats.gleague.nba.com/game",
+        "https://stats.wnba.com/game",
+        "https://store.nba.com",
+        "https://store.nba.com/Nike/br-76+",
+        "https://store.nba.com/custom-shop/c-2642"
       ],
       "reference_data_candidate": false
     },
     "players_traditional": {
       "ok": true,
-      "next_data_sha256": "25cc9803bf4f6fbf98efd6168e4c288bc1d8fb883ab40bec1a7d5f504f2fec8a",
-      "node_count": 4406,
+      "next_data_sha256": "bb2f68db901a6658d5cb945012b3933b1697eb606be81c4a54e6ddc416be52fd",
+      "node_count": 4382,
       "max_depth": 11,
       "top_level_type": "dict",
       "top_level_keys": [
@@ -936,7 +936,7 @@
         },
         {
           "path": "props.countrySplits",
-          "length": 106
+          "length": 107
         },
         {
           "path": "props.clientConfigSettings.targetMarkets.prime",
@@ -1042,16 +1042,16 @@
         "https://photostore.nba.com",
         "https://picks.nba.com/pickem",
         "https://play.nba.com",
-        "https://play.nba.com/nba-full-court-guess",
-        "https://play.nba.com/nba-hoop-connect",
         "https://play.nba.com/nba-iq",
-        "https://play.nba.com/nba-player-path",
-        "https://play.nba.com/nba-rank",
         "https://play.nba.com/nba-trivia",
         "https://pr.nba.com",
         "https://snapchat.com/add/nba",
         "https://sorare.com/nba",
-        "https://stats.gleague.nba.com/game"
+        "https://stats.gleague.nba.com/game",
+        "https://stats.wnba.com/game",
+        "https://store.nba.com",
+        "https://store.nba.com/Nike/br-76+",
+        "https://store.nba.com/custom-shop/c-2642"
       ],
       "reference_data_candidate": false
     }

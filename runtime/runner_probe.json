@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-runner-network-probe-v1",
-  "checked_at": "2026-10-27T18:39:21.163574+00:00",
+  "checked_at": "2026-10-28T18:48:29.105106+00:00",
   "season": "2026-27",
   "probe_season": "2025-26",
   "role": "NETWORK_DIAGNOSTIC_ONLY",
@@ -27,84 +27,84 @@
       "name": "cdn_schedule_json",
       "ok": false,
       "state": "ACCESS_BLOCKED",
-      "elapsed_ms": 61.5,
+      "elapsed_ms": 241.1,
       "error": "GET https://cdn.nba.com/static/json/staticData/scheduleLeagueV2.json failed: HTTP 403"
     },
     "cdn_schedule_json_legacy": {
       "name": "cdn_schedule_json_legacy",
       "ok": false,
       "state": "ACCESS_BLOCKED",
-      "elapsed_ms": 23.0,
+      "elapsed_ms": 85.7,
       "error": "GET https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_1.json failed: HTTP 403"
     },
     "data_nba_mobile_schedule": {
       "name": "data_nba_mobile_schedule",
       "ok": false,
       "state": "ACCESS_BLOCKED",
-      "elapsed_ms": 88.9,
+      "elapsed_ms": 228.3,
       "error": "GET https://data.nba.com/data/10s/v2015/json/mobile_teams/nba/2026/league/00_full_schedule.json failed: HTTP 403"
     },
     "espn_reference_schedule": {
       "name": "espn_reference_schedule",
       "ok": true,
       "state": "REACHABLE",
-      "elapsed_ms": 321.2,
+      "elapsed_ms": 160.5,
       "size": 3
     },
     "api_hub_schedule_page": {
       "name": "api_hub_schedule_page",
       "ok": false,
       "state": "UNAVAILABLE",
-      "elapsed_ms": 59.7,
+      "elapsed_ms": 330.3,
       "error": "GET https://api-hub.nba.com/schedule failed: HTTP 461"
     },
     "nba_pr_schedule_release": {
       "name": "nba_pr_schedule_release",
       "ok": true,
       "state": "REACHABLE",
-      "elapsed_ms": 210.3,
-      "size": 47136
+      "elapsed_ms": 273.3,
+      "size": 47148
     },
     "nba_pr_schedule_pdf": {
       "name": "nba_pr_schedule_pdf",
       "ok": true,
       "state": "REACHABLE",
-      "elapsed_ms": 1774.0,
+      "elapsed_ms": 2048.0,
       "size": 1200
     },
     "www_nba_stats_page": {
       "name": "www_nba_stats_page",
       "ok": true,
       "state": "REACHABLE",
-      "elapsed_ms": 230.9,
-      "size": 325646
+      "elapsed_ms": 606.5,
+      "size": 323501
     },
     "official_injury_page": {
       "name": "official_injury_page",
       "ok": true,
       "state": "REACHABLE",
-      "elapsed_ms": 137.5,
-      "size": 43609
+      "elapsed_ms": 354.7,
+      "size": 43737
     },
     "historical_injury_page": {
       "name": "historical_injury_page",
       "ok": true,
       "state": "REACHABLE",
-      "elapsed_ms": 130.2,
-      "size": 43609
+      "elapsed_ms": 697.1,
+      "size": 43737
     },
     "known_official_injury_pdf": {
       "name": "known_official_injury_pdf",
       "ok": true,
       "state": "REACHABLE",
-      "elapsed_ms": 25.5,
+      "elapsed_ms": 70.3,
       "size": 87753
     },
     "historical_stats_api": {
       "name": "historical_stats_api",
       "ok": false,
       "state": "TIMEOUT",
-      "elapsed_ms": 10044.4,
+      "elapsed_ms": 10175.6,
       "error": "GET https://stats.nba.com/stats/leaguedashteamstats failed: TimeoutError"
     }
   }

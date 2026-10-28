@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-nextdata-reference-probe-v1",
-  "checked_at": "2026-10-27T18:39:36.247677+00:00",
+  "checked_at": "2026-10-28T18:48:46.526226+00:00",
   "season": "2025-26",
   "role": "REFERENCE_ONLY",
   "predictive_evidence_eligible": false,
@@ -50,9 +50,6 @@
     "https://official.nba.com",
     "https://photostore.nba.com",
     "https://picks.nba.com/pickem",
-    "https://play.nba.com",
-    "https://play.nba.com/nba-iq",
-    "https://play.nba.com/nba-trivia",
     "https://pr.nba.com",
     "https://snapchat.com/add/nba",
     "https://sorare.com/nba",
@@ -60,13 +57,16 @@
     "https://stats.wnba.com/game",
     "https://store.nba.com",
     "https://store.nba.com/Nike/br-76+",
-    "https://store.nba.com/custom-shop/c-2642"
+    "https://store.nba.com/custom-shop/c-2642",
+    "https://store.nba.com/footwear/d-1294282497+z-957317-2506523281",
+    "https://store.nba.com/hardwood-classics/c-48147129+z-9352503-894010671",
+    "https://store.nba.com/hats/d-1238400306+z-933233-2567195697"
   ],
   "pages": {
     "teams_advanced": {
       "ok": true,
-      "next_data_sha256": "863142a82e91ad8dba16f50055ad8f50a76f08a63c27eb8816d14649a5383e30",
-      "node_count": 3982,
+      "next_data_sha256": "38c13619707257c9bf5ed2c994b4e2d87928701f9d32a94ac75a389d34026901",
+      "node_count": 3961,
       "max_depth": 11,
       "top_level_type": "dict",
       "top_level_keys": [
@@ -297,9 +297,6 @@
         "https://official.nba.com",
         "https://photostore.nba.com",
         "https://picks.nba.com/pickem",
-        "https://play.nba.com",
-        "https://play.nba.com/nba-iq",
-        "https://play.nba.com/nba-trivia",
         "https://pr.nba.com",
         "https://snapchat.com/add/nba",
         "https://sorare.com/nba",
@@ -307,14 +304,17 @@
         "https://stats.wnba.com/game",
         "https://store.nba.com",
         "https://store.nba.com/Nike/br-76+",
-        "https://store.nba.com/custom-shop/c-2642"
+        "https://store.nba.com/custom-shop/c-2642",
+        "https://store.nba.com/footwear/d-1294282497+z-957317-2506523281",
+        "https://store.nba.com/hardwood-classics/c-48147129+z-9352503-894010671",
+        "https://store.nba.com/hats/d-1238400306+z-933233-2567195697"
       ],
       "reference_data_candidate": false
     },
     "teams_traditional": {
       "ok": true,
-      "next_data_sha256": "741048dd037bd81d734903686cf0e3cc8b96b64fb9b89201a163ede580a25df1",
-      "node_count": 3982,
+      "next_data_sha256": "f4ac9452e08952c20a72e38f4e62d0c0fb5ce974ad17a176353af5f5f0eb1c11",
+      "node_count": 3961,
       "max_depth": 11,
       "top_level_type": "dict",
       "top_level_keys": [
@@ -545,9 +545,6 @@
         "https://official.nba.com",
         "https://photostore.nba.com",
         "https://picks.nba.com/pickem",
-        "https://play.nba.com",
-        "https://play.nba.com/nba-iq",
-        "https://play.nba.com/nba-trivia",
         "https://pr.nba.com",
         "https://snapchat.com/add/nba",
         "https://sorare.com/nba",
@@ -555,14 +552,17 @@
         "https://stats.wnba.com/game",
         "https://store.nba.com",
         "https://store.nba.com/Nike/br-76+",
-        "https://store.nba.com/custom-shop/c-2642"
+        "https://store.nba.com/custom-shop/c-2642",
+        "https://store.nba.com/footwear/d-1294282497+z-957317-2506523281",
+        "https://store.nba.com/hardwood-classics/c-48147129+z-9352503-894010671",
+        "https://store.nba.com/hats/d-1238400306+z-933233-2567195697"
       ],
       "reference_data_candidate": false
     },
     "players_advanced": {
       "ok": true,
-      "next_data_sha256": "674e98989a4985fd3c7c62eec02397e4aa0015d0f3d1cfa0d453b5ffd8a020f4",
-      "node_count": 4382,
+      "next_data_sha256": "90c93cecd56d9e4ed49262cbb2556cf34d73f80af1bab4b7948225111018f82b",
+      "node_count": 4361,
       "max_depth": 11,
       "top_level_type": "dict",
       "top_level_keys": [
@@ -793,9 +793,6 @@
         "https://official.nba.com",
         "https://photostore.nba.com",
         "https://picks.nba.com/pickem",
-        "https://play.nba.com",
-        "https://play.nba.com/nba-iq",
-        "https://play.nba.com/nba-trivia",
         "https://pr.nba.com",
         "https://snapchat.com/add/nba",
         "https://sorare.com/nba",
@@ -803,14 +800,17 @@
         "https://stats.wnba.com/game",
         "https://store.nba.com",
         "https://store.nba.com/Nike/br-76+",
-        "https://store.nba.com/custom-shop/c-2642"
+        "https://store.nba.com/custom-shop/c-2642",
+        "https://store.nba.com/footwear/d-1294282497+z-957317-2506523281",
+        "https://store.nba.com/hardwood-classics/c-48147129+z-9352503-894010671",
+        "https://store.nba.com/hats/d-1238400306+z-933233-2567195697"
       ],
       "reference_data_candidate": false
     },
     "players_traditional": {
       "ok": true,
-      "next_data_sha256": "bb2f68db901a6658d5cb945012b3933b1697eb606be81c4a54e6ddc416be52fd",
-      "node_count": 4382,
+      "next_data_sha256": "d7de5378731abee0ff51ef286b75c04ad61b5e77d576e86ccf250cdd3d37af09",
+      "node_count": 4361,
       "max_depth": 11,
       "top_level_type": "dict",
       "top_level_keys": [
@@ -1041,9 +1041,6 @@
         "https://official.nba.com",
         "https://photostore.nba.com",
         "https://picks.nba.com/pickem",
-        "https://play.nba.com",
-        "https://play.nba.com/nba-iq",
-        "https://play.nba.com/nba-trivia",
         "https://pr.nba.com",
         "https://snapchat.com/add/nba",
         "https://sorare.com/nba",
@@ -1051,7 +1048,10 @@
         "https://stats.wnba.com/game",
         "https://store.nba.com",
         "https://store.nba.com/Nike/br-76+",
-        "https://store.nba.com/custom-shop/c-2642"
+        "https://store.nba.com/custom-shop/c-2642",
+        "https://store.nba.com/footwear/d-1294282497+z-957317-2506523281",
+        "https://store.nba.com/hardwood-classics/c-48147129+z-9352503-894010671",
+        "https://store.nba.com/hats/d-1238400306+z-933233-2567195697"
       ],
       "reference_data_candidate": false
     }

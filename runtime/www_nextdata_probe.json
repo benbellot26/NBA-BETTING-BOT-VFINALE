@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-nextdata-reference-probe-v1",
-  "checked_at": "2026-10-28T18:48:46.526226+00:00",
+  "checked_at": "2026-10-29T18:56:18.661206+00:00",
   "season": "2025-26",
   "role": "REFERENCE_ONLY",
   "predictive_evidence_eligible": false,
@@ -65,8 +65,8 @@
   "pages": {
     "teams_advanced": {
       "ok": true,
-      "next_data_sha256": "38c13619707257c9bf5ed2c994b4e2d87928701f9d32a94ac75a389d34026901",
-      "node_count": 3961,
+      "next_data_sha256": "e1c743e7610bdb3fe452b9c1c18e25cc3b7d735b81c4e46ca6b039b1e6d53bb6",
+      "node_count": 3964,
       "max_depth": 11,
       "top_level_type": "dict",
       "top_level_keys": [
@@ -313,8 +313,8 @@
     },
     "teams_traditional": {
       "ok": true,
-      "next_data_sha256": "f4ac9452e08952c20a72e38f4e62d0c0fb5ce974ad17a176353af5f5f0eb1c11",
-      "node_count": 3961,
+      "next_data_sha256": "ace8ceafcd8761295f367e2072f38ec9514cea69c5ca45c2f8d8c30ab2e14611",
+      "node_count": 3964,
       "max_depth": 11,
       "top_level_type": "dict",
       "top_level_keys": [
@@ -561,8 +561,8 @@
     },
     "players_advanced": {
       "ok": true,
-      "next_data_sha256": "90c93cecd56d9e4ed49262cbb2556cf34d73f80af1bab4b7948225111018f82b",
-      "node_count": 4361,
+      "next_data_sha256": "7749ae7141040b932e6ed52900d0b927f006621f3ad00b2311a112006061eff0",
+      "node_count": 4364,
       "max_depth": 11,
       "top_level_type": "dict",
       "top_level_keys": [
@@ -809,8 +809,8 @@
     },
     "players_traditional": {
       "ok": true,
-      "next_data_sha256": "d7de5378731abee0ff51ef286b75c04ad61b5e77d576e86ccf250cdd3d37af09",
-      "node_count": 4361,
+      "next_data_sha256": "42cd04783020d6b8c3328bddf28c0d203e21895cef39355359b2fbdb7b68c794",
+      "node_count": 4364,
       "max_depth": 11,
       "top_level_type": "dict",
       "top_level_keys": [

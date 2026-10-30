@@ -2,7 +2,7 @@
   "added": 0,
   "betting_certified": false,
   "candidate_games": 0,
-  "checked_at": "2026-10-30T00:37:19.106242+00:00",
+  "checked_at": "2026-10-30T04:10:49.426211+00:00",
   "failures": [],
   "generation": "pulsar-nba-gamebook-provider-shadow-v1",
   "market_data_used": false,
@@ -12,6 +12,6 @@
   "schema": "pulsar-nba-gamebook-provider-shadow-status-v1",
   "source_fetch_deferred": true,
   "status": "NO_ELIGIBLE_FINAL_WINDOW",
-  "target_date": "2026-10-29",
-  "upcoming_games": 1
+  "target_date": "2026-10-30",
+  "upcoming_games": 10
 }

@@ -1,12 +1,12 @@
 {
   "schema": "pulsar-nba-health-v1",
-  "generated_at": "2026-10-31T10:10:00.462538+00:00",
+  "generated_at": "2026-10-31T16:19:30.009464+00:00",
   "state": "PROVIDER_DEGRADED",
   "live_operational": false,
   "real_betting_authorized": false,
   "research_readiness": {
     "schema": "pulsar-nba-research-readiness-v1",
-    "generated_at": "2026-10-31T10:10:00.477237+00:00",
+    "generated_at": "2026-10-31T16:19:30.024089+00:00",
     "role": "RESEARCH_STATUS_ONLY",
     "live_betting_authorized": false,
     "betting_certified": false,
@@ -46,7 +46,7 @@
         "ready": false,
         "blocker": "prospective_provider_shadow_evidence_incomplete",
         "next_action": "continue prospective gamebook-provider shadow collection",
-        "gamebooks": 137,
+        "gamebooks": 147,
         "teams_with_games": 30,
         "review_failures": [
           "resolved_n<250",
@@ -81,9 +81,9 @@
   "provider_ok": false,
   "provider_state": "BLOCKED",
   "diagnostics": {
-    "provider_age_hours": 15.597843371388889,
+    "provider_age_hours": 21.756050850833333,
     "provider_fresh": true,
-    "market_age_hours": 14.807342446388889,
+    "market_age_hours": 20.965549925833333,
     "market_fresh": true
   },
   "provider_details": {
@@ -552,11 +552,11 @@
   "gamebook_reference": {
     "role": "ALTERNATE_REFERENCE_ONLY",
     "season": "2026-27",
-    "date_to": "10/29/2026",
-    "gamebooks": 137,
-    "expected_gamebooks": 138,
+    "date_to": "10/30/2026",
+    "gamebooks": 147,
+    "expected_gamebooks": 148,
     "missing_gamebooks": 1,
-    "gamebook_completeness": 0.9927536231884058,
+    "gamebook_completeness": 0.9932432432432432,
     "collection_complete": false,
     "teams_with_games": 30,
     "production_provider_authorized": false

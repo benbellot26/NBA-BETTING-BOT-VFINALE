@@ -1,12 +1,12 @@
 {
   "schema": "pulsar-nba-health-v1",
-  "generated_at": "2026-11-03T20:17:50.455644+00:00",
+  "generated_at": "2026-11-03T20:30:26.875376+00:00",
   "state": "PROVIDER_DEGRADED",
   "live_operational": false,
   "real_betting_authorized": false,
   "research_readiness": {
     "schema": "pulsar-nba-research-readiness-v1",
-    "generated_at": "2026-11-03T20:17:50.463721+00:00",
+    "generated_at": "2026-11-03T20:30:26.886857+00:00",
     "role": "RESEARCH_STATUS_ONLY",
     "live_betting_authorized": false,
     "betting_certified": false,
@@ -25,11 +25,12 @@
         "injury_state": "UNAVAILABLE"
       },
       "current_pinnacle": {
-        "state": "PINNACLE_READY",
-        "ready": true,
-        "next_action": "capture prospective Pinnacle entry/close evidence",
-        "targeted_events": 20,
-        "pinnacle_events": 15,
+        "state": "PINNACLE_TARGET_EMPTY",
+        "ready": false,
+        "blocker": "current_pinnacle_unavailable",
+        "next_action": "keep benchmark unchanged and monitor current availability",
+        "targeted_events": 9,
+        "pinnacle_events": 0,
         "regional_pinnacle_present": true,
         "complete_consensus_events": 15,
         "replacement_allowed": false
@@ -70,6 +71,7 @@
     },
     "primary_blockers": [
       "canonical_provider",
+      "current_pinnacle",
       "gamebook_provider_shadow",
       "learned_v2"
     ]
@@ -81,9 +83,9 @@
   "provider_ok": false,
   "provider_state": "BLOCKED",
   "diagnostics": {
-    "provider_age_hours": 0.21712989666666668,
+    "provider_age_hours": 0.4272464888888889,
     "provider_fresh": true,
-    "market_age_hours": 21.517700798611113,
+    "market_age_hours": 4.2134999999999996e-05,
     "market_fresh": true
   },
   "provider_details": {
@@ -112,12 +114,14 @@
       "error": "injury report parsed no team submission state"
     }
   },
-  "market_coverage_ready": true,
-  "market_availability_state": "PINNACLE_READY",
+  "market_coverage_ready": false,
+  "market_availability_state": "PINNACLE_TARGET_EMPTY",
   "market_benchmark_bookmaker": "pinnacle",
   "ready_for_real_rehearsal": false,
   "readiness_failures": [
-    "provider_not_operational:BLOCKED"
+    "provider_not_operational:BLOCKED",
+    "pinnacle_market_coverage_not_ready",
+    "no_complete_pinnacle_event"
   ],
   "runner_probe": {
     "checked_at": "2026-11-03T20:04:24.540441+00:00",
@@ -747,11 +751,10 @@
     }
   },
   "odds_budget": {
-    "used": 2,
+    "used": 1,
     "limit": 48,
-    "remaining": 46,
+    "remaining": 47,
     "purposes": {
-      "bookmaker_discovery": 1,
       "market_smoke": 1
     }
   },

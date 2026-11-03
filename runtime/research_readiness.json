@@ -10,14 +10,15 @@
       "stats_state": "TIMEOUT"
     },
     "current_pinnacle": {
+      "blocker": "current_pinnacle_unavailable",
       "complete_consensus_events": 15,
-      "next_action": "capture prospective Pinnacle entry/close evidence",
-      "pinnacle_events": 15,
-      "ready": true,
+      "next_action": "keep benchmark unchanged and monitor current availability",
+      "pinnacle_events": 0,
+      "ready": false,
       "regional_pinnacle_present": true,
       "replacement_allowed": false,
-      "state": "PINNACLE_READY",
-      "targeted_events": 20
+      "state": "PINNACLE_TARGET_EMPTY",
+      "targeted_events": 9
     },
     "gamebook_provider_shadow": {
       "blocker": "prospective_provider_shadow_evidence_incomplete",
@@ -55,11 +56,12 @@
   },
   "benchmark_bookmaker": "pinnacle",
   "betting_certified": false,
-  "generated_at": "2026-11-03T20:17:50.418819+00:00",
+  "generated_at": "2026-11-03T21:29:58.298347+00:00",
   "live_betting_authorized": false,
   "pinnacle_replacement_allowed": false,
   "primary_blockers": [
     "canonical_provider",
+    "current_pinnacle",
     "gamebook_provider_shadow",
     "learned_v2"
   ],

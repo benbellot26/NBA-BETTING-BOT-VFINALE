@@ -1,12 +1,12 @@
 {
   "schema": "pulsar-nba-health-v1",
-  "generated_at": "2026-11-04T20:34:10.062451+00:00",
+  "generated_at": "2026-11-04T20:49:37.587120+00:00",
   "state": "PROVIDER_DEGRADED",
   "live_operational": false,
   "real_betting_authorized": false,
   "research_readiness": {
     "schema": "pulsar-nba-research-readiness-v1",
-    "generated_at": "2026-11-04T20:34:10.077740+00:00",
+    "generated_at": "2026-11-04T20:49:37.601950+00:00",
     "role": "RESEARCH_STATUS_ONLY",
     "live_betting_authorized": false,
     "betting_certified": false,
@@ -25,12 +25,11 @@
         "injury_state": "UNAVAILABLE"
       },
       "current_pinnacle": {
-        "state": "PINNACLE_TARGET_EMPTY",
-        "ready": false,
-        "blocker": "current_pinnacle_unavailable",
-        "next_action": "keep benchmark unchanged and monitor current availability",
-        "targeted_events": 9,
-        "pinnacle_events": 0,
+        "state": "PINNACLE_READY",
+        "ready": true,
+        "next_action": "capture prospective Pinnacle entry/close evidence",
+        "targeted_events": 18,
+        "pinnacle_events": 14,
         "regional_pinnacle_present": true,
         "complete_consensus_events": 15,
         "replacement_allowed": false
@@ -71,7 +70,6 @@
     },
     "primary_blockers": [
       "canonical_provider",
-      "current_pinnacle",
       "gamebook_provider_shadow",
       "learned_v2"
     ]
@@ -83,9 +81,9 @@
   "provider_ok": false,
   "provider_state": "BLOCKED",
   "diagnostics": {
-    "provider_age_hours": 0.15923285194444442,
+    "provider_age_hours": 0.4168785933333334,
     "provider_fresh": true,
-    "market_age_hours": 24.062038544722224,
+    "market_age_hours": 4.781944444444444e-05,
     "market_fresh": true
   },
   "provider_details": {
@@ -114,14 +112,12 @@
       "error": "injury report parsed no team submission state"
     }
   },
-  "market_coverage_ready": false,
-  "market_availability_state": "PINNACLE_TARGET_EMPTY",
+  "market_coverage_ready": true,
+  "market_availability_state": "PINNACLE_READY",
   "market_benchmark_bookmaker": "pinnacle",
   "ready_for_real_rehearsal": false,
   "readiness_failures": [
-    "provider_not_operational:BLOCKED",
-    "pinnacle_market_coverage_not_ready",
-    "no_complete_pinnacle_event"
+    "provider_not_operational:BLOCKED"
   ],
   "runner_probe": {
     "checked_at": "2026-11-04T20:24:09.324716+00:00",

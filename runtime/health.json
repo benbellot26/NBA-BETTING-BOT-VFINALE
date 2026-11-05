@@ -1,12 +1,12 @@
 {
   "schema": "pulsar-nba-health-v1",
-  "generated_at": "2026-11-05T20:50:05.870005+00:00",
+  "generated_at": "2026-11-05T21:05:12.999015+00:00",
   "state": "PROVIDER_DEGRADED",
   "live_operational": false,
   "real_betting_authorized": false,
   "research_readiness": {
     "schema": "pulsar-nba-research-readiness-v1",
-    "generated_at": "2026-11-05T20:50:05.880456+00:00",
+    "generated_at": "2026-11-05T21:05:13.013268+00:00",
     "role": "RESEARCH_STATUS_ONLY",
     "live_betting_authorized": false,
     "betting_certified": false,
@@ -28,8 +28,8 @@
         "state": "PINNACLE_READY",
         "ready": true,
         "next_action": "capture prospective Pinnacle entry/close evidence",
-        "targeted_events": 18,
-        "pinnacle_events": 14,
+        "targeted_events": 6,
+        "pinnacle_events": 2,
         "regional_pinnacle_present": true,
         "complete_consensus_events": 15,
         "replacement_allowed": false
@@ -81,9 +81,9 @@
   "provider_ok": false,
   "provider_state": "BLOCKED",
   "diagnostics": {
-    "provider_age_hours": 0.20826311666666666,
+    "provider_age_hours": 0.46024339722222224,
     "provider_fresh": true,
-    "market_age_hours": 24.00790417638889,
+    "market_age_hours": 5.3e-05,
     "market_fresh": true
   },
   "provider_details": {

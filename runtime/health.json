@@ -1,12 +1,12 @@
 {
   "schema": "pulsar-nba-health-v1",
-  "generated_at": "2026-11-08T18:19:52.839375+00:00",
+  "generated_at": "2026-11-08T18:25:56.223968+00:00",
   "state": "PROVIDER_DEGRADED",
   "live_operational": false,
   "real_betting_authorized": false,
   "research_readiness": {
     "schema": "pulsar-nba-research-readiness-v1",
-    "generated_at": "2026-11-08T18:19:52.847204+00:00",
+    "generated_at": "2026-11-08T18:25:56.235067+00:00",
     "role": "RESEARCH_STATUS_ONLY",
     "live_betting_authorized": false,
     "betting_certified": false,
@@ -81,9 +81,9 @@
   "provider_ok": false,
   "provider_state": "BLOCKED",
   "diagnostics": {
-    "provider_age_hours": 0.005431592222222222,
+    "provider_age_hours": 0.10637175694444445,
     "provider_fresh": true,
-    "market_age_hours": 23.534812219444447,
+    "market_age_hours": 23.635752384166665,
     "market_fresh": true
   },
   "provider_details": {
@@ -541,7 +541,7 @@
     "runner_auto_switch_allowed": false
   },
   "canonical_stats_reference": {
-    "checked_at": "2026-11-07T18:05:26.917786+00:00",
+    "checked_at": "2026-11-08T18:24:24.371789+00:00",
     "state": "TIMEOUT",
     "season": "2026-27",
     "date_to": null,

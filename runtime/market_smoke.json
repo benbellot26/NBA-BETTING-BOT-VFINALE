@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-market-smoke-v2",
-  "checked_at": "2026-11-07T18:47:47.515385+00:00",
+  "checked_at": "2026-11-08T18:49:39.402685+00:00",
   "request_count": 1,
   "events": 11,
   "pinnacle_events": 7,
@@ -31,8 +31,8 @@
   "benchmark_bookmaker": "pinnacle",
   "pinnacle_replacement_allowed": false,
   "quota": {
-    "remaining": 473,
-    "used": 27,
+    "remaining": 470,
+    "used": 30,
     "last_cost": 3
   },
   "coverage_ready": true,

@@ -1,12 +1,12 @@
 {
   "schema": "pulsar-nba-health-v1",
-  "generated_at": "2026-11-09T23:26:14.381633+00:00",
+  "generated_at": "2026-11-09T23:28:56.582131+00:00",
   "state": "PROVIDER_DEGRADED",
   "live_operational": false,
   "real_betting_authorized": false,
   "research_readiness": {
     "schema": "pulsar-nba-research-readiness-v1",
-    "generated_at": "2026-11-09T23:26:14.395432+00:00",
+    "generated_at": "2026-11-09T23:28:56.595921+00:00",
     "role": "RESEARCH_STATUS_ONLY",
     "live_betting_authorized": false,
     "betting_certified": false,
@@ -31,7 +31,7 @@
         "targeted_events": 14,
         "pinnacle_events": 8,
         "regional_pinnacle_present": true,
-        "complete_consensus_events": 15,
+        "complete_consensus_events": 9,
         "replacement_allowed": false
       },
       "historical_pinnacle_research": {
@@ -81,9 +81,9 @@
   "provider_ok": false,
   "provider_state": "BLOCKED",
   "diagnostics": {
-    "provider_age_hours": 0.47080084250000004,
+    "provider_age_hours": 0.5158565363888888,
     "provider_fresh": true,
-    "market_age_hours": 5.1567500000000004e-05,
+    "market_age_hours": 0.04510726138888889,
     "market_fresh": true
   },
   "provider_details": {
@@ -225,40 +225,40 @@
     }
   },
   "bookmaker_discovery": {
-    "checked_at": "2026-11-02T22:49:45.128946+00:00",
+    "checked_at": "2026-11-09T23:28:56.503586+00:00",
     "pinnacle_present": true,
     "pinnacle_state": "PRESENT_IN_DISCOVERY",
     "complete_featured_market_events": {
-      "draftkings": 20,
-      "gtbets": 20,
-      "betrivers": 19,
-      "unibet_nl": 19,
-      "coolbet": 18,
-      "fanduel": 15,
-      "lowvig": 15,
-      "betonlineag": 15,
-      "sport888": 15,
-      "williamhill": 15,
-      "mybookieag": 15,
-      "onexbet": 15,
-      "matchbook": 15,
-      "betus": 15,
-      "pinnacle": 15,
-      "marathonbet": 15,
-      "bovada": 15,
-      "betanysports": 15,
-      "tipico_de": 15,
-      "betmgm": 14,
-      "everygame": 14,
-      "betsson": 7,
-      "nordicbet": 7
+      "betrivers": 14,
+      "unibet_nl": 14,
+      "gtbets": 13,
+      "coolbet": 12,
+      "onexbet": 12,
+      "fanduel": 11,
+      "sport888": 10,
+      "williamhill": 10,
+      "draftkings": 10,
+      "tipico_de": 9,
+      "betmgm": 9,
+      "mybookieag": 8,
+      "matchbook": 8,
+      "marathonbet": 8,
+      "betonlineag": 8,
+      "lowvig": 8,
+      "everygame": 8,
+      "bovada": 8,
+      "betanysports": 8,
+      "betus": 8,
+      "pinnacle": 8,
+      "nordicbet": 4,
+      "betsson": 4
     },
     "consensus_market_events": {
-      "ML": 20,
-      "SPREAD": 19,
-      "TOTAL": 16
+      "ML": 15,
+      "SPREAD": 12,
+      "TOTAL": 9
     },
-    "complete_consensus_events": 15,
+    "complete_consensus_events": 9,
     "consensus_replaces_pinnacle": false
   },
   "www_stats_probe": {
@@ -747,10 +747,11 @@
     }
   },
   "odds_budget": {
-    "used": 1,
+    "used": 2,
     "limit": 48,
-    "remaining": 47,
+    "remaining": 46,
     "purposes": {
+      "bookmaker_discovery": 1,
       "market_smoke": 1
     }
   },

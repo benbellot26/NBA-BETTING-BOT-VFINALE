@@ -1,12 +1,12 @@
 {
   "schema": "pulsar-nba-health-v1",
-  "generated_at": "2026-11-09T23:10:22.733782+00:00",
+  "generated_at": "2026-11-09T23:26:14.381633+00:00",
   "state": "PROVIDER_DEGRADED",
   "live_operational": false,
   "real_betting_authorized": false,
   "research_readiness": {
     "schema": "pulsar-nba-research-readiness-v1",
-    "generated_at": "2026-11-09T23:10:22.744709+00:00",
+    "generated_at": "2026-11-09T23:26:14.395432+00:00",
     "role": "RESEARCH_STATUS_ONLY",
     "live_betting_authorized": false,
     "betting_certified": false,
@@ -28,8 +28,8 @@
         "state": "PINNACLE_READY",
         "ready": true,
         "next_action": "capture prospective Pinnacle entry/close evidence",
-        "targeted_events": 11,
-        "pinnacle_events": 7,
+        "targeted_events": 14,
+        "pinnacle_events": 8,
         "regional_pinnacle_present": true,
         "complete_consensus_events": 15,
         "replacement_allowed": false
@@ -81,9 +81,9 @@
   "provider_ok": false,
   "provider_state": "BLOCKED",
   "diagnostics": {
-    "provider_age_hours": 0.20645421722222224,
+    "provider_age_hours": 0.47080084250000004,
     "provider_fresh": true,
-    "market_age_hours": 28.345369749166668,
+    "market_age_hours": 5.1567500000000004e-05,
     "market_fresh": true
   },
   "provider_details": {
@@ -117,8 +117,7 @@
   "market_benchmark_bookmaker": "pinnacle",
   "ready_for_real_rehearsal": false,
   "readiness_failures": [
-    "provider_not_operational:BLOCKED",
-    "market_smoke_stale>24h"
+    "provider_not_operational:BLOCKED"
   ],
   "runner_probe": {
     "checked_at": "2026-11-09T22:57:34.202883+00:00",

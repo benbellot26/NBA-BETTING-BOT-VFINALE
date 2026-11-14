@@ -1,12 +1,12 @@
 {
   "schema": "pulsar-nba-health-v1",
-  "generated_at": "2026-11-14T17:18:30.107042+00:00",
+  "generated_at": "2026-11-14T18:43:28.954155+00:00",
   "state": "PROVIDER_DEGRADED",
   "live_operational": false,
   "real_betting_authorized": false,
   "research_readiness": {
     "schema": "pulsar-nba-research-readiness-v1",
-    "generated_at": "2026-11-14T17:18:30.115474+00:00",
+    "generated_at": "2026-11-14T18:43:28.965296+00:00",
     "role": "RESEARCH_STATUS_ONLY",
     "live_betting_authorized": false,
     "betting_certified": false,
@@ -81,9 +81,9 @@
   "provider_ok": false,
   "provider_state": "BLOCKED",
   "diagnostics": {
-    "provider_age_hours": 20.84060464194444,
+    "provider_age_hours": 0.005182256666666666,
     "provider_fresh": true,
-    "market_age_hours": 20.409971203333335,
+    "market_age_hours": 21.82631762361111,
     "market_fresh": true
   },
   "provider_details": {
@@ -120,7 +120,7 @@
     "provider_not_operational:BLOCKED"
   ],
   "runner_probe": {
-    "checked_at": "2026-11-13T20:27:41.960532+00:00",
+    "checked_at": "2026-11-14T18:42:36.015497+00:00",
     "reachable_routes": [
       "espn_reference_schedule",
       "nba_pr_schedule_release",
@@ -142,84 +142,84 @@
         "name": "cdn_schedule_json",
         "ok": false,
         "state": "ACCESS_BLOCKED",
-        "elapsed_ms": 107.4,
+        "elapsed_ms": 71.3,
         "error": "GET https://cdn.nba.com/static/json/staticData/scheduleLeagueV2.json failed: HTTP 403"
       },
       "cdn_schedule_json_legacy": {
         "name": "cdn_schedule_json_legacy",
         "ok": false,
         "state": "ACCESS_BLOCKED",
-        "elapsed_ms": 20.8,
+        "elapsed_ms": 41.4,
         "error": "GET https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_1.json failed: HTTP 403"
       },
       "data_nba_mobile_schedule": {
         "name": "data_nba_mobile_schedule",
         "ok": false,
         "state": "ACCESS_BLOCKED",
-        "elapsed_ms": 162.6,
+        "elapsed_ms": 182.2,
         "error": "GET https://data.nba.com/data/10s/v2015/json/mobile_teams/nba/2026/league/00_full_schedule.json failed: HTTP 403"
       },
       "espn_reference_schedule": {
         "name": "espn_reference_schedule",
         "ok": true,
         "state": "REACHABLE",
-        "elapsed_ms": 320.6,
+        "elapsed_ms": 206.9,
         "size": 3
       },
       "api_hub_schedule_page": {
         "name": "api_hub_schedule_page",
         "ok": false,
         "state": "UNAVAILABLE",
-        "elapsed_ms": 61.0,
+        "elapsed_ms": 295.5,
         "error": "GET https://api-hub.nba.com/schedule failed: HTTP 461"
       },
       "nba_pr_schedule_release": {
         "name": "nba_pr_schedule_release",
         "ok": true,
         "state": "REACHABLE",
-        "elapsed_ms": 216.6,
-        "size": 47145
+        "elapsed_ms": 580.2,
+        "size": 128554
       },
       "nba_pr_schedule_pdf": {
         "name": "nba_pr_schedule_pdf",
         "ok": true,
         "state": "REACHABLE",
-        "elapsed_ms": 1922.6,
+        "elapsed_ms": 1503.7,
         "size": 1200
       },
       "www_nba_stats_page": {
         "name": "www_nba_stats_page",
         "ok": true,
         "state": "REACHABLE",
-        "elapsed_ms": 272.9,
-        "size": 322878
+        "elapsed_ms": 322.8,
+        "size": 322865
       },
       "official_injury_page": {
         "name": "official_injury_page",
         "ok": true,
         "state": "REACHABLE",
-        "elapsed_ms": 80.4,
-        "size": 44003
+        "elapsed_ms": 87.2,
+        "size": 124508
       },
       "historical_injury_page": {
         "name": "historical_injury_page",
         "ok": true,
         "state": "REACHABLE",
-        "elapsed_ms": 176.5,
-        "size": 44003
+        "elapsed_ms": 154.6,
+        "size": 124508
       },
       "known_official_injury_pdf": {
         "name": "known_official_injury_pdf",
         "ok": true,
         "state": "REACHABLE",
-        "elapsed_ms": 121.6,
+        "elapsed_ms": 90.8,
         "size": 87753
       },
       "historical_stats_api": {
         "name": "historical_stats_api",
         "ok": false,
         "state": "TIMEOUT",
-        "elapsed_ms": 10037.8,
+        "elapsed_ms": 10058.8,
         "error": "GET https://stats.nba.com/stats/leaguedashteamstats failed: TimeoutError"
       }
     }
@@ -262,15 +262,15 @@
     "consensus_replaces_pinnacle": false
   },
   "www_stats_probe": {
-    "checked_at": "2026-11-13T20:27:55.580351+00:00",
+    "checked_at": "2026-11-14T18:42:49.714084+00:00",
     "season": "2025-26",
     "all_pages_reachable": true,
     "structured_candidate_for_reference_parser": true,
     "pages": {
       "teams_advanced": {
         "ok": true,
-        "bytes": 323073,
-        "sha256": "c80938f8404a0c5a15bd3c569951556d64ac1f09cfd8b5154214609f52bd1ca7",
+        "bytes": 323064,
+        "sha256": "a91af91447a844c6d8921ca2b5ca2b3925dd5eb1607853e2622dd0979bdd2d04",
         "marker_counts": {
           "OFF_RATING": 0,
           "DEF_RATING": 0,
@@ -300,8 +300,8 @@
       },
       "teams_traditional": {
         "ok": true,
-        "bytes": 323103,
-        "sha256": "897934fb97dcd95091c4a2643b00846ed473cda2cd255e7eb1b46bf2d14f77d5",
+        "bytes": 323094,
+        "sha256": "570b9331499c101679d6defd7222238fd2e863dafa1782f27d4f34b453187371",
         "marker_counts": {
           "OFF_RATING": 0,
           "DEF_RATING": 0,
@@ -331,8 +331,8 @@
       },
       "players_advanced": {
         "ok": true,
-        "bytes": 400886,
-        "sha256": "943f28cd9a9159d208d4e9396b3ee5e2e5779152964133a06a1c4b9427cae271",
+        "bytes": 400877,
+        "sha256": "53894be2de249b5162c07e489ac6200ef129035a62234dcfca394a77a3fe3604",
         "marker_counts": {
           "OFF_RATING": 0,
           "DEF_RATING": 0,
@@ -362,8 +362,8 @@
       },
       "players_traditional": {
         "ok": true,
-        "bytes": 400916,
-        "sha256": "4c471135599e6661a79cacba0ff63268683648602ad13c99c816626bfb8ec0b1",
+        "bytes": 400907,
+        "sha256": "8b9eedfec985b23ac26afd108a58bc2fc2da5a8017e9d5e3496b443a80d5f06f",
         "marker_counts": {
           "OFF_RATING": 0,
           "DEF_RATING": 0,
@@ -596,7 +596,7 @@
     "betting_certified": false
   },
   "official_report_probe": {
-    "checked_at": "2026-11-13T20:27:57.730362+00:00",
+    "checked_at": "2026-11-14T18:43:05.437957+00:00",
     "official_gamebook_candidate": true,
     "media_central_reachable": true,
     "production_provider_authorized": false,
@@ -675,8 +675,8 @@
     },
     "media_central": {
       "ok": true,
-      "bytes": 269988,
-      "sha256": "f97f7126855751c4a40524823763a7c5d590921971ba8fdaa9e86c495aebb087",
+      "bytes": 269979,
+      "sha256": "95371d7329a6f5c5886ab26287ff2543857dc1e981c58e3f600c9dee990817d4",
       "term_hits": {
         "Latest Boxscore Lines": false,
         "Game-by-Game": false,

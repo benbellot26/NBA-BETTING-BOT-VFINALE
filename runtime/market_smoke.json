@@ -1,40 +1,40 @@
 {
   "schema": "pulsar-nba-market-smoke-v2",
-  "checked_at": "2026-11-25T23:05:25.321759+00:00",
+  "checked_at": "2026-11-26T22:58:58.924841+00:00",
   "request_count": 1,
-  "events": 9,
-  "pinnacle_events": 9,
+  "events": 11,
+  "pinnacle_events": 0,
   "query_mode": "TARGETED_BOOKMAKER",
   "requested_bookmakers": [
     "pinnacle"
   ],
-  "raw_events_with_any_bookmaker": 9,
-  "raw_events_with_pinnacle": 9,
-  "raw_empty_bookmaker_events": 0,
+  "raw_events_with_any_bookmaker": 0,
+  "raw_events_with_pinnacle": 0,
+  "raw_empty_bookmaker_events": 11,
   "market_book_counts": {
-    "ML": 9,
-    "SPREAD": 9,
-    "TOTAL": 9
+    "ML": 0,
+    "SPREAD": 0,
+    "TOTAL": 0
   },
   "paired_pinnacle_market_events": {
-    "ML": 9,
-    "SPREAD": 9,
-    "TOTAL": 9
+    "ML": 0,
+    "SPREAD": 0,
+    "TOTAL": 0
   },
   "fresh_pinnacle_market_events": {
-    "ML": 9,
-    "SPREAD": 9,
-    "TOTAL": 9
+    "ML": 0,
+    "SPREAD": 0,
+    "TOTAL": 0
   },
-  "complete_pinnacle_events": 9,
-  "availability_state": "PINNACLE_READY",
+  "complete_pinnacle_events": 0,
+  "availability_state": "PINNACLE_TARGET_EMPTY",
   "benchmark_bookmaker": "pinnacle",
   "pinnacle_replacement_allowed": false,
   "quota": {
-    "remaining": 401,
-    "used": 99,
+    "remaining": 398,
+    "used": 102,
     "last_cost": 3
   },
-  "coverage_ready": true,
+  "coverage_ready": false,
   "betting_certified": false
 }

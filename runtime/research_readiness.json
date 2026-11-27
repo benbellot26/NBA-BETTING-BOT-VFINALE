@@ -10,14 +10,13 @@
       "stats_state": "TIMEOUT"
     },
     "current_pinnacle": {
-      "blocker": "current_pinnacle_unavailable",
       "complete_consensus_events": 5,
-      "next_action": "keep benchmark unchanged and monitor current availability",
-      "pinnacle_events": 0,
-      "ready": false,
+      "next_action": "capture prospective Pinnacle entry/close evidence",
+      "pinnacle_events": 11,
+      "ready": true,
       "regional_pinnacle_present": true,
       "replacement_allowed": false,
-      "state": "PINNACLE_TARGET_EMPTY",
+      "state": "PINNACLE_READY",
       "targeted_events": 11
     },
     "gamebook_provider_shadow": {
@@ -33,7 +32,7 @@
         "total_mae_paired_metric_missing",
         "ml_brier_paired_metric_missing"
       ],
-      "state": "NO_ELIGIBLE_FINAL_WINDOW",
+      "state": "INCOMPLETE_GAMEBOOK_HISTORY",
       "teams_with_games": 30
     },
     "historical_pinnacle_research": {
@@ -56,12 +55,11 @@
   },
   "benchmark_bookmaker": "pinnacle",
   "betting_certified": false,
-  "generated_at": "2026-11-27T22:22:08.317633+00:00",
+  "generated_at": "2026-11-27T23:54:16.661729+00:00",
   "live_betting_authorized": false,
   "pinnacle_replacement_allowed": false,
   "primary_blockers": [
     "canonical_provider",
-    "current_pinnacle",
     "gamebook_provider_shadow",
     "learned_v2"
   ],

@@ -2894,7 +2894,7 @@
     }
   ],
   "collection_complete": false,
-  "date_to": "11/25/2026",
+  "date_to": "11/26/2026",
   "expected_gamebooks": 337,
   "gamebook_completeness": 0.9970326409495549,
   "gamebook_manifest_sha256": "ceb2598b1950ae44e7450a275570091d78235125f4f9e56b168dc76e87903a08",
@@ -2910,7 +2910,7 @@
       "reference_id": "espn-401914130"
     }
   ],
-  "observed_at": "2026-11-26T20:31:45.038030+00:00",
+  "observed_at": "2026-11-27T20:18:33.408953+00:00",
   "player_advanced": [
     {
       "DEF_RATING": 111.9344569909774,
@@ -19357,7 +19357,7 @@
   "schema": "pulsar-nba-gamebook-stat-pack-v1",
   "season": "2026-27",
   "source": "NBA_OFFICIAL_SCORERS_REPORT",
-  "stat_pack_sha256": "7253993360b7b97907d10fe9fd56c8e2d90f883b9911672aa5a02b54d84622cc",
+  "stat_pack_sha256": "a6723435854f70b3b829facb4fed7b95a9f9222a9542f84e193dedf96a376499",
   "teams_with_games": 30,
   "usage_scale": "fraction_0_to_1"
 }

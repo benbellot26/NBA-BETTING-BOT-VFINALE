@@ -1,6 +1,6 @@
 {
   "schema": "pulsar-nba-www-stats-structure-probe-v1",
-  "checked_at": "2026-11-26T22:15:55.566640+00:00",
+  "checked_at": "2026-11-27T21:55:29.431985+00:00",
   "season": "2025-26",
   "role": "NETWORK_DIAGNOSTIC_ONLY",
   "predictive_evidence_eligible": false,
@@ -11,8 +11,8 @@
   "pages": {
     "teams_advanced": {
       "ok": true,
-      "bytes": 294262,
-      "sha256": "790d26e71c9b0605e1f0a65f7899c676f33612e0afd33fb8145429ffa42cb8ce",
+      "bytes": 294503,
+      "sha256": "5e264616144d207bfba0a2a25839560f7e05a89e1e202028b3c932c922dc13e6",
       "marker_counts": {
         "OFF_RATING": 0,
         "DEF_RATING": 0,
@@ -42,8 +42,8 @@
     },
     "teams_traditional": {
       "ok": true,
-      "bytes": 294292,
-      "sha256": "d68057fd7edb0ed69d460a228e08550f565bf084692681908912b47bff945fc3",
+      "bytes": 294533,
+      "sha256": "17f031ae469343a42232662fefcb7edbfa8e7bd5082ab402e6cfcbf9ce1e8561",
       "marker_counts": {
         "OFF_RATING": 0,
         "DEF_RATING": 0,
@@ -73,8 +73,8 @@
     },
     "players_advanced": {
       "ok": true,
-      "bytes": 372075,
-      "sha256": "4dd3e13ff9ebffe3445319d049fa4540c4dc26d8e1567332853ca4fab9012ed9",
+      "bytes": 372316,
+      "sha256": "b6e57ecca7057922a2398a05d6215e921e3223ae2d0b91f17aa3877b055af6dc",
       "marker_counts": {
         "OFF_RATING": 0,
         "DEF_RATING": 0,
@@ -104,8 +104,8 @@
     },
     "players_traditional": {
       "ok": true,
-      "bytes": 372105,
-      "sha256": "e64fe653ece3ed5a7ac23409b2e77e4d974075c94ab315f62123619f3faa892c",
+      "bytes": 372346,
+      "sha256": "af157f7754f226ecee83a4edd21b19af2ff432aa8c2e3c0c0cf837896b4231c8",
       "marker_counts": {
         "OFF_RATING": 0,
         "DEF_RATING": 0,
